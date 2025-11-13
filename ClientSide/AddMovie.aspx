@@ -61,7 +61,8 @@
             border-radius: 5px;
             border: 1px solid #333399;
             background: rgba(255, 255, 255, 0.1);
-            color: white;
+            color: black;
+            background: white;
             font-size: 14px;
         }
         .form-buttons {

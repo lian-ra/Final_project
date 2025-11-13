@@ -135,7 +135,7 @@
                                                         <span></span>
                                                     </div>
                                                 </div>
-                                                <a href="index-2.html"><img class="logo" src="images/logo1.png" alt="" width="119" height="58"></a>
+                                                <a href="Home.aspx"><img class="logo" src="images/logo1.png" alt="" width="119" height="58"></a>
                                             </div>
                                             <!-- Collect the nav links, forms, and other content for toggling -->
                                          
@@ -204,14 +204,6 @@
 			<!-- /.navbar-collapse -->
 	    </nav>
 	    
-	    <!-- top search form -->
-	    <div class="top-search">
-	    	<select>
-				<option value="united">Films</option>
-				<option value="saab">Others</option>
-			</select>
-			<input type="text" placeholder="Search for a movie, TV Show or celebrity that you are looking for">
-	    </div>
 	</div>
 </header>
 <!-- END | Header -->

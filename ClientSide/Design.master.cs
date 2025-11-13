@@ -10,7 +10,48 @@ public partial class Design : System.Web.UI.MasterPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        // Empty - child pages will call SetUserLoggedIn or SetUserLoggedOut
+        try
+        {
+            string status = Session["status"] as string;
+
+            DataTable dt = Session["data"] as DataTable;
+
+            if ((status == "1" || status == "2") && dt != null && dt.Rows.Count > 0)
+            {
+                string username = null;
+
+                if (dt.Columns.Contains("User"))
+                {
+                    username = dt.Rows[0]["User"].ToString();
+                }
+                else if (dt.Columns.Contains("Usern"))
+                {
+                    username = dt.Rows[0]["Usern"].ToString();
+                }
+                else
+                {
+                    username = dt.Rows[0][0].ToString();
+                }
+
+                if (!string.IsNullOrEmpty(username))
+                {
+                    SetUserLoggedIn(username);
+                }
+                else
+                {
+                    SetUserLoggedOut();
+                }
+            }
+            else
+            {
+                SetUserLoggedOut();
+            }
+        }
+        catch
+        {
+            // In case of any unexpected issue with Session/DataTable, default to logged-out UI
+            SetUserLoggedOut();
+        }
     }
 
     public void SetUserLoggedIn(string username)
