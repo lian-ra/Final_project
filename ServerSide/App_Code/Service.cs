@@ -388,5 +388,82 @@ public class Service : System.Web.Services.WebService
         return DbActions.Search(sql, GetPath());
     }
 
+    //---------------------------------------------------------------------------------
+    // Celebs Methods
+    //---------------------------------------------------------------------------------
+
+    [WebMethod]
+    public void CreateCelebsTable()
+    {
+        string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Celebs'";
+        DataTable dt = DbActions.Search(checkTableSql, GetPath());
+
+        int tableExists = 0;
+        if (dt != null && dt.Rows.Count > 0)
+        {
+            tableExists = Convert.ToInt32(dt.Rows[0][0]);
+        }
+
+        if (tableExists == 0)
+        {
+            string createTableSql = @"CREATE TABLE [Celebs] (
+                [CelebId] INT IDENTITY(1,1) PRIMARY KEY,
+                [Name] NVARCHAR(255) NOT NULL,
+                [Role] NVARCHAR(255),
+                [Photo] NVARCHAR(500),
+                [Bio] NVARCHAR(MAX)
+            )";
+
+            SqlCommand cmmd = new SqlCommand(createTableSql);
+            DbActions.MyAction(cmmd, GetPath());
+
+            InsertSampleCelebs();
+        }
+    }
+
+    private void InsertSampleCelebs()
+    {
+        Celeb[] sampleCelebs = new Celeb[]
+        {
+            new Celeb { Name = "Leonardo DiCaprio", Role = "Actor", Photo = "images/uploads/ava1.jpg", Bio = "Academy Award-winning actor known for films such as Inception, The Revenant, and Titanic." },
+            new Celeb { Name = "Anne Hathaway", Role = "Actress", Photo = "images/uploads/ava2.jpg", Bio = "American actress known for roles in The Devil Wears Prada, Les Misérables, and Interstellar." },
+            new Celeb { Name = "Christopher Nolan", Role = "Director", Photo = "images/uploads/ava3.jpg", Bio = "British-American film director, producer, and screenwriter known for The Dark Knight trilogy and Inception." },
+            new Celeb { Name = "Tom Hardy", Role = "Actor", Photo = "images/uploads/ava4.jpg", Bio = "English actor known for roles in Inception, Mad Max: Fury Road, and The Revenant." }
+        };
+
+        foreach (Celeb celeb in sampleCelebs)
+        {
+            AddCelebInternal(celeb);
+        }
+    }
+
+    private void AddCelebInternal(Celeb celeb)
+    {
+        string sql = "INSERT INTO [Celebs] ([Name], [Role], [Photo], [Bio]) VALUES (@p1, @p2, @p3, @p4)";
+
+        SqlCommand cmmd = new SqlCommand(sql);
+
+        cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
+        cmmd.Parameters["@p1"].Value = celeb.Name ?? (object)DBNull.Value;
+
+        cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
+        cmmd.Parameters["@p2"].Value = celeb.Role ?? (object)DBNull.Value;
+
+        cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.NVarChar));
+        cmmd.Parameters["@p3"].Value = celeb.Photo ?? (object)DBNull.Value;
+
+        cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
+        cmmd.Parameters["@p4"].Value = celeb.Bio ?? (object)DBNull.Value;
+
+        DbActions.MyAction(cmmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetAllCelebs()
+    {
+        CreateCelebsTable(); // Ensure table exists
+        string sql = "SELECT * FROM [Celebs] ORDER BY [Name]";
+        return DbActions.Search(sql, GetPath());
+    }
 
 }
