@@ -18,11 +18,19 @@ public partial class Celebs : System.Web.UI.Page
         }
     }
 
+    protected void btnSearchCelebs_Click(object sender, EventArgs e)
+    {
+        LoadCelebs();
+    }
+
     private void LoadCelebs()
     {
         try
         {
-            DataTable dt = myService.GetAllCelebs();
+            string searchText = txtSearchCelebs.Text.Trim();
+            string role = ddlRole.SelectedValue;
+
+            DataTable dt = myService.SearchCelebs(searchText, role);
 
             celebsGrid.Controls.Clear();
 

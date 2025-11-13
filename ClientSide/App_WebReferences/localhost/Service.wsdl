@@ -226,6 +226,47 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="SearchCelebs">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="searchText" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="role" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchCelebsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchCelebsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddCeleb">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="celeb" type="tns:Celeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Celeb">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CelebId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Role" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Photo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Bio" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddCelebResponse">
+        <s:complexType />
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="LoginSoapIn">
@@ -300,6 +341,18 @@
   <wsdl:message name="GetAllCelebsSoapOut">
     <wsdl:part name="parameters" element="tns:GetAllCelebsResponse" />
   </wsdl:message>
+  <wsdl:message name="SearchCelebsSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchCelebs" />
+  </wsdl:message>
+  <wsdl:message name="SearchCelebsSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchCelebsResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddCelebSoapIn">
+    <wsdl:part name="parameters" element="tns:AddCeleb" />
+  </wsdl:message>
+  <wsdl:message name="AddCelebSoapOut">
+    <wsdl:part name="parameters" element="tns:AddCelebResponse" />
+  </wsdl:message>
   <wsdl:portType name="ServiceSoap">
     <wsdl:operation name="Login">
       <wsdl:input message="tns:LoginSoapIn" />
@@ -348,6 +401,14 @@
     <wsdl:operation name="GetAllCelebs">
       <wsdl:input message="tns:GetAllCelebsSoapIn" />
       <wsdl:output message="tns:GetAllCelebsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchCelebs">
+      <wsdl:input message="tns:SearchCelebsSoapIn" />
+      <wsdl:output message="tns:SearchCelebsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddCeleb">
+      <wsdl:input message="tns:AddCelebSoapIn" />
+      <wsdl:output message="tns:AddCelebSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
@@ -460,6 +521,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="SearchCelebs">
+      <soap:operation soapAction="http://tempuri.org/SearchCelebs" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddCeleb">
+      <soap:operation soapAction="http://tempuri.org/AddCeleb" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -564,6 +643,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetAllCelebs">
       <soap12:operation soapAction="http://tempuri.org/GetAllCelebs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchCelebs">
+      <soap12:operation soapAction="http://tempuri.org/SearchCelebs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddCeleb">
+      <soap12:operation soapAction="http://tempuri.org/AddCeleb" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

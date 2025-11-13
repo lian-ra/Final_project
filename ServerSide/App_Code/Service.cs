@@ -466,4 +466,125 @@ public class Service : System.Web.Services.WebService
         return DbActions.Search(sql, GetPath());
     }
 
+    [WebMethod]
+    public DataTable SearchCelebs(string searchText, string role)
+    {
+        CreateCelebsTable(); // Ensure table exists
+
+        string sql = "SELECT * FROM [Celebs] WHERE 1=1";
+
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            string escaped = searchText.Replace("'", "''");
+            sql += " AND ([Name] LIKE '%" + escaped + "%' OR [Bio] LIKE '%" + escaped + "%')";
+        }
+
+        if (!string.IsNullOrWhiteSpace(role) && role.ToLower() != "all")
+        {
+            sql += " AND [Role] = '" + role.Replace("'", "''") + "'";
+        }
+
+        sql += " ORDER BY [Name]";
+
+        return DbActions.Search(sql, GetPath());
+    }
+
+    [WebMethod]
+    public void AddCeleb(Celeb celeb)
+    {
+        try
+        {
+            if (celeb == null)
+            {
+                throw new Exception("Celeb data is required.");
+            }
+
+            CreateCelebsTable(); // Ensure table exists
+
+            string sql = "INSERT INTO [Celebs] ([Name], [Role], [Photo], [Bio]) VALUES (@p1, @p2, @p3, @p4)";
+
+            SqlCommand cmmd = new SqlCommand(sql);
+
+            cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
+            cmmd.Parameters["@p1"].Value = celeb.Name ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
+            cmmd.Parameters["@p2"].Value = celeb.Role ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.NVarChar));
+            cmmd.Parameters["@p3"].Value = celeb.Photo ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
+            cmmd.Parameters["@p4"].Value = celeb.Bio ?? (object)DBNull.Value;
+
+            DbActions.MyAction(cmmd, GetPath());
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            throw;
+        }
+    }
+
+    [WebMethod]
+    public void UpdateCeleb(Celeb celeb)
+    {
+        try
+        {
+            if (celeb == null || celeb.CelebId <= 0)
+            {
+                throw new Exception("Valid celeb data (with CelebId) is required for update.");
+            }
+
+            CreateCelebsTable(); // Ensure table exists
+
+            string sql = "UPDATE [Celebs] SET [Name]=@p1, [Role]=@p2, [Photo]=@p3, [Bio]=@p4 WHERE [CelebId]=@p5";
+
+            SqlCommand cmmd = new SqlCommand(sql);
+
+            cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
+            cmmd.Parameters["@p1"].Value = celeb.Name ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
+            cmmd.Parameters["@p2"].Value = celeb.Role ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.NVarChar));
+            cmmd.Parameters["@p3"].Value = celeb.Photo ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
+            cmmd.Parameters["@p4"].Value = celeb.Bio ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Int));
+            cmmd.Parameters["@p5"].Value = celeb.CelebId;
+
+            DbActions.MyAction(cmmd, GetPath());
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            throw;
+        }
+    }
+
+    [WebMethod]
+    public void DeleteCeleb(int celebId)
+    {
+        try
+        {
+            CreateCelebsTable(); // Ensure table exists
+
+            string sql = "DELETE FROM [Celebs] WHERE [CelebId]=@p1";
+            SqlCommand cmmd = new SqlCommand(sql);
+            cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int));
+            cmmd.Parameters["@p1"].Value = celebId;
+
+            DbActions.MyAction(cmmd, GetPath());
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            throw;
+        }
+    }
+
 }
