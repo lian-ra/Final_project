@@ -1,0 +1,392 @@
+﻿//using MDb.App_Code;
+//using System; 
+//using System.Data;
+//using System.Web.Services;
+//using System.Web.UI.WebControls;
+//using System.Data.SqlClient;
+//using System.Data.OleDb;
+using MDb.App_Code;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Services;
+using System.Web.UI.WebControls;
+using System.Data.SqlClient;
+using System.Data.OleDb;
+
+[WebService(Namespace = "http://tempuri.org/")]
+[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+// To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
+// [System.Web.Script.Services.ScriptService]
+
+public class Service : System.Web.Services.WebService
+{
+    public Service()
+    {
+
+        //Uncomment the following line if using designed components 
+        //InitializeComponent(); 
+
+    }
+    private string GetPath()
+    {
+        return Server.MapPath("App_Data/Db.mdf");
+    }
+
+    private void LogError(Exception ex)
+    {
+        try
+        {
+            string logPath = Server.MapPath("App_Data/service_errors.log");
+            string text = "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] " + ex.ToString() + Environment.NewLine;
+            System.IO.File.AppendAllText(logPath, text);
+        }
+        catch
+        {
+            // Swallow any logging errors to avoid masking the original exception
+        }
+    }
+
+    //[WebMethod]
+    //public void Check()
+    //{
+    //    DbActions.Search("", GetPath());
+    //}
+
+    //======================================================
+
+    [WebMethod]
+    public DataTable Login(string username, string password, bool Choice)
+    {
+
+        string Sql = "Select * from ";
+
+        if (Choice == true) //user
+            Sql += "[Users] where [User]='" + username.Replace("'", "''") + "' and [pass]='" + password.Replace("'", "''") + "'";
+        else
+            Sql += "[Admin] where [Usern]='" + username.Replace("'", "''") + "' and [Pass]='" + password.Replace("'", "''") + "'";
+
+        DataTable dt= DbActions.Search(Sql, GetPath());
+
+        return dt;
+    }
+
+    //======================================================
+
+    [WebMethod]
+
+
+    public void Regi(Users users)
+    {
+        string sql = "INSERT INTO [Users] values(@p1 , @p2 , @p3 , @p4 ,@p5 , @p6 ,@p7 ,@p8 ,@p9 ,@p10)";
+
+
+        SqlCommand cmmd = new SqlCommand(sql);
+
+        cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.VarChar));
+        cmmd.Parameters["@p1"].Value = users.UserN;
+
+        cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.VarChar));
+        cmmd.Parameters["@p2"].Value = users.Pass;
+
+        cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.VarChar));
+        cmmd.Parameters["@p3"].Value = users.LastN;
+
+        cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.VarChar));
+        cmmd.Parameters["@p4"].Value = users.NameF;
+
+        cmmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.VarChar));
+        cmmd.Parameters["@p5"].Value = users.Fulladdres;
+
+        cmmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.VarChar));
+        cmmd.Parameters["@p6"].Value = users.Email;
+
+        cmmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.VarChar));
+        cmmd.Parameters["@p7"].Value = users.PhoneN;
+
+        cmmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.VarChar));
+        cmmd.Parameters["@p8"].Value = users.Gender;
+
+        cmmd.Parameters.Add(new SqlParameter("@p9", SqlDbType.DateTime));
+        DateTime birthdayDate;
+        if (DateTime.TryParse(users.Birthday, out birthdayDate))
+        {
+            cmmd.Parameters["@p9"].Value = birthdayDate;
+        }
+        else
+        {
+            cmmd.Parameters["@p9"].Value = DBNull.Value;
+        }
+
+        cmmd.Parameters.Add(new SqlParameter("@p10", SqlDbType.VarChar));
+        cmmd.Parameters["@p10"].Value = users.Pic;
+
+        DbActions.MyAction(cmmd, GetPath());
+
+
+
+    }
+    //-----------------------------------------------------
+
+    [WebMethod]
+    public DataTable UpdateUser(Users user)
+    {
+        string sql = "Update [Users] SET [User]=@p1, [pass]=@p2, [FName]=@p3, [LName]=@p4, [address]=@p5,[email]=@p6,[phone]=@p7, [pic]=@p8 where [User]=@p9"; //שם הטבלה
+        SqlCommand cmmd = new SqlCommand(sql);
+
+        cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.VarChar));
+        cmmd.Parameters["@p1"].Value = user.UserN;
+
+        cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.VarChar));
+        cmmd.Parameters["@p2"].Value = user.Pass;
+
+        cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.VarChar));
+        cmmd.Parameters["@p3"].Value = user.NameF;
+
+        cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.VarChar));
+        cmmd.Parameters["@p4"].Value = user.LastN;
+
+        cmmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.VarChar));
+        cmmd.Parameters["@p5"].Value = user.Fulladdres;
+
+        cmmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.VarChar));
+        cmmd.Parameters["@p6"].Value = user.Email;
+
+        cmmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.VarChar));
+        cmmd.Parameters["@p7"].Value = user.PhoneN;
+
+        cmmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.VarChar));
+        cmmd.Parameters["@p8"].Value = user.Pic;
+
+        
+       
+        
+
+
+        cmmd.Parameters.Add(new SqlParameter("@p9", SqlDbType.VarChar));
+        cmmd.Parameters["@p9"].Value = user.UserN;
+
+        DbActions.MyAction(cmmd, GetPath());
+        sql = "Select * from [Users] where [User]='" + user.UserN.Replace("'", "''") + "'";
+        return DbActions.Search(sql, GetPath());
+    }
+
+    //---------------------------------------------------------------------------------
+    [WebMethod]
+    public DataTable SearchUser(string data, string option)
+    {
+        string sql = "Select * from [Users] ";
+
+        // If data is empty or null, return all users
+        if (!string.IsNullOrEmpty(data) && !string.IsNullOrEmpty(option))
+        {
+            if (option.Equals("name"))
+                sql += "WHERE [FName]='" + data.Replace("'", "''") + "'";
+            else if (option.Equals("address"))
+                sql += "WHERE [address]='" + data.Replace("'", "''") + "'";
+            else if (option.Equals("username"))
+                sql += "WHERE [User]='" + data.Replace("'", "''") + "'";
+        }
+
+        return DbActions.Search(sql, GetPath());
+    }
+
+    //---------------------------------------------------------------------------------
+    // Movies Methods
+    //---------------------------------------------------------------------------------
+
+    [WebMethod]
+    public void CreateMoviesTable()
+    {
+        // Check if table exists, if not create it
+        string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Movies'";
+        DataTable dt = DbActions.Search(checkTableSql, GetPath());
+        
+        int tableExists = 0;
+        if (dt != null && dt.Rows.Count > 0)
+        {
+            tableExists = Convert.ToInt32(dt.Rows[0][0]);
+        }
+
+        if (tableExists == 0)
+        {
+            // Create Movies table
+            string createTableSql = @"CREATE TABLE [Movies] (
+                [MovieId] INT IDENTITY(1,1) PRIMARY KEY,
+                [Title] NVARCHAR(255) NOT NULL,
+                [Description] NVARCHAR(MAX),
+                [Year] INT NOT NULL,
+                [Genre] NVARCHAR(100),
+                [Rating] DECIMAL(3,1) DEFAULT 0.0,
+                [Poster] NVARCHAR(500),
+                [Director] NVARCHAR(255),
+                [Actors] NVARCHAR(MAX),
+                [Duration] INT DEFAULT 0
+            )";
+            
+            SqlCommand cmmd = new SqlCommand(createTableSql);
+            DbActions.MyAction(cmmd, GetPath());
+
+            // Insert sample movies
+            InsertSampleMovies();
+        }
+    }
+
+    private void InsertSampleMovies()
+    {
+        Movies[] sampleMovies = new Movies[]
+        {
+            new Movies { Title = "Interstellar", Description = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.", Year = 2014, Genre = "Sci-Fi", Rating = 8.6m, Poster = "images/uploads/slider1.jpg", Director = "Christopher Nolan", Actors = "Matthew McConaughey, Anne Hathaway, Jessica Chastain", Duration = 169 },
+            new Movies { Title = "The Revenant", Description = "A frontiersman on a fur trading expedition in the 1820s fights for survival after being mauled by a bear.", Year = 2015, Genre = "Drama", Rating = 8.0m, Poster = "images/uploads/slider2.jpg", Director = "Alejandro G. Iñárritu", Actors = "Leonardo DiCaprio, Tom Hardy, Will Poulter", Duration = 156 },
+            new Movies { Title = "Die Hard", Description = "An NYPD officer tries to save his wife and several others taken hostage by German terrorists during a Christmas party.", Year = 1988, Genre = "Action", Rating = 8.2m, Poster = "images/uploads/slider3.jpg", Director = "John McTiernan", Actors = "Bruce Willis, Alan Rickman, Bonnie Bedelia", Duration = 132 },
+            new Movies { Title = "The Walk", Description = "In 1974, high-wire artist Philippe Petit recruits a team of people to help him realize his dream: to walk the immense void between the World Trade Center towers.", Year = 2015, Genre = "Drama", Rating = 7.3m, Poster = "images/uploads/slider4.jpg", Director = "Robert Zemeckis", Actors = "Joseph Gordon-Levitt, Charlotte Le Bon, Guillaume Baillargeon", Duration = 123 }
+        };
+
+        foreach (Movies movie in sampleMovies)
+        {
+            AddMovieInternal(movie);
+        }
+    }
+
+    // Internal method to add movies without admin check (for initialization only)
+    private void AddMovieInternal(Movies movie)
+    {
+        string sql = "INSERT INTO [Movies] ([Title], [Description], [Year], [Genre], [Rating], [Poster], [Director], [Actors], [Duration]) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
+        
+        SqlCommand cmmd = new SqlCommand(sql);
+        
+        cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
+        cmmd.Parameters["@p1"].Value = movie.Title ?? (object)DBNull.Value;
+        
+        cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
+        cmmd.Parameters["@p2"].Value = movie.Description ?? (object)DBNull.Value;
+        
+        cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int));
+        cmmd.Parameters["@p3"].Value = movie.Year;
+        
+        cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
+        cmmd.Parameters["@p4"].Value = movie.Genre ?? (object)DBNull.Value;
+        
+        cmmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal));
+        cmmd.Parameters["@p5"].Value = movie.Rating;
+        
+        cmmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.NVarChar));
+        cmmd.Parameters["@p6"].Value = movie.Poster ?? (object)DBNull.Value;
+        
+        cmmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.NVarChar));
+        cmmd.Parameters["@p7"].Value = movie.Director ?? (object)DBNull.Value;
+        
+        cmmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.NVarChar));
+        cmmd.Parameters["@p8"].Value = movie.Actors ?? (object)DBNull.Value;
+        
+        cmmd.Parameters.Add(new SqlParameter("@p9", SqlDbType.Int));
+        cmmd.Parameters["@p9"].Value = movie.Duration;
+        
+        DbActions.MyAction(cmmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetAllMovies()
+    {
+        CreateMoviesTable(); // Ensure table exists
+        string sql = "SELECT * FROM [Movies] ORDER BY [Year] DESC, [Title]";
+        return DbActions.Search(sql, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable SearchMovies(string searchTerm, string genre)
+    {
+        CreateMoviesTable(); // Ensure table exists
+        string sql = "SELECT * FROM [Movies] WHERE 1=1";
+        
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            string escapedSearchTerm = searchTerm.Replace("'", "''");
+            sql += " AND ([Title] LIKE '%" + escapedSearchTerm + "%' OR [Description] LIKE '%" + escapedSearchTerm + "%' OR [Director] LIKE '%" + escapedSearchTerm + "%' OR [Actors] LIKE '%" + escapedSearchTerm + "%')";
+        }
+        
+        if (!string.IsNullOrWhiteSpace(genre) && genre.ToLower() != "all")
+        {
+            sql += " AND [Genre] = '" + genre.Replace("'", "''") + "'";
+        }
+        
+        sql += " ORDER BY [Rating] DESC, [Year] DESC";
+        
+        return DbActions.Search(sql, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetMovieById(int movieId)
+    {
+        CreateMoviesTable(); // Ensure table exists
+        string sql = "SELECT * FROM [Movies] WHERE [MovieId] = " + movieId;
+        return DbActions.Search(sql, GetPath());
+    }
+
+    [WebMethod]
+    public void AddMovie(Movies movie)
+    {
+        try
+        {
+            // Note: Admin authorization is performed on the client side before calling this service.
+            // In a production environment, use Windows authentication or ASP.NET roles for better security.
+            if (movie == null)
+            {
+                throw new Exception("Movie data is required.");
+            }
+
+            CreateMoviesTable(); // Ensure table exists
+            
+            string sql = "INSERT INTO [Movies] ([Title], [Description], [Year], [Genre], [Rating], [Poster], [Director], [Actors], [Duration]) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
+            
+            SqlCommand cmmd = new SqlCommand(sql);
+            
+            cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
+            cmmd.Parameters["@p1"].Value = movie.Title ?? (object)DBNull.Value;
+            
+            cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
+            cmmd.Parameters["@p2"].Value = movie.Description ?? (object)DBNull.Value;
+            
+            cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int));
+            cmmd.Parameters["@p3"].Value = movie.Year;
+            
+            cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
+            cmmd.Parameters["@p4"].Value = movie.Genre ?? (object)DBNull.Value;
+            
+            cmmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal));
+            cmmd.Parameters["@p5"].Value = movie.Rating;
+            
+            cmmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.NVarChar));
+            cmmd.Parameters["@p6"].Value = movie.Poster ?? (object)DBNull.Value;
+            
+            cmmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.NVarChar));
+            cmmd.Parameters["@p7"].Value = movie.Director ?? (object)DBNull.Value;
+            
+            cmmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.NVarChar));
+            cmmd.Parameters["@p8"].Value = movie.Actors ?? (object)DBNull.Value;
+            
+            cmmd.Parameters.Add(new SqlParameter("@p9", SqlDbType.Int));
+            cmmd.Parameters["@p9"].Value = movie.Duration;
+            
+            DbActions.MyAction(cmmd, GetPath());
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            throw;
+        }
+    }
+
+    [WebMethod]
+    public DataTable GetMoviesByGenre(string genre)
+    {
+        CreateMoviesTable(); // Ensure table exists
+        string sql = "SELECT * FROM [Movies] WHERE [Genre] = '" + genre.Replace("'", "''") + "' ORDER BY [Rating] DESC, [Year] DESC";
+        return DbActions.Search(sql, GetPath());
+    }
+
+
+}
