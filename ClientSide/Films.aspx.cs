@@ -208,8 +208,10 @@ public partial class Films : System.Web.UI.Page
 
         string cardHtml = string.Format(@"
             <div class='film-card'>
-                <img src='{0}' alt='{1}' class='film-poster' />
-                <div class='film-title'>{1}</div>
+                <a href='MovieDetails.aspx?movieId={5}' style='text-decoration:none; color:inherit;'>
+                    <img src='{0}' alt='{1}' class='film-poster' />
+                    <div class='film-title'>{1}</div>
+                </a>
                 <div class='film-rating'>{2}</div>
                 <div class='film-year'>{3}</div>
                 {4}
@@ -218,7 +220,8 @@ public partial class Films : System.Web.UI.Page
             HttpUtility.HtmlEncode(title),
             rating,
             year,
-            actionHtml
+            actionHtml,
+            movieId
         );
         
         return cardHtml;
