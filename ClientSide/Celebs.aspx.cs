@@ -70,19 +70,24 @@ public partial class Celebs : System.Web.UI.Page
             photo = "~/" + photo;
         }
 
+        string urlName = HttpUtility.UrlEncode(name);
+
         string cardHtml = string.Format(@"
             <div class='celeb-card'>
-                <img src='{0}' alt='{1}' class='celeb-photo' />
-                <div class='celeb-info'>
-                    <div class='celeb-name'>{1}</div>
-                    <div class='celeb-role'>{2}</div>
-                    <div class='celeb-bio'>{3}</div>
-                </div>
+                <a href='CelebDetails.aspx?name={4}' style='text-decoration:none; color:inherit;'>
+                    <img src='{0}' alt='{1}' class='celeb-photo' />
+                    <div class='celeb-info'>
+                        <div class='celeb-name'>{1}</div>
+                        <div class='celeb-role'>{2}</div>
+                        <div class='celeb-bio'>{3}</div>
+                    </div>
+                </a>
             </div>",
             ResolveUrl(photo),
             HttpUtility.HtmlEncode(name),
             HttpUtility.HtmlEncode(role),
-            HttpUtility.HtmlEncode(bio)
+            HttpUtility.HtmlEncode(bio),
+            urlName
         );
 
         return cardHtml;

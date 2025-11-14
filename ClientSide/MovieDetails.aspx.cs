@@ -16,6 +16,60 @@ public partial class MovieDetails : System.Web.UI.Page
         }
     }
 
+    private string GetLoggedInUsername()
+    {
+        try
+        {
+            string status = Session["status"] as string;
+            if (status != "1")
+            {
+                return null;
+            }
+
+            DataTable dt = Session["data"] as DataTable;
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                if (dt.Columns.Contains("User"))
+                    return dt.Rows[0]["User"].ToString();
+                return dt.Rows[0][0].ToString();
+            }
+        }
+        catch
+        {
+        }
+
+        return null;
+    }
+
+    private bool IsMovieInWishlist(int movieId)
+    {
+        try
+        {
+            string username = GetLoggedInUsername();
+            if (string.IsNullOrEmpty(username) || movieId <= 0)
+            {
+                return false;
+            }
+
+            DataTable dt = myService.GetWishlistMovies(username);
+            if (dt != null)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["MovieId"] != DBNull.Value && Convert.ToInt32(row["MovieId"]) == movieId)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        catch
+        {
+        }
+
+        return false;
+    }
+
     private void LoadMovie()
     {
         int movieId;
@@ -63,7 +117,8 @@ public partial class MovieDetails : System.Web.UI.Page
                     string name = part.Trim();
                     if (name.Length > 0)
                     {
-                        actorsHtml += "<span class='actor-badge'>" + HttpUtility.HtmlEncode(name) + "</span>";
+                        string urlName = HttpUtility.UrlEncode(name);
+                        actorsHtml += "<a href='CelebDetails.aspx?name=" + urlName + "' class='actor-badge'>" + HttpUtility.HtmlEncode(name) + "</a>";
                     }
                 }
             }
@@ -71,6 +126,17 @@ public partial class MovieDetails : System.Web.UI.Page
             if (string.IsNullOrEmpty(actorsHtml))
             {
                 actorsHtml = HttpUtility.HtmlEncode(actors);
+            }
+
+            bool inWishlist = IsMovieInWishlist(movieId);
+            string actionHtml;
+            if (inWishlist)
+            {
+                actionHtml = "<span class='actor-badge' style='background:#555;border-color:#555;color:#ddd;'>In wishlist</span>";
+            }
+            else
+            {
+                actionHtml = "<a href='Wishlist.aspx?action=add&movieId=" + movieId + "' class='btn-wishlist'>Add to wishlist</a>";
             }
 
             string html = string.Format(@"<div class='details-layout'>
@@ -89,7 +155,7 @@ public partial class MovieDetails : System.Web.UI.Page
                         <div class='details-actors'>{7}</div>
                         <div class='details-actions'>
                             <a href='Films.aspx' class='btn-back'>Back to films</a>
-                            <a href='Wishlist.aspx?action=add&movieId={8}' class='btn-wishlist'>Add to wishlist</a>
+                            {8}
                         </div>
                     </div>
                 </div>",
@@ -101,7 +167,7 @@ public partial class MovieDetails : System.Web.UI.Page
                 HttpUtility.HtmlEncode(description),
                 HttpUtility.HtmlEncode(director),
                 actorsHtml,
-                movieId
+                actionHtml
             );
 
             phDetails.Controls.Add(new LiteralControl(html));
