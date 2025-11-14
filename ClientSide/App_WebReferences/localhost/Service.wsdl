@@ -199,6 +199,26 @@
       <s:element name="AddMovieResponse">
         <s:complexType />
       </s:element>
+      <s:element name="UpdateMovie">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="movie" type="tns:Movies" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateMovieResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="DeleteMovie">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="movieId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteMovieResponse">
+        <s:complexType />
+      </s:element>
       <s:element name="GetMoviesByGenre">
         <s:complexType>
           <s:sequence>
@@ -426,6 +446,18 @@
   <wsdl:message name="AddMovieSoapOut">
     <wsdl:part name="parameters" element="tns:AddMovieResponse" />
   </wsdl:message>
+  <wsdl:message name="UpdateMovieSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateMovie" />
+  </wsdl:message>
+  <wsdl:message name="UpdateMovieSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateMovieResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteMovieSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteMovie" />
+  </wsdl:message>
+  <wsdl:message name="DeleteMovieSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteMovieResponse" />
+  </wsdl:message>
   <wsdl:message name="GetMoviesByGenreSoapIn">
     <wsdl:part name="parameters" element="tns:GetMoviesByGenre" />
   </wsdl:message>
@@ -532,6 +564,14 @@
     <wsdl:operation name="AddMovie">
       <wsdl:input message="tns:AddMovieSoapIn" />
       <wsdl:output message="tns:AddMovieSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMovie">
+      <wsdl:input message="tns:UpdateMovieSoapIn" />
+      <wsdl:output message="tns:UpdateMovieSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteMovie">
+      <wsdl:input message="tns:DeleteMovieSoapIn" />
+      <wsdl:output message="tns:DeleteMovieSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetMoviesByGenre">
       <wsdl:input message="tns:GetMoviesByGenreSoapIn" />
@@ -663,6 +703,24 @@
     </wsdl:operation>
     <wsdl:operation name="AddMovie">
       <soap:operation soapAction="http://tempuri.org/AddMovie" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMovie">
+      <soap:operation soapAction="http://tempuri.org/UpdateMovie" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteMovie">
+      <soap:operation soapAction="http://tempuri.org/DeleteMovie" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -855,6 +913,24 @@
     </wsdl:operation>
     <wsdl:operation name="AddMovie">
       <soap12:operation soapAction="http://tempuri.org/AddMovie" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMovie">
+      <soap12:operation soapAction="http://tempuri.org/UpdateMovie" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteMovie">
+      <soap12:operation soapAction="http://tempuri.org/DeleteMovie" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

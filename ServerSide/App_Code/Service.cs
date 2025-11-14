@@ -389,6 +389,91 @@ public class Service : System.Web.Services.WebService
     }
 
     [WebMethod]
+    public void UpdateMovie(Movies movie)
+    {
+        try
+        {
+            if (movie == null || movie.MovieId <= 0)
+            {
+                throw new Exception("Valid movie data (with MovieId) is required for update.");
+            }
+
+            CreateMoviesTable(); // Ensure table exists
+
+            string sql = @"UPDATE [Movies]
+                           SET [Title]=@p1, [Description]=@p2, [Year]=@p3, [Genre]=@p4,
+                               [Rating]=@p5, [Poster]=@p6, [Director]=@p7, [Actors]=@p8,
+                               [Duration]=@p9
+                           WHERE [MovieId]=@p10";
+
+            SqlCommand cmmd = new SqlCommand(sql);
+
+            cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
+            cmmd.Parameters["@p1"].Value = movie.Title ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
+            cmmd.Parameters["@p2"].Value = movie.Description ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int));
+            cmmd.Parameters["@p3"].Value = movie.Year;
+
+            cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
+            cmmd.Parameters["@p4"].Value = movie.Genre ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal));
+            cmmd.Parameters["@p5"].Value = movie.Rating;
+
+            cmmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.NVarChar));
+            cmmd.Parameters["@p6"].Value = movie.Poster ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.NVarChar));
+            cmmd.Parameters["@p7"].Value = movie.Director ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.NVarChar));
+            cmmd.Parameters["@p8"].Value = movie.Actors ?? (object)DBNull.Value;
+
+            cmmd.Parameters.Add(new SqlParameter("@p9", SqlDbType.Int));
+            cmmd.Parameters["@p9"].Value = movie.Duration;
+
+            cmmd.Parameters.Add(new SqlParameter("@p10", SqlDbType.Int));
+            cmmd.Parameters["@p10"].Value = movie.MovieId;
+
+            DbActions.MyAction(cmmd, GetPath());
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            throw;
+        }
+    }
+
+    [WebMethod]
+    public void DeleteMovie(int movieId)
+    {
+        try
+        {
+            if (movieId <= 0)
+            {
+                throw new Exception("Valid MovieId is required for delete.");
+            }
+
+            CreateMoviesTable(); // Ensure table exists
+
+            string sql = "DELETE FROM [Movies] WHERE [MovieId]=@p1";
+            SqlCommand cmmd = new SqlCommand(sql);
+            cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int));
+            cmmd.Parameters["@p1"].Value = movieId;
+
+            DbActions.MyAction(cmmd, GetPath());
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            throw;
+        }
+    }
+
+    [WebMethod]
     public DataTable GetMoviesByGenre(string genre)
     {
         CreateMoviesTable(); // Ensure table exists

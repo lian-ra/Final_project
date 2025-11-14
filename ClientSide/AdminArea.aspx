@@ -12,7 +12,7 @@
       &nbsp;|
       <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/ManageCelebs.aspx" >Manage Celebs</asp:HyperLink>
       &nbsp;|
-      <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/AddMovie.aspx" >Add Movie</asp:HyperLink>
+      <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/ManageMovies.aspx" >Manage Movies</asp:HyperLink>
 <center>
 
 
