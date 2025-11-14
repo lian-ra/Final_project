@@ -283,6 +283,40 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="AddMovieComment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="movieId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="rating" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="commentText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddMovieCommentResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetMovieComments">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="movieId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMovieCommentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMovieCommentsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="CreateCelebsTable">
         <s:complexType />
       </s:element>
@@ -482,6 +516,18 @@
   <wsdl:message name="GetWishlistMoviesSoapOut">
     <wsdl:part name="parameters" element="tns:GetWishlistMoviesResponse" />
   </wsdl:message>
+  <wsdl:message name="AddMovieCommentSoapIn">
+    <wsdl:part name="parameters" element="tns:AddMovieComment" />
+  </wsdl:message>
+  <wsdl:message name="AddMovieCommentSoapOut">
+    <wsdl:part name="parameters" element="tns:AddMovieCommentResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMovieCommentsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMovieComments" />
+  </wsdl:message>
+  <wsdl:message name="GetMovieCommentsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMovieCommentsResponse" />
+  </wsdl:message>
   <wsdl:message name="CreateCelebsTableSoapIn">
     <wsdl:part name="parameters" element="tns:CreateCelebsTable" />
   </wsdl:message>
@@ -588,6 +634,14 @@
     <wsdl:operation name="GetWishlistMovies">
       <wsdl:input message="tns:GetWishlistMoviesSoapIn" />
       <wsdl:output message="tns:GetWishlistMoviesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddMovieComment">
+      <wsdl:input message="tns:AddMovieCommentSoapIn" />
+      <wsdl:output message="tns:AddMovieCommentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMovieComments">
+      <wsdl:input message="tns:GetMovieCommentsSoapIn" />
+      <wsdl:output message="tns:GetMovieCommentsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="CreateCelebsTable">
       <wsdl:input message="tns:CreateCelebsTableSoapIn" />
@@ -757,6 +811,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetWishlistMovies">
       <soap:operation soapAction="http://tempuri.org/GetWishlistMovies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddMovieComment">
+      <soap:operation soapAction="http://tempuri.org/AddMovieComment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMovieComments">
+      <soap:operation soapAction="http://tempuri.org/GetMovieComments" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -967,6 +1039,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetWishlistMovies">
       <soap12:operation soapAction="http://tempuri.org/GetWishlistMovies" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddMovieComment">
+      <soap12:operation soapAction="http://tempuri.org/AddMovieComment" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMovieComments">
+      <soap12:operation soapAction="http://tempuri.org/GetMovieComments" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

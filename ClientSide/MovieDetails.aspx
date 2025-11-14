@@ -87,11 +87,97 @@
             padding: 40px 0;
             color: white;
         }
+        .comments-wrapper {
+            margin-top: 40px;
+        }
+        .comments-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 5px;
+        }
+        .comment-form {
+            margin-bottom: 20px;
+        }
+        .comment-form textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #333399;
+            font-size: 13px;
+            color: black;
+        }
+        .comment-actions {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .comment-actions select {
+            padding: 4px 6px;
+            border-radius: 4px;
+            border: 1px solid #333399;
+            font-size: 13px;
+        }
+        .btn-comment {
+            padding: 6px 14px;
+            border-radius: 4px;
+            border: none;
+            background-color: #333399;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .comments-list {
+            margin-top: 10px;
+        }
+        .comment-item {
+            padding: 8px 10px;
+            border-radius: 4px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .comment-meta {
+            opacity: 0.8;
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+        .comment-text {
+            white-space: pre-wrap;
+        }
+        .comments-message {
+            margin-top: 6px;
+            font-size: 12px;
+        }
     </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="details-wrapper">
         <asp:PlaceHolder ID="phDetails" runat="server"></asp:PlaceHolder>
+        <div class="comments-wrapper">
+            <div class="comments-title">Comments</div>
+            <asp:Panel ID="pnlCommentForm" runat="server" CssClass="comment-form">
+                <asp:TextBox ID="txtComment" runat="server" TextMode="MultiLine"></asp:TextBox>
+                <div class="comment-actions">
+                    <span>Rating:</span>
+                    <asp:DropDownList ID="ddlRating" runat="server">
+                        <asp:ListItem Value="5">5</asp:ListItem>
+                        <asp:ListItem Value="4">4</asp:ListItem>
+                        <asp:ListItem Value="3">3</asp:ListItem>
+                        <asp:ListItem Value="2">2</asp:ListItem>
+                        <asp:ListItem Value="1">1</asp:ListItem>
+                    </asp:DropDownList>
+                    <asp:Button ID="btnAddComment" runat="server" Text="Add Comment" CssClass="btn-comment" OnClick="btnAddComment_Click" />
+                </div>
+                <asp:Label ID="lblCommentMessage" runat="server" CssClass="comments-message" Visible="false"></asp:Label>
+            </asp:Panel>
+            <div class="comments-list">
+                <asp:PlaceHolder ID="phComments" runat="server"></asp:PlaceHolder>
+            </div>
+        </div>
     </div>
 </asp:Content>

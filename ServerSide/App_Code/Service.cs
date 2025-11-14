@@ -613,6 +613,96 @@ public class Service : System.Web.Services.WebService
     }
 
     //---------------------------------------------------------------------------------
+    // Movie Comments Methods
+    //---------------------------------------------------------------------------------
+
+    private void CreateMovieCommentsTable()
+    {
+        string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MovieComments'";
+        DataTable dt = DbActions.Search(checkTableSql, GetPath());
+
+        int tableExists = 0;
+        if (dt != null && dt.Rows.Count > 0)
+        {
+            tableExists = Convert.ToInt32(dt.Rows[0][0]);
+        }
+
+        if (tableExists == 0)
+        {
+            string createTableSql = @"CREATE TABLE [MovieComments] (
+                [CommentId] INT IDENTITY(1,1) PRIMARY KEY,
+                [MovieId] INT NOT NULL,
+                [Username] NVARCHAR(255) NOT NULL,
+                [Rating] INT NOT NULL,
+                [CommentText] NVARCHAR(MAX) NOT NULL,
+                [CreatedAt] DATETIME NOT NULL
+            )";
+
+            SqlCommand cmmd = new SqlCommand(createTableSql);
+            DbActions.MyAction(cmmd, GetPath());
+        }
+    }
+
+    [WebMethod]
+    public void AddMovieComment(string username, int movieId, int rating, string commentText)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(username) || movieId <= 0 || string.IsNullOrWhiteSpace(commentText))
+            {
+                throw new Exception("Username, movie and comment text are required.");
+            }
+
+            if (rating < 1 || rating > 5)
+            {
+                rating = 0;
+            }
+
+            CreateMoviesTable();
+            CreateMovieCommentsTable();
+
+            string sql = @"INSERT INTO [MovieComments] ([MovieId], [Username], [Rating], [CommentText], [CreatedAt])
+                           VALUES (@p1, @p2, @p3, @p4, @p5)";
+
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int));
+            cmd.Parameters["@p1"].Value = movieId;
+            cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
+            cmd.Parameters["@p2"].Value = username;
+            cmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int));
+            cmd.Parameters["@p3"].Value = rating;
+            cmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
+            cmd.Parameters["@p4"].Value = commentText;
+            cmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.DateTime));
+            cmd.Parameters["@p5"].Value = DateTime.Now;
+
+            DbActions.MyAction(cmd, GetPath());
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            throw;
+        }
+    }
+
+    [WebMethod]
+    public DataTable GetMovieComments(int movieId)
+    {
+        if (movieId <= 0)
+        {
+            throw new Exception("Valid MovieId is required.");
+        }
+
+        CreateMovieCommentsTable();
+
+        string sql = @"SELECT [CommentId], [MovieId], [Username], [Rating], [CommentText], [CreatedAt]
+                       FROM [MovieComments]
+                       WHERE [MovieId] = " + movieId + " ORDER BY [CreatedAt] DESC";
+
+        return DbActions.Search(sql, GetPath());
+    }
+
+    //---------------------------------------------------------------------------------
     // Celebs Methods
     //---------------------------------------------------------------------------------
 

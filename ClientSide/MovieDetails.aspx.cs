@@ -13,6 +13,8 @@ public partial class MovieDetails : System.Web.UI.Page
         if (!IsPostBack)
         {
             LoadMovie();
+            LoadComments();
+            SetupCommentFormVisibility();
         }
     }
 
@@ -68,6 +70,17 @@ public partial class MovieDetails : System.Web.UI.Page
         }
 
         return false;
+    }
+
+    private int GetCurrentMovieId()
+    {
+        int movieId;
+        if (!int.TryParse(Request.QueryString["movieId"], out movieId) || movieId <= 0)
+        {
+            return 0;
+        }
+
+        return movieId;
     }
 
     private void LoadMovie()
@@ -178,6 +191,115 @@ public partial class MovieDetails : System.Web.UI.Page
             ClientScript.RegisterStartupScript(this.GetType(), "MovieDetailsError", msg, true);
             phDetails.Controls.Clear();
             phDetails.Controls.Add(new LiteralControl("<div class='details-error'>Error loading movie details.</div>"));
+        }
+    }
+
+    private void LoadComments()
+    {
+        try
+        {
+            int movieId = GetCurrentMovieId();
+            phComments.Controls.Clear();
+
+            if (movieId <= 0)
+            {
+                return;
+            }
+
+            DataTable dt = myService.GetMovieComments(movieId);
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                phComments.Controls.Add(new LiteralControl("<div class='comment-item'>No comments yet. Be the first to comment!</div>"));
+                return;
+            }
+
+            foreach (DataRow row in dt.Rows)
+            {
+                string username = row["Username"] != DBNull.Value ? row["Username"].ToString() : "Unknown";
+                string text = row["CommentText"] != DBNull.Value ? row["CommentText"].ToString() : "";
+                int rating = 0;
+                if (row["Rating"] != DBNull.Value)
+                {
+                    int.TryParse(row["Rating"].ToString(), out rating);
+                }
+                string created = row["CreatedAt"] != DBNull.Value ? Convert.ToDateTime(row["CreatedAt"]).ToString("yyyy-MM-dd HH:mm") : "";
+
+                string ratingText = rating > 0 ? " | Rating: " + rating + "/5" : string.Empty;
+
+                string html = string.Format(
+                    "<div class='comment-item'><div class='comment-meta'>{0}{1} - {2}</div><div class='comment-text'>{3}</div></div>",
+                    HttpUtility.HtmlEncode(username),
+                    ratingText,
+                    HttpUtility.HtmlEncode(created),
+                    HttpUtility.HtmlEncode(text)
+                );
+
+                phComments.Controls.Add(new LiteralControl(html));
+            }
+        }
+        catch
+        {
+            // Swallow comment loading errors to avoid breaking the page
+        }
+    }
+
+    private void SetupCommentFormVisibility()
+    {
+        string username = GetLoggedInUsername();
+        if (string.IsNullOrEmpty(username))
+        {
+            pnlCommentForm.Visible = false;
+            phComments.Controls.Add(new LiteralControl("<div class='comment-item'>You must be logged in to add comments.</div>"));
+        }
+        else
+        {
+            pnlCommentForm.Visible = true;
+        }
+    }
+
+    protected void btnAddComment_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string username = GetLoggedInUsername();
+            if (string.IsNullOrEmpty(username))
+            {
+                lblCommentMessage.Text = "You must be logged in to add a comment.";
+                lblCommentMessage.Visible = true;
+                return;
+            }
+
+            int movieId = GetCurrentMovieId();
+            if (movieId <= 0)
+            {
+                lblCommentMessage.Text = "Invalid movie.";
+                lblCommentMessage.Visible = true;
+                return;
+            }
+
+            string text = txtComment.Text.Trim();
+            if (string.IsNullOrEmpty(text))
+            {
+                lblCommentMessage.Text = "Please enter a comment.";
+                lblCommentMessage.Visible = true;
+                return;
+            }
+
+            int rating = 0;
+            int.TryParse(ddlRating.SelectedValue, out rating);
+
+            myService.AddMovieComment(username, movieId, rating, text);
+
+            txtComment.Text = string.Empty;
+            lblCommentMessage.Text = "Comment added.";
+            lblCommentMessage.Visible = true;
+
+            LoadComments();
+        }
+        catch (Exception ex)
+        {
+            lblCommentMessage.Text = "Error adding comment: " + ex.Message;
+            lblCommentMessage.Visible = true;
         }
     }
 }
