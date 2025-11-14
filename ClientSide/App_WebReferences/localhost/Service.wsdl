@@ -115,6 +115,23 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetLatestMovies">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetLatestMoviesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLatestMoviesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="SearchMovies">
         <s:complexType>
           <s:sequence>
@@ -226,6 +243,23 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetLatestCelebs">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetLatestCelebsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLatestCelebsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="SearchCelebs">
         <s:complexType>
           <s:sequence>
@@ -325,6 +359,12 @@
   <wsdl:message name="GetAllMoviesSoapOut">
     <wsdl:part name="parameters" element="tns:GetAllMoviesResponse" />
   </wsdl:message>
+  <wsdl:message name="GetLatestMoviesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLatestMovies" />
+  </wsdl:message>
+  <wsdl:message name="GetLatestMoviesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLatestMoviesResponse" />
+  </wsdl:message>
   <wsdl:message name="SearchMoviesSoapIn">
     <wsdl:part name="parameters" element="tns:SearchMovies" />
   </wsdl:message>
@@ -360,6 +400,12 @@
   </wsdl:message>
   <wsdl:message name="GetAllCelebsSoapOut">
     <wsdl:part name="parameters" element="tns:GetAllCelebsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLatestCelebsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLatestCelebs" />
+  </wsdl:message>
+  <wsdl:message name="GetLatestCelebsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLatestCelebsResponse" />
   </wsdl:message>
   <wsdl:message name="SearchCelebsSoapIn">
     <wsdl:part name="parameters" element="tns:SearchCelebs" />
@@ -410,6 +456,10 @@
       <wsdl:input message="tns:GetAllMoviesSoapIn" />
       <wsdl:output message="tns:GetAllMoviesSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetLatestMovies">
+      <wsdl:input message="tns:GetLatestMoviesSoapIn" />
+      <wsdl:output message="tns:GetLatestMoviesSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="SearchMovies">
       <wsdl:input message="tns:SearchMoviesSoapIn" />
       <wsdl:output message="tns:SearchMoviesSoapOut" />
@@ -433,6 +483,10 @@
     <wsdl:operation name="GetAllCelebs">
       <wsdl:input message="tns:GetAllCelebsSoapIn" />
       <wsdl:output message="tns:GetAllCelebsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLatestCelebs">
+      <wsdl:input message="tns:GetLatestCelebsSoapIn" />
+      <wsdl:output message="tns:GetLatestCelebsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SearchCelebs">
       <wsdl:input message="tns:SearchCelebsSoapIn" />
@@ -507,6 +561,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetLatestMovies">
+      <soap:operation soapAction="http://tempuri.org/GetLatestMovies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="SearchMovies">
       <soap:operation soapAction="http://tempuri.org/SearchMovies" style="document" />
       <wsdl:input>
@@ -554,6 +617,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAllCelebs">
       <soap:operation soapAction="http://tempuri.org/GetAllCelebs" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLatestCelebs">
+      <soap:operation soapAction="http://tempuri.org/GetLatestCelebs" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -654,6 +726,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetLatestMovies">
+      <soap12:operation soapAction="http://tempuri.org/GetLatestMovies" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="SearchMovies">
       <soap12:operation soapAction="http://tempuri.org/SearchMovies" style="document" />
       <wsdl:input>
@@ -701,6 +782,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAllCelebs">
       <soap12:operation soapAction="http://tempuri.org/GetAllCelebs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLatestCelebs">
+      <soap12:operation soapAction="http://tempuri.org/GetLatestCelebs" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

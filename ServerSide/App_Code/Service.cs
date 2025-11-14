@@ -297,6 +297,14 @@ public class Service : System.Web.Services.WebService
     }
 
     [WebMethod]
+    public DataTable GetLatestMovies()
+    {
+        CreateMoviesTable(); // Ensure table exists
+        string sql = "SELECT TOP 5 * FROM [Movies] ORDER BY [MovieId] DESC";
+        return DbActions.Search(sql, GetPath());
+    }
+
+    [WebMethod]
     public DataTable SearchMovies(string searchTerm, string genre)
     {
         CreateMoviesTable(); // Ensure table exists
@@ -463,6 +471,14 @@ public class Service : System.Web.Services.WebService
     {
         CreateCelebsTable(); // Ensure table exists
         string sql = "SELECT * FROM [Celebs] ORDER BY [Name]";
+        return DbActions.Search(sql, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetLatestCelebs()
+    {
+        CreateCelebsTable(); // Ensure table exists
+        string sql = "SELECT TOP 5 * FROM [Celebs] ORDER BY [CelebId] DESC";
         return DbActions.Search(sql, GetPath());
     }
 
