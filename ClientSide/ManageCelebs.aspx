@@ -104,5 +104,22 @@
             </div>
             <asp:Label ID="lblManageMessage" runat="server" Visible="false" CssClass="message-label"></asp:Label>
         </div>
+
+        <br />
+        <asp:GridView ID="grdCelebs" runat="server" AutoGenerateColumns="False" CssClass="manage-grid"
+            DataKeyNames="CelebId"
+            OnRowEditing="grdCelebs_RowEditing"
+            OnRowCancelingEdit="grdCelebs_RowCancelingEdit"
+            OnRowUpdating="grdCelebs_RowUpdating"
+            OnRowDeleting="grdCelebs_RowDeleting">
+            <Columns>
+                <asp:CommandField ShowEditButton="True" ShowDeleteButton="True" />
+                <asp:BoundField DataField="CelebId" HeaderText="ID" ReadOnly="True" />
+                <asp:BoundField DataField="Name" HeaderText="Name" />
+                <asp:BoundField DataField="Role" HeaderText="Role" />
+                <asp:BoundField DataField="Photo" HeaderText="Photo" />
+                <asp:BoundField DataField="Bio" HeaderText="Bio" />
+            </Columns>
+        </asp:GridView>
     </div>
 </asp:Content>

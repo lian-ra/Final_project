@@ -267,6 +267,26 @@
       <s:element name="AddCelebResponse">
         <s:complexType />
       </s:element>
+      <s:element name="UpdateCeleb">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="celeb" type="tns:Celeb" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateCelebResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="DeleteCeleb">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="celebId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteCelebResponse">
+        <s:complexType />
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="LoginSoapIn">
@@ -353,6 +373,18 @@
   <wsdl:message name="AddCelebSoapOut">
     <wsdl:part name="parameters" element="tns:AddCelebResponse" />
   </wsdl:message>
+  <wsdl:message name="UpdateCelebSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateCeleb" />
+  </wsdl:message>
+  <wsdl:message name="UpdateCelebSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateCelebResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteCelebSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteCeleb" />
+  </wsdl:message>
+  <wsdl:message name="DeleteCelebSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteCelebResponse" />
+  </wsdl:message>
   <wsdl:portType name="ServiceSoap">
     <wsdl:operation name="Login">
       <wsdl:input message="tns:LoginSoapIn" />
@@ -409,6 +441,14 @@
     <wsdl:operation name="AddCeleb">
       <wsdl:input message="tns:AddCelebSoapIn" />
       <wsdl:output message="tns:AddCelebSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCeleb">
+      <wsdl:input message="tns:UpdateCelebSoapIn" />
+      <wsdl:output message="tns:UpdateCelebSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCeleb">
+      <wsdl:input message="tns:DeleteCelebSoapIn" />
+      <wsdl:output message="tns:DeleteCelebSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
@@ -539,6 +579,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UpdateCeleb">
+      <soap:operation soapAction="http://tempuri.org/UpdateCeleb" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCeleb">
+      <soap:operation soapAction="http://tempuri.org/DeleteCeleb" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -661,6 +719,24 @@
     </wsdl:operation>
     <wsdl:operation name="AddCeleb">
       <soap12:operation soapAction="http://tempuri.org/AddCeleb" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCeleb">
+      <soap12:operation soapAction="http://tempuri.org/UpdateCeleb" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCeleb">
+      <soap12:operation soapAction="http://tempuri.org/DeleteCeleb" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

@@ -19,6 +19,8 @@ public partial class ManageCelebs : System.Web.UI.Page
             {
                 Response.Redirect("Login.aspx");
             }
+
+            BindCelebsGrid();
         }
     }
 
@@ -48,6 +50,7 @@ public partial class ManageCelebs : System.Web.UI.Page
 
             ShowMessage("Celebrity added successfully.", true);
             ClearForm();
+            BindCelebsGrid();
         }
         catch (Exception ex)
         {
@@ -80,6 +83,79 @@ public partial class ManageCelebs : System.Web.UI.Page
         else
         {
             lblManageMessage.CssClass = "message-label message-error";
+        }
+    }
+
+    private void BindCelebsGrid()
+    {
+        try
+        {
+            var dt = myService.GetAllCelebs();
+            grdCelebs.DataSource = dt;
+            grdCelebs.DataBind();
+        }
+        catch (Exception ex)
+        {
+            ShowMessage("Error loading celebrities list: " + ex.Message, false);
+        }
+    }
+
+    protected void grdCelebs_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        grdCelebs.EditIndex = e.NewEditIndex;
+        BindCelebsGrid();
+    }
+
+    protected void grdCelebs_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        grdCelebs.EditIndex = -1;
+        BindCelebsGrid();
+    }
+
+    protected void grdCelebs_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        try
+        {
+            int celebId = (int)grdCelebs.DataKeys[e.RowIndex].Value;
+
+            GridViewRow row = grdCelebs.Rows[e.RowIndex];
+
+            string name = ((TextBox)row.Cells[2].Controls[0]).Text.Trim();
+            string role = ((TextBox)row.Cells[3].Controls[0]).Text.Trim();
+            string photo = ((TextBox)row.Cells[4].Controls[0]).Text.Trim();
+            string bio = ((TextBox)row.Cells[5].Controls[0]).Text.Trim();
+
+            localhost.Celeb celeb = new localhost.Celeb();
+            celeb.CelebId = celebId;
+            celeb.Name = name;
+            celeb.Role = role;
+            celeb.Photo = photo;
+            celeb.Bio = bio;
+
+            myService.UpdateCeleb(celeb);
+
+            grdCelebs.EditIndex = -1;
+            BindCelebsGrid();
+            ShowMessage("Celebrity updated successfully.", true);
+        }
+        catch (Exception ex)
+        {
+            ShowMessage("Error updating celebrity: " + ex.Message, false);
+        }
+    }
+
+    protected void grdCelebs_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        try
+        {
+            int celebId = (int)grdCelebs.DataKeys[e.RowIndex].Value;
+            myService.DeleteCeleb(celebId);
+            BindCelebsGrid();
+            ShowMessage("Celebrity deleted successfully.", true);
+        }
+        catch (Exception ex)
+        {
+            ShowMessage("Error deleting celebrity: " + ex.Message, false);
         }
     }
 }
