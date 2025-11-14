@@ -13,8 +13,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
      
-    <center>
-        <h1 style="color: #FFFFFF"> Register </h1>
+    <center style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 70px;">
+        <h1 style="color: #FFFFFF; margin-bottom: 25px;" > Register </h1>
      <table>
          <tr>
              <td>
@@ -160,7 +160,7 @@
 
          <tr>
              <td>
-                 <asp:Button runat="server" id="btnsave"  Text="Sign Up" OnClick="btnsave_Click"  />             </td>
+                 <asp:Button runat="server" id="btnsave"  Text="Sign Up" OnClick="btnsave_Click" style="padding: 12px; border-radius: 20px; background: red; color: white; font-weight: 700; margin-top: 20px" />             </td>
          </tr>
 
      </table>

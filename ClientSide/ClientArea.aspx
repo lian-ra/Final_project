@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
-    <center>
+    <center style=" margin-top: 70px;">
         <h1>
             User
         </h1>

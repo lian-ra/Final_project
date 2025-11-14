@@ -1,19 +1,12 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Login" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-    <style type="text/css">
-        .auto-style1 {
-            width: 469px;
-        }
-        .auto-style2 {
-            width: 960px;
-        }
-    </style>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
-   <center>
-<h1 style="color: #FFFFFF"white">Login</h1>
+<center style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100vw; height: 100vh;">
+<h1 style="color: #FFFFFF; margin-bottom: 50px;">Login</h1>
 
 <table>
 <tr>
@@ -38,11 +31,11 @@
             </asp:DropDownList>
         </td>
     </tr>
-<tr>
+<tr style="display: flex; flex-direction: row; margin-top: 40px; align-items: center; justify-content: center;">
   <td <%--class="auto-style1"--%>>
-      <asp:Button ID="btnsi" runat="server" Text="Sign In" OnClick="btnsi_Click" Width="109px"   /></td>
+      <asp:Button ID="btnsi" runat="server" Text="Sign In" OnClick="btnsi_Click" Width="109px" style="padding: 12px; border-radius: 20px; background: white; font-weight: 800;"   /></td>
   <td <%--class="auto-style2"--%>>
-      <asp:Button ID="btnsu2" runat="server" Text="Sign Up" Width="109px" OnClick="btnsu2_Click" /></td>
+      <asp:Button ID="btnsu2" runat="server" Text="Sign Up" Width="109px" OnClick="btnsu2_Click" style="padding: 12px; border-radius: 20px; background: red; color: white; font-weight: 700;" /></td>
 </tr>
 </table>
 

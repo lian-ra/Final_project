@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
    
     <center>
-        <h1 style="color: #FFFFFF"> Update </h1>
+        <h1 style="color: #FFFFFF; margin-top: 60px;"> Update </h1>
      <table>
          <tr>
              <td>

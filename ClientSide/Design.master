@@ -210,7 +210,7 @@
 <!-- END | Header -->
 
 <div class="movie-items">
-    <div>
+    <div class:"flex-center">
         <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
         </asp:ContentPlaceHolder>
     </div>
