@@ -50,6 +50,33 @@ public partial class CelebDetails : System.Web.UI.Page
                 photo = "~/" + photo;
             }
 
+            // Find movies where this celeb appears in the Actors column
+            DataTable moviesDt = myService.SearchMovies(celebName, "");
+            string moviesHtml = "";
+            if (moviesDt != null && moviesDt.Rows.Count > 0)
+            {
+                moviesHtml += "<div class='celeb-details-movies-title'>Movies</div><div class='celeb-details-movies-list'><ul>";
+                foreach (DataRow m in moviesDt.Rows)
+                {
+                    int movieId = m["MovieId"] != DBNull.Value ? Convert.ToInt32(m["MovieId"]) : 0;
+                    string title = m["Title"] != DBNull.Value ? m["Title"].ToString() : "Unknown";
+                    string year = m["Year"] != DBNull.Value ? m["Year"].ToString() : "";
+                    string rating = m["Rating"] != DBNull.Value ? m["Rating"].ToString() : "";
+
+                    moviesHtml += "<li><a href='MovieDetails.aspx?movieId=" + movieId + "'>" + HttpUtility.HtmlEncode(title) + "</a>";
+                    if (!string.IsNullOrEmpty(year) || !string.IsNullOrEmpty(rating))
+                    {
+                        moviesHtml += " (";
+                        if (!string.IsNullOrEmpty(year)) moviesHtml += HttpUtility.HtmlEncode(year);
+                        if (!string.IsNullOrEmpty(year) && !string.IsNullOrEmpty(rating)) moviesHtml += ", ";
+                        if (!string.IsNullOrEmpty(rating)) moviesHtml += HttpUtility.HtmlEncode(rating);
+                        moviesHtml += ")";
+                    }
+                    moviesHtml += "</li>";
+                }
+                moviesHtml += "</ul></div>";
+            }
+
             string html = string.Format(@"<div class='celeb-details-layout'>
                     <div class='celeb-details-photo'>
                         <img src='{0}' alt='{1}' />
@@ -58,6 +85,7 @@ public partial class CelebDetails : System.Web.UI.Page
                         <div class='celeb-details-name'>{1}</div>
                         <div class='celeb-details-role'>{2}</div>
                         <div class='celeb-details-bio'>{3}</div>
+                        {4}
                         <div class='celeb-details-actions'>
                             <a href='Celebs.aspx' class='btn-back-celebs'>Back to celebs</a>
                         </div>
@@ -66,7 +94,8 @@ public partial class CelebDetails : System.Web.UI.Page
                 ResolveUrl(photo),
                 HttpUtility.HtmlEncode(celebName),
                 HttpUtility.HtmlEncode(role),
-                HttpUtility.HtmlEncode(bio)
+                HttpUtility.HtmlEncode(bio),
+                moviesHtml
             );
 
             phCeleb.Controls.Add(new LiteralControl(html));

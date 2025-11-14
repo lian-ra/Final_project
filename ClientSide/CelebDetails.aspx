@@ -36,6 +36,20 @@
             font-size: 14px;
             line-height: 1.6;
         }
+        .celeb-details-movies-title {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 4px;
+        }
+        .celeb-details-movies-list {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .celeb-details-movies-list ul {
+            padding-left: 18px;
+        }
         .celeb-details-actions {
             margin-top: 20px;
         }
