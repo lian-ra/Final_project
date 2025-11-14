@@ -124,7 +124,7 @@
             <div style="display: flex; flex-direction: row;">
                 
             <asp:DropDownList ID="ddlSort" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlSort_SelectedIndexChanged" 
-                style="width: 200px; margin-top: 15px; padding: 8px 14px; border-radius: 25px; border: 1px solid #333399; background: white; color: black; margin-right: 100px;">
+                style="width: 200px; margin-top: 28px; padding: 0px 14px; border-radius: 25px; border: 1px solid #333399; background: white; color: black; margin-right: 100px;">
                 <asp:ListItem Value="default" Selected="True">Sort: Best (rating)</asp:ListItem>
                 <asp:ListItem Value="year_desc">Year: Newest first</asp:ListItem>
                 <asp:ListItem Value="year_asc">Year: Oldest first</asp:ListItem>
