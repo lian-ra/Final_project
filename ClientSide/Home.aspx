@@ -107,7 +107,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <div class="films-container">
         <div class="films-header">
-            <h1>🎬 Films</h1>
+            <h1>Films</h1>
             <p>Discover and explore movies</p>
         </div>
 
@@ -116,14 +116,25 @@
             <br />
             <asp:Button ID="btnSearchFilms" runat="server" Text="Search" OnClick="btnSearchFilms_Click" 
                 style="margin-top: 15px; padding: 12px 40px; background: #333399; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px;" />
-            
-            <div class="genre-filters">
+            <br />
+            <div style="display: flex; flex-direction: row;">
+                <asp:DropDownList ID="ddlSort" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlSort_SelectedIndexChanged" 
+                    style="width: 200px; margin-top: 15px; padding: 8px 14px; border-radius: 25px; border: 1px solid #333399; background: white; color: black; margin-right: 100px;">
+                    <asp:ListItem Value="default" Selected="True">Sort: Best (rating)</asp:ListItem>
+                    <asp:ListItem Value="year_desc">Year: Newest first</asp:ListItem>
+                    <asp:ListItem Value="year_asc">Year: Oldest first</asp:ListItem>
+                    <asp:ListItem Value="rating_desc">Rating: High to low</asp:ListItem>
+                    <asp:ListItem Value="rating_asc">Rating: Low to high</asp:ListItem>
+                </asp:DropDownList>
+
+                <div class="genre-filters">
                 <asp:LinkButton ID="btnAll" runat="server" CssClass="genre-btn active" Text="All" OnClick="btnFilter_Click" CommandArgument="all" />
                 <asp:LinkButton ID="btnAction" runat="server" CssClass="genre-btn" Text="Action" OnClick="btnFilter_Click" CommandArgument="action" />
                 <asp:LinkButton ID="btnComedy" runat="server" CssClass="genre-btn" Text="Comedy" OnClick="btnFilter_Click" CommandArgument="comedy" />
                 <asp:LinkButton ID="btnDrama" runat="server" CssClass="genre-btn" Text="Drama" OnClick="btnFilter_Click" CommandArgument="drama" />
                 <asp:LinkButton ID="btnHorror" runat="server" CssClass="genre-btn" Text="Horror" OnClick="btnFilter_Click" CommandArgument="horror" />
                 <asp:LinkButton ID="btnSciFi" runat="server" CssClass="genre-btn" Text="Sci-Fi" OnClick="btnFilter_Click" CommandArgument="scifi" />
+                </div>
             </div>
         </div>
 

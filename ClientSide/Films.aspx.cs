@@ -9,9 +9,11 @@ using System.Data;
 public partial class Films : System.Web.UI.Page
 {
     private localhost.Service myService = new localhost.Service();
+    private HashSet<int> wishlistMovieIds = new HashSet<int>();
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        LoadWishlistForCurrentUser();
         if (!IsPostBack)
         {
             LoadFilms();
@@ -20,6 +22,51 @@ public partial class Films : System.Web.UI.Page
         {
             // Reload films on postback to maintain state
             LoadFilms();
+        }
+    }
+
+    private void LoadWishlistForCurrentUser()
+    {
+        try
+        {
+            string status = Session["status"] as string;
+            if (status != "1")
+            {
+                return;
+            }
+
+            DataTable dtUser = Session["data"] as DataTable;
+            if (dtUser == null || dtUser.Rows.Count == 0)
+            {
+                return;
+            }
+
+            string username;
+            if (dtUser.Columns.Contains("User"))
+                username = dtUser.Rows[0]["User"].ToString();
+            else
+                username = dtUser.Rows[0][0].ToString();
+
+            DataTable dtWishlist = myService.GetWishlistMovies(username);
+            wishlistMovieIds.Clear();
+            if (dtWishlist != null)
+            {
+                foreach (DataRow row in dtWishlist.Rows)
+                {
+                    if (row["MovieId"] != DBNull.Value)
+                    {
+                        int id;
+                        if (int.TryParse(row["MovieId"].ToString(), out id))
+                        {
+                            wishlistMovieIds.Add(id);
+                        }
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // ignore wishlist load errors on films page
         }
     }
 
@@ -49,6 +96,16 @@ public partial class Films : System.Web.UI.Page
         LoadFilms();
     }
 
+    protected void ddlSort_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownList ddl = sender as DropDownList;
+        if (ddl != null)
+        {
+            ViewState["SelectedSort"] = ddl.SelectedValue;
+        }
+        LoadFilms();
+    }
+
     private void LoadFilms()
     {
         try
@@ -71,6 +128,32 @@ public partial class Films : System.Web.UI.Page
                 genre = "Horror";
 
             DataTable dt = myService.SearchMovies(searchTerm, genre);
+            // Apply sorting based on selected option
+            string sortOption = ViewState["SelectedSort"] as string ?? "default";
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                DataView dv = dt.DefaultView;
+                switch (sortOption)
+                {
+                    case "year_desc":
+                        dv.Sort = "Year DESC, Rating DESC";
+                        break;
+                    case "year_asc":
+                        dv.Sort = "Year ASC, Rating DESC";
+                        break;
+                    case "rating_asc":
+                        dv.Sort = "Rating ASC, Year DESC";
+                        break;
+                    case "rating_desc":
+                        dv.Sort = "Rating DESC, Year DESC";
+                        break;
+                    case "default":
+                    default:
+                        dv.Sort = "Rating DESC, Year DESC";
+                        break;
+                }
+                dt = dv.ToTable();
+            }
             
             // Clear existing content
             filmsGrid.Controls.Clear();
@@ -105,6 +188,7 @@ public partial class Films : System.Web.UI.Page
         string poster = row["Poster"] != DBNull.Value ? row["Poster"].ToString() : "images/uploads/slider1.jpg";
         string rating = row["Rating"] != DBNull.Value ? row["Rating"].ToString() : "0.0";
         string year = row["Year"] != DBNull.Value ? row["Year"].ToString() : "";
+        int movieId = row["MovieId"] != DBNull.Value ? Convert.ToInt32(row["MovieId"]) : 0;
         
         // Build poster path - check if it starts with ~/ or is relative
         if (!poster.StartsWith("http") && !poster.StartsWith("/") && !poster.StartsWith("~/"))
@@ -112,17 +196,29 @@ public partial class Films : System.Web.UI.Page
             poster = "~/" + poster;
         }
         
+        string actionHtml;
+        if (wishlistMovieIds.Contains(movieId))
+        {
+            actionHtml = "<span style='display:inline-block;margin-top:8px;padding:6px 14px;border-radius:20px;background:#555;color:#ddd;font-size:13px;'>In wishlist</span>";
+        }
+        else
+        {
+            actionHtml = string.Format("<a href='Wishlist.aspx?action=add&movieId={0}' style='display:inline-block;margin-top:8px;padding:6px 14px;border-radius:20px;background:#ff6b6b;color:white;text-decoration:none;font-size:13px;'>Add to wishlist</a>", movieId);
+        }
+
         string cardHtml = string.Format(@"
             <div class='film-card'>
                 <img src='{0}' alt='{1}' class='film-poster' />
                 <div class='film-title'>{1}</div>
                 <div class='film-rating'>{2}</div>
                 <div class='film-year'>{3}</div>
+                {4}
             </div>",
             ResolveUrl(poster),
             HttpUtility.HtmlEncode(title),
             rating,
-            year
+            year,
+            actionHtml
         );
         
         return cardHtml;

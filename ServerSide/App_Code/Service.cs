@@ -397,6 +397,137 @@ public class Service : System.Web.Services.WebService
     }
 
     //---------------------------------------------------------------------------------
+    // Wishlist Methods
+    //---------------------------------------------------------------------------------
+
+    private void CreateWishlistTable()
+    {
+        string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Wishlist'";
+        DataTable dt = DbActions.Search(checkTableSql, GetPath());
+
+        int tableExists = 0;
+        if (dt != null && dt.Rows.Count > 0)
+        {
+            tableExists = Convert.ToInt32(dt.Rows[0][0]);
+        }
+
+        if (tableExists == 0)
+        {
+            string createTableSql = @"CREATE TABLE [Wishlist] (
+                [Id] INT IDENTITY(1,1) PRIMARY KEY,
+                [Username] NVARCHAR(255) NOT NULL,
+                [MovieId] INT NOT NULL
+            )";
+
+            SqlCommand cmmd = new SqlCommand(createTableSql);
+            DbActions.MyAction(cmmd, GetPath());
+        }
+    }
+
+    private void AddToWishlistInternal(string username, int movieId)
+    {
+        CreateMoviesTable();
+        CreateWishlistTable();
+
+        string checkSql = "SELECT COUNT(*) FROM [Wishlist] WHERE [Username]=@u AND [MovieId]=@m";
+        SqlCommand checkCmd = new SqlCommand(checkSql);
+        checkCmd.Parameters.Add(new SqlParameter("@u", SqlDbType.NVarChar));
+        checkCmd.Parameters["@u"].Value = username ?? string.Empty;
+        checkCmd.Parameters.Add(new SqlParameter("@m", SqlDbType.Int));
+        checkCmd.Parameters["@m"].Value = movieId;
+
+        DataTable dt = DbActions.Search(checkSql.Replace("@u", "'" + username.Replace("'", "''") + "'").Replace("@m", movieId.ToString()), GetPath());
+        int exists = 0;
+        if (dt != null && dt.Rows.Count > 0)
+        {
+            exists = Convert.ToInt32(dt.Rows[0][0]);
+        }
+
+        if (exists == 0)
+        {
+            string insertSql = "INSERT INTO [Wishlist] ([Username], [MovieId]) VALUES (@p1, @p2)";
+            SqlCommand insertCmd = new SqlCommand(insertSql);
+            insertCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
+            insertCmd.Parameters["@p1"].Value = username ?? string.Empty;
+            insertCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int));
+            insertCmd.Parameters["@p2"].Value = movieId;
+
+            DbActions.MyAction(insertCmd, GetPath());
+        }
+    }
+
+    private void RemoveFromWishlistInternal(string username, int movieId)
+    {
+        CreateWishlistTable();
+
+        string deleteSql = "DELETE FROM [Wishlist] WHERE [Username]=@p1 AND [MovieId]=@p2";
+        SqlCommand cmd = new SqlCommand(deleteSql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
+        cmd.Parameters["@p1"].Value = username ?? string.Empty;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int));
+        cmd.Parameters["@p2"].Value = movieId;
+
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public void AddToWishlist(string username, int movieId)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(username) || movieId <= 0)
+            {
+                throw new Exception("Username and valid MovieId are required.");
+            }
+
+            AddToWishlistInternal(username, movieId);
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            throw;
+        }
+    }
+
+    [WebMethod]
+    public void RemoveFromWishlist(string username, int movieId)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(username) || movieId <= 0)
+            {
+                throw new Exception("Username and valid MovieId are required.");
+            }
+
+            RemoveFromWishlistInternal(username, movieId);
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            throw;
+        }
+    }
+
+    [WebMethod]
+    public DataTable GetWishlistMovies(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            throw new Exception("Username is required.");
+        }
+
+        CreateMoviesTable();
+        CreateWishlistTable();
+
+        string safeUsername = username.Replace("'", "''");
+        string sql = @"SELECT m.* FROM [Movies] m
+                        INNER JOIN [Wishlist] w ON m.[MovieId] = w.[MovieId]
+                        WHERE w.[Username] = '" + safeUsername + "'";
+
+        return DbActions.Search(sql, GetPath());
+    }
+
+    //---------------------------------------------------------------------------------
     // Celebs Methods
     //---------------------------------------------------------------------------------
 
