@@ -909,4 +909,13 @@ public class Service : System.Web.Services.WebService
         }
     }
 
+
+
+
+    [WebMethod]
+    public DataTable GetMovies()
+    {
+        string sql = "select * from [Movies]";
+        return DbActions.Search(sql, GetPath());
+    }
 }

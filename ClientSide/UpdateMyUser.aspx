@@ -12,8 +12,8 @@
                  <asp:Label ID="TextBox3" runat="server" Text="Username" ForeColor="White" Font-Size="14pt"></asp:Label>
              </td>
              <td>
-                <asp:TextBox ID="txtUName"  runat="server" Width="295px"></asp:TextBox>
-             </td>
+                <asp:TextBox ID="txtUName" Readonly="true" runat="server" Width="295px"></asp:TextBox>
+             </td
          </tr>
 
          <tr>

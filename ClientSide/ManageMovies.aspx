@@ -95,6 +95,11 @@
                             <asp:ListItem Value="Comedy">Comedy</asp:ListItem>
                             <asp:ListItem Value="Horror">Horror</asp:ListItem>
                             <asp:ListItem Value="Sci-Fi">Sci-Fi</asp:ListItem>
+                            <asp:ListItem Value="Romance">Romance</asp:ListItem>
+                            <asp:ListItem Value="Adventure">Adventure</asp:ListItem>
+                            <asp:ListItem Value="Fantasy">Fantasy</asp:ListItem>
+                            <asp:ListItem Value="Thriller">Thriller</asp:ListItem>
+
                         </asp:DropDownList>
                     </td>
                 </tr>

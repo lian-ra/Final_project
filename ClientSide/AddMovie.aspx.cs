@@ -13,6 +13,12 @@ public partial class AddMovie : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (!Session["status"].ToString().Equals("2"))
+        {
+            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'login.aspx';}, 10); // 10 = 10/1000 seconds delay";
+            ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
+        }
+
         if (!IsPostBack)
         {
             // Check if user is admin (status "2" = admin)

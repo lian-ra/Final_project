@@ -1,4 +1,4 @@
-<%@ Page Title="Films" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Films.aspx.cs" Inherits="Films" %>
+ <%--Page Title="Films" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Films.aspx.cs" Inherits="Films" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -102,53 +102,201 @@
             border-color: #ff6b6b;
         }
     </style>
-</asp:Content>
+</asp:Content>--%>
 
+
+
+
+
+
+
+
+ <%@ Page Title="" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Films.aspx.cs" Inherits="Movies" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+    <style type="text/css">
+        .shop-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+        }
+
+            .cards-container table {
+                width: 260px;
+                background: #ffffff;
+                border-radius: 18px;
+                padding: 0;
+                box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+                transition: transform 0.25s, box-shadow 0.25s;
+                overflow: hidden;
+                text-align: center;
+                position: relative;
+            }
+
+                .cards-container table:hover {
+                    transform: translateY(-6px);
+                    box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+                }
+
+            .cards-container .image-container {
+                position: relative;
+                overflow: hidden;
+                border-radius: 18px 18px 0 0;
+            }
+
+            .cards-container img {
+                width: 100%;
+                height: 280px;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .cards-container table:hover img {
+                transform: scale(1.05);
+            }
+
+            .cards-container td.info {
+                padding: 10px;
+            }
+
+            .cards-container .name {
+                font-size: 18px;
+                font-weight: 700;
+                color: #333;
+                margin-bottom: 6px;
+            }
+
+            .cards-container .price {
+                font-size: 16px;
+                font-weight: 600;
+                color: #ff4c3b;
+            }
+
+        /* Add to Cart icon button with hover + bounce animation */
+        .cart-btn {
+            font-size: 22px;
+            padding: 12px 0;
+            width: 100%;
+            color: white;
+            background: #d3d3d3;
+            border: none;
+            border-radius: 0 0 18px 18px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+            .cart-btn:hover {
+                background: #6ecfff;
+                animation: hoverBounce 0.3s;
+            }
+
+            .cart-btn:active {
+                animation: bounce 0.3s;
+            }
+
+        /* Bounce animation keyframes on click */
+        @keyframes bounce {
+            0% {
+                transform: scale(1);
+            }
+
+            30% {
+                transform: scale(1.2) translateY(-5px);
+            }
+
+            50% {
+                transform: scale(0.95) translateY(0);
+            }
+
+            70% {
+                transform: scale(1.05) translateY(-3px);
+            }
+
+            100% {
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Small bounce on hover */
+        @keyframes hoverBounce {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05) translateY(-2px);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .cards-container table {
+                width: 45%;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .cards-container table {
+                width: 90%;
+            }
+        }
+    </style>
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    <div class="films-container">
-        <div class="films-header">
-            <h1>Films</h1>
-            <p>Discover and explore movies</p>
-            <asp:HyperLink ID="lnkAddMovie" runat="server" NavigateUrl="~/AddMovie.aspx" 
-                style="display: inline-block; margin-top: 20px; padding: 10px 30px; background: #ff6b6b; color: white; text-decoration: none; border-radius: 25px; font-size: 14px;">
-                + Add New Movie
-            </asp:HyperLink>
-        </div>
+    <div class="shop-wrapper">
 
-        <div class="search-section">
-            <asp:TextBox ID="txtSearchFilms" runat="server" CssClass="search-box" placeholder="Search for movies..." />
-            <br />
-            <asp:Button ID="btnSearchFilms" runat="server" Text="Search" OnClick="btnSearchFilms_Click" 
-                style="margin-top: 15px; padding: 12px 40px; background: #333399; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px;" />
-            <br />
-            <div style="display: flex; flex-direction: row;">
-                
-            <asp:DropDownList ID="ddlSort" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlSort_SelectedIndexChanged" 
-                style="width: 200px; margin-top: 28px; padding: 0px 14px; border-radius: 25px; border: 1px solid #333399; background: white; color: black; margin-right: 100px;">
-                <asp:ListItem Value="default" Selected="True">Sort: Best (rating)</asp:ListItem>
-                <asp:ListItem Value="year_desc">Year: Newest first</asp:ListItem>
-                <asp:ListItem Value="year_asc">Year: Oldest first</asp:ListItem>
-                <asp:ListItem Value="rating_desc">Rating: High to low</asp:ListItem>
-                <asp:ListItem Value="rating_asc">Rating: Low to high</asp:ListItem>
-            </asp:DropDownList>
+    <h1 style="text-align:center">Shop</h1>
 
-            <div class="genre-filters">
-                <asp:LinkButton ID="btnAll" runat="server" CssClass="genre-btn active" Text="All" OnClick="btnFilter_Click" CommandArgument="all" />
-                <asp:LinkButton ID="btnAction" runat="server" CssClass="genre-btn" Text="Action" OnClick="btnFilter_Click" CommandArgument="action" />
-                <asp:LinkButton ID="btnComedy" runat="server" CssClass="genre-btn" Text="Comedy" OnClick="btnFilter_Click" CommandArgument="comedy" />
-                <asp:LinkButton ID="btnDrama" runat="server" CssClass="genre-btn" Text="Drama" OnClick="btnFilter_Click" CommandArgument="drama" />
-                <asp:LinkButton ID="btnHorror" runat="server" CssClass="genre-btn" Text="Horror" OnClick="btnFilter_Click" CommandArgument="horror" />
-                <asp:LinkButton ID="btnSciFi" runat="server" CssClass="genre-btn" Text="Sci-Fi" OnClick="btnFilter_Click" CommandArgument="scifi" />
-            </div>
-            
-            </div>
-        </div>
+    <asp:DataList ID="dtlMovies" runat="server" RepeatColumns="4" RepeatDirection="Horizontal" CssClass="cards-container" OnSelectedIndexChanged="dtlMovies_SelectedIndexChanged">
+        <itemtemplate>
+            <table>
 
-        <div class="films-grid">
-            <asp:PlaceHolder ID="filmsGrid" runat="server">
-                <!-- Film cards will be generated dynamically from database -->
-            </asp:PlaceHolder>
-        </div>
-    </div>
+                <tr>
+                    <td>
+                        <div class="image-container">
+                            <asp:Image ID="Image1"
+                                ImageUrl='<%# DataBinder.Eval(Container.DataItem,"pic","MyPics/{0}") %>'
+                                runat="server" />
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center" class="info">
+                        <div class="name">
+                            <asp:Label ID="lblName" runat="server"
+                                Text='<%# DataBinder.Eval(Container.DataItem,"name") %>'></asp:Label>
+                        </div>
+                        <div class="price">
+                            <asp:Label ID="lblPrice" runat="server"
+                                Text='<%# DataBinder.Eval(Container.DataItem,"price") %>'></asp:Label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <asp:LinkButton ID="btnAddCart" runat="server" CssClass="cart-btn" CommandName="AddToCart">
+                            <i class="fa fa-cart-plus"></i>
+                        </asp:LinkButton>
+                    </td>
+                </tr>
+
+            </table>
+        </itemtemplate>
+    </asp:DataList>
+</div>
 </asp:Content>
+
 

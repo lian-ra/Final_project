@@ -12,6 +12,11 @@ public partial class SearchUsers : System.Web.UI.Page
     
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (!Session["status"].ToString().Equals("2"))
+        {
+            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'login.aspx';}, 10); // 10 = 10/1000 seconds delay";
+            ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
+        }
         if (!IsPostBack)
         {
             LoadAllUsers();
@@ -79,8 +84,12 @@ public partial class SearchUsers : System.Web.UI.Page
     protected void GrdUsers_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Handle row selection if needed
+
+        TxtName.Text = GrdUsers.SelectedRow.Cells[3].Text;
+        TxtLast.Text = GrdUsers.SelectedRow.Cells[4].Text;
+
     }
-    
+
     protected string GetPhoneValue(object dataItem)
     {
         if (dataItem == null) return "";
@@ -240,5 +249,10 @@ public partial class SearchUsers : System.Web.UI.Page
         }
         
         return "";
+    }
+
+    protected void TxtLast_TextChanged(object sender, EventArgs e)
+    {
+
     }
 }

@@ -1,0 +1,60 @@
+[2025-11-14 11:42:09] System.Data.SqlClient.SqlException (0x80131904): String or binary data would be truncated in table 'C:\USERS\ליאן\ONEDRIVE\שולחן העבודה\_FLIAN_FINAL_ROJECT\SERVERSIDE\APP_DATA\DB.MDF.dbo.Movies', column 'Poster'. Truncated value: 'data:image/webp;base64,UklGRuIPAABXRUJQVlA4INYPAACQRACdASq9AIgAPrVOoU0nI6MiKBQsiOAWiWUBIqXVOJY2ZKK5a'.
+The statement has been terminated.
+   ב-  System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   ב-  System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   ב-  System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   ב-  System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   ב-  System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   ב-  System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   ב-  System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   ב-  System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   ב-  System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   ב-  MDb.App_Code.DbActions.MyAction(SqlCommand cmmd, String path) ב- c:\Users\ליאן\OneDrive\שולחן העבודה\_FLian_final_Roject\ServerSide\App_Code\DbActions.cs:שורה 102
+   ב-  Service.AddMovie(Movies movie) ב- c:\Users\ליאן\OneDrive\שולחן העבודה\_FLian_final_Roject\ServerSide\App_Code\Service.cs:שורה 382
+ClientConnectionId:9107319e-043b-4307-b73e-b0c5c1e30105
+Error Number:2628,State:1,Class:16
+[2025-11-14 11:43:28] System.Data.SqlClient.SqlException (0x80131904): String or binary data would be truncated in table 'C:\USERS\ליאן\ONEDRIVE\שולחן העבודה\_FLIAN_FINAL_ROJECT\SERVERSIDE\APP_DATA\DB.MDF.dbo.Movies', column 'Poster'. Truncated value: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMVFRUXFRcYFRcWFxUXFRUVFxcXFxgXF'.
+The statement has been terminated.
+   ב-  System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   ב-  System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   ב-  System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   ב-  System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   ב-  System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   ב-  System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   ב-  System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   ב-  System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   ב-  System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   ב-  MDb.App_Code.DbActions.MyAction(SqlCommand cmmd, String path) ב- c:\Users\ליאן\OneDrive\שולחן העבודה\_FLian_final_Roject\ServerSide\App_Code\DbActions.cs:שורה 102
+   ב-  Service.AddMovie(Movies movie) ב- c:\Users\ליאן\OneDrive\שולחן העבודה\_FLian_final_Roject\ServerSide\App_Code\Service.cs:שורה 382
+ClientConnectionId:eccd2fe3-2fef-4e04-b6fe-5702ea53ad4f
+Error Number:2628,State:1,Class:16
+[2025-11-14 22:19:01] System.Data.SqlClient.SqlException (0x80131904): String or binary data would be truncated in table 'C:\USERS\ליאן\ONEDRIVE\שולחן העבודה\_FLIAN_FINAL_ROJECT\SERVERSIDE\APP_DATA\DB.MDF.dbo.Celebs', column 'Photo'. Truncated value: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExIVFRUXFxcXGBYXFxcXFxcXGBUXHRgXG'.
+The statement has been terminated.
+   ב-  System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   ב-  System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   ב-  System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   ב-  System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   ב-  System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   ב-  System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   ב-  System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   ב-  System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   ב-  System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   ב-  MDb.App_Code.DbActions.MyAction(SqlCommand cmmd, String path) ב- c:\Users\ליאן\OneDrive\שולחן העבודה\_FLian_final_Roject\ServerSide\App_Code\DbActions.cs:שורה 102
+   ב-  Service.UpdateCeleb(Celeb celeb) ב- c:\Users\ליאן\OneDrive\שולחן העבודה\_FLian_final_Roject\ServerSide\App_Code\Service.cs:שורה 882
+ClientConnectionId:e228d22d-17af-4d42-bb5c-223d4311df0f
+Error Number:2628,State:1,Class:16
+[2025-11-18 10:29:52] System.Data.SqlClient.SqlException (0x80131904): String or binary data would be truncated in table 'C:\USERS\ליאן\ONEDRIVE\שולחן העבודה\_FLIAN_FINAL_ROJECT\SERVERSIDE\APP_DATA\DB.MDF.dbo.Movies', column 'Poster'. Truncated value: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTEhMWFhUXGRgaFxgYGBgXGhkZHRoYGhcaG'.
+The statement has been terminated.
+   ב-  System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   ב-  System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   ב-  System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   ב-  System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   ב-  System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   ב-  System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   ב-  System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   ב-  System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   ב-  System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   ב-  MDb.App_Code.DbActions.MyAction(SqlCommand cmmd, String path) ב- c:\Users\ליאן\OneDrive\שולחן העבודה\_FLian_final_Roject\ServerSide\App_Code\DbActions.cs:שורה 102
+   ב-  Service.UpdateMovie(Movies movie) ב- c:\Users\ליאן\OneDrive\שולחן העבודה\_FLian_final_Roject\ServerSide\App_Code\Service.cs:שורה 441
+ClientConnectionId:703ca1de-9d12-4081-88d4-b357d8d206e9
+Error Number:2628,State:1,Class:16

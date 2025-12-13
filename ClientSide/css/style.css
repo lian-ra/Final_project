@@ -23,10 +23,6 @@
 	-----------------------------------------------------------
 	-----------------------------------------------------------
 ------------------- END TABLE OF CONTENT ------------------*/
-/* Global header spacing: ensure consistent space below the header on all pages */
-.ht-header {
-  margin-bottom: 30px;
-}
 /* I. FRAMEWORK
 ***********************/
 /*!
@@ -7055,7 +7051,7 @@ p.ceb-single {
   text-align: center;
   background-size: cover;
   position: relative;
-  padding-top: 100px;
+  padding-top: 200px;
   padding-bottom: 50px;
   display: -webkit-flex;
   display: -moz-box;
@@ -8333,11 +8329,4 @@ footer.full-width-ft .ft-copyright {
 .header-nav a:hover,
 .header-actions a:hover {
     color: #ffcc00;
-}
-.flex-center {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  margin-top: 60px;
 }

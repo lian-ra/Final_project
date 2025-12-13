@@ -10,6 +10,11 @@ public partial class AdminArea : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (!Session["status"].ToString().Equals("2"))
+        {
+            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'login.aspx';}, 10); // 10 = 10/1000 seconds delay";
+            ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
+        }
         try
         {
             string status = Session["status"] as string;
@@ -33,5 +38,12 @@ public partial class AdminArea : System.Web.UI.Page
         {
             Response.Redirect("Home.aspx");
         }
+
+        //if(Session["Status"].ToString().Equals("2"))
+        //{
+        //string message1= "Alert('you are not wwlcome!!!');";
+        //ClientScript.RegisteredStartUpScript(this.GetType(), "MessageBo
+        //Response.Redirect(Login.aspx);
+        //}
     }
 }

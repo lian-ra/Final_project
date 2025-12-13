@@ -35,6 +35,8 @@
         <br /> <br />
         <asp:GridView ID="GrdUsers" runat="server" AutoGenerateColumns="False" BackColor="White" BorderColor="#3366CC" BorderStyle="None" BorderWidth="1px" CellPadding="4" Height="262px" OnSelectedIndexChanged="GrdUsers_SelectedIndexChanged">
             <Columns>
+                <asp:CommandField ButtonType="Button" HeaderText="Select Client" ShowSelectButton="True" />
+                <asp:CommandField />
                 <asp:BoundField DataField="User" HeaderText="Username" />
                 <asp:BoundField DataField="FName" HeaderText="First Name" />
                 <asp:BoundField DataField="LName" HeaderText="Last Name" />
@@ -71,6 +73,28 @@
             <SortedDescendingCellStyle BackColor="#D6DFDF" />
             <SortedDescendingHeaderStyle BackColor="#002876" />
         </asp:GridView>
+
+         <br />
+         <table>
+             <tr>   
+               
+                     <td>
+                         <asp:Label ID="Label2" runat="server" Text="FirstName" BorderColor="White" ForeColor="White" Width="200px"></asp:Label>
+                     </td>
+                   <td>
+                     <asp:TextBox ID="TxtName" runat="server"></asp:TextBox>
+                 </td>
+             </tr>
+             <tr>
+                 <td>
+                     <asp:Label ID="Label3" runat="server" Text="LastName"  BorderColor="White" ForeColor="White" Width="200px"></asp:Label>
+                 </td>
+                 <td>
+                     <asp:TextBox ID="TxtLast" runat="server" OnTextChanged="TxtLast_TextChanged"></asp:TextBox>
+                 </td>
+             </tr>
+         </table>
+         <br />
 
     </center>
    
