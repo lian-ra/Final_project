@@ -131,7 +131,7 @@ public partial class ManageMovies : System.Web.UI.Page
     {
         try
         {
-            var dt = myService.GetAllMovies();
+            var dt = myService.GetAllMovies("");
             grdMovies.DataSource = dt;
             grdMovies.DataBind();
         }

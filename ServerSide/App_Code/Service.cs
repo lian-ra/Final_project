@@ -69,7 +69,7 @@ public class Service : System.Web.Services.WebService
         else
             Sql += "[Admin] where [Usern]='" + username.Replace("'", "''") + "' and [Pass]='" + password.Replace("'", "''") + "'";
 
-        DataTable dt= DbActions.Search(Sql, GetPath());
+        DataTable dt = DbActions.Search(Sql, GetPath());
 
         return dt;
     }
@@ -161,9 +161,9 @@ public class Service : System.Web.Services.WebService
         cmmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.VarChar));
         cmmd.Parameters["@p8"].Value = user.Pic;
 
-        
-       
-        
+
+
+
 
 
         cmmd.Parameters.Add(new SqlParameter("@p9", SqlDbType.VarChar));
@@ -181,15 +181,21 @@ public class Service : System.Web.Services.WebService
         string sql = "Select * from [Users] ";
 
         // If data is empty or null, return all users
-        if (!string.IsNullOrEmpty(data) && !string.IsNullOrEmpty(option))
-        {
+       // if (!string.IsNullOrEmpty(data) && !string.IsNullOrEmpty(option))
+       // {
             if (option.Equals("name"))
-                sql += "WHERE [FName]='" + data.Replace("'", "''") + "'";
-            else if (option.Equals("address"))
-                sql += "WHERE [address]='" + data.Replace("'", "''") + "'";
-            else if (option.Equals("username"))
-                sql += "WHERE [User]='" + data.Replace("'", "''") + "'";
+            {
+                sql += "where [FName]='" + data+ "'";
+            }  
+            if (option.Equals("address"))
+            {
+                sql += "where [address]='" + data + "'";
         }
+            if (option.Equals("username"))
+            {
+                sql += "where [User]='" + data + "'";
+        }
+      //  }
 
         return DbActions.Search(sql, GetPath());
     }
@@ -198,13 +204,16 @@ public class Service : System.Web.Services.WebService
     // Movies Methods
     //---------------------------------------------------------------------------------
 
+
+
+    //alo
     [WebMethod]
     public void CreateMoviesTable()
     {
         // Check if table exists, if not create it
         string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Movies'";
         DataTable dt = DbActions.Search(checkTableSql, GetPath());
-        
+
         int tableExists = 0;
         if (dt != null && dt.Rows.Count > 0)
         {
@@ -226,258 +235,117 @@ public class Service : System.Web.Services.WebService
                 [Actors] NVARCHAR(MAX),
                 [Duration] INT DEFAULT 0
             )";
-            
+
             SqlCommand cmmd = new SqlCommand(createTableSql);
             DbActions.MyAction(cmmd, GetPath());
 
             // Insert sample movies
-            InsertSampleMovies();
+            // InsertSampleMovies();
         }
     }
 
-    private void InsertSampleMovies()
-    {
-        Movies[] sampleMovies = new Movies[]
-        {
-            new Movies { Title = "Interstellar", Description = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.", Year = 2014, Genre = "Sci-Fi", Rating = 8.6m, Poster = "images/uploads/slider1.jpg", Director = "Christopher Nolan", Actors = "Matthew McConaughey, Anne Hathaway, Jessica Chastain", Duration = 169 },
-            new Movies { Title = "The Revenant", Description = "A frontiersman on a fur trading expedition in the 1820s fights for survival after being mauled by a bear.", Year = 2015, Genre = "Drama", Rating = 8.0m, Poster = "images/uploads/slider2.jpg", Director = "Alejandro G. Iñárritu", Actors = "Leonardo DiCaprio, Tom Hardy, Will Poulter", Duration = 156 },
-            new Movies { Title = "Die Hard", Description = "An NYPD officer tries to save his wife and several others taken hostage by German terrorists during a Christmas party.", Year = 1988, Genre = "Action", Rating = 8.2m, Poster = "images/uploads/slider3.jpg", Director = "John McTiernan", Actors = "Bruce Willis, Alan Rickman, Bonnie Bedelia", Duration = 132 },
-            new Movies { Title = "The Walk", Description = "In 1974, high-wire artist Philippe Petit recruits a team of people to help him realize his dream: to walk the immense void between the World Trade Center towers.", Year = 2015, Genre = "Drama", Rating = 7.3m, Poster = "images/uploads/slider4.jpg", Director = "Robert Zemeckis", Actors = "Joseph Gordon-Levitt, Charlotte Le Bon, Guillaume Baillargeon", Duration = 123 }
-        };
-
-        foreach (Movies movie in sampleMovies)
-        {
-            AddMovieInternal(movie);
-        }
-    }
+  // private void InsertSampleMovies()
+  // {
+  //     Movies[] sampleMovies = new Movies[]
+  //     {
+  //         new Movies { Title = "Interstellar", Description = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.", Year = 2014, Genre = "Sci-Fi", Rating = 8.6m, Poster = "images/uploads/slider1.jpg", Director = "Christopher Nolan", Actors = "Matthew McConaughey, Anne Hathaway, Jessica Chastain", Duration = 169 },
+  //         new Movies { Title = "The Revenant", Description = "A frontiersman on a fur trading expedition in the 1820s fights for survival after being mauled by a bear.", Year = 2015, Genre = "Drama", Rating = 8.0m, Poster = "images/uploads/slider2.jpg", Director = "Alejandro G. Iñárritu", Actors = "Leonardo DiCaprio, Tom Hardy, Will Poulter", Duration = 156 },
+  //         new Movies { Title = "Die Hard", Description = "An NYPD officer tries to save his wife and several others taken hostage by German terrorists during a Christmas party.", Year = 1988, Genre = "Action", Rating = 8.2m, Poster = "images/uploads/slider3.jpg", Director = "John McTiernan", Actors = "Bruce Willis, Alan Rickman, Bonnie Bedelia", Duration = 132 },
+  //         new Movies { Title = "The Walk", Description = "In 1974, high-wire artist Philippe Petit recruits a team of people to help him realize his dream: to walk the immense void between the World Trade Center towers.", Year = 2015, Genre = "Drama", Rating = 7.3m, Poster = "images/uploads/slider4.jpg", Director = "Robert Zemeckis", Actors = "Joseph Gordon-Levitt, Charlotte Le Bon, Guillaume Baillargeon", Duration = 123 }
+  //     };
+  //
+  //     foreach (Movies movie in sampleMovies)
+  //     {
+  //         AddMovieInternal(movie);
+  //     }
+  // }
 
     // Internal method to add movies without admin check (for initialization only)
     private void AddMovieInternal(Movies movie)
     {
         string sql = "INSERT INTO [Movies] ([Title], [Description], [Year], [Genre], [Rating], [Poster], [Director], [Actors], [Duration]) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
-        
+
         SqlCommand cmmd = new SqlCommand(sql);
-        
+
         cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
-        cmmd.Parameters["@p1"].Value = movie.Title ?? (object)DBNull.Value;
-        
+        cmmd.Parameters["@p1"].Value = movie.Title;
+
         cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
-        cmmd.Parameters["@p2"].Value = movie.Description ?? (object)DBNull.Value;
-        
+        cmmd.Parameters["@p2"].Value = movie.Description;
+
         cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int));
         cmmd.Parameters["@p3"].Value = movie.Year;
-        
+
         cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
-        cmmd.Parameters["@p4"].Value = movie.Genre ?? (object)DBNull.Value;
-        
+        cmmd.Parameters["@p4"].Value = movie.Genre;
+
         cmmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal));
         cmmd.Parameters["@p5"].Value = movie.Rating;
-        
+
         cmmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.NVarChar));
-        cmmd.Parameters["@p6"].Value = movie.Poster ?? (object)DBNull.Value;
-        
+        cmmd.Parameters["@p6"].Value = movie.Poster;
+
         cmmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.NVarChar));
-        cmmd.Parameters["@p7"].Value = movie.Director ?? (object)DBNull.Value;
-        
+        cmmd.Parameters["@p7"].Value = movie.Director;
+
         cmmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.NVarChar));
-        cmmd.Parameters["@p8"].Value = movie.Actors ?? (object)DBNull.Value;
-        
+        cmmd.Parameters["@p8"].Value = movie.Actors;
+
         cmmd.Parameters.Add(new SqlParameter("@p9", SqlDbType.Int));
-        cmmd.Parameters["@p9"].Value = movie.Duration;
-        
+
         DbActions.MyAction(cmmd, GetPath());
     }
 
     [WebMethod]
-    public DataTable GetAllMovies()
+    public DataTable GetAllMovies(string year)
     {
         CreateMoviesTable(); // Ensure table exists
-        string sql = "SELECT * FROM [Movies] ORDER BY [Year] DESC, [Title]";
+        string sql = "SELECT * FROM [Movies]";
+        if (!string.IsNullOrEmpty(year))
+        {
+            sql += " where [Year]='" + year + "'";
+        }
         return DbActions.Search(sql, GetPath());
     }
 
     [WebMethod]
-    public DataTable GetLatestMovies()
+    public DataTable GetLatestMovies(string movieid)
     {
         CreateMoviesTable(); // Ensure table exists
-        string sql = "SELECT TOP 5 * FROM [Movies] ORDER BY [MovieId] DESC";
+        string sql;
+        if (string.IsNullOrEmpty(movieid))
+        {
+            sql = "SELECT TOP 5 * FROM [Movies] ORDER BY [MovieId] DESC";
+        }
+        else
+        {
+            sql = "SELECT * FROM [Movies] WHERE [MovieId]='" + movieid + "'";
+        }
         return DbActions.Search(sql, GetPath());
     }
 
     [WebMethod]
-    public DataTable SearchMovies(string searchTerm, string genre)
+    public DataTable SearchMovies(string data, string option)
     {
-        CreateMoviesTable(); // Ensure table exists
-        string sql = "SELECT * FROM [Movies] WHERE 1=1";
-        
-        if (!string.IsNullOrWhiteSpace(searchTerm))
+
+        string sql = "select * from [Movies]";
+
+        if (option.Equals("Movie Name"))
         {
-            string escapedSearchTerm = searchTerm.Replace("'", "''");
-            sql += " AND ([Title] LIKE '%" + escapedSearchTerm + "%' OR [Description] LIKE '%" + escapedSearchTerm + "%' OR [Director] LIKE '%" + escapedSearchTerm + "%' OR [Actors] LIKE '%" + escapedSearchTerm + "%')";
+            sql += "where [Name]='" + data + "'";
         }
-        
-        if (!string.IsNullOrWhiteSpace(genre) && genre.ToLower() != "all")
+
+        if (option.Equals("genre"))
         {
-            sql += " AND [Genre] = '" + genre.Replace("'", "''") + "'";
+            sql += " where [code]='" + data + "'";
         }
-        
-        sql += " ORDER BY [Rating] DESC, [Year] DESC";
-        
-        return DbActions.Search(sql, GetPath());
-    }
-
-    [WebMethod]
-    public DataTable GetMovieById(int movieId)
-    {
-        CreateMoviesTable(); // Ensure table exists
-        string sql = "SELECT * FROM [Movies] WHERE [MovieId] = " + movieId;
-        return DbActions.Search(sql, GetPath());
-    }
-
-    [WebMethod]
-    public void AddMovie(Movies movie)
-    {
-        try
+        if (option.Equals("Rate"))
         {
-            // Note: Admin authorization is performed on the client side before calling this service.
-            // In a production environment, use Windows authentication or ASP.NET roles for better security.
-            if (movie == null)
-            {
-                throw new Exception("Movie data is required.");
-            }
-
-            CreateMoviesTable(); // Ensure table exists
-            
-            string sql = "INSERT INTO [Movies] ([Title], [Description], [Year], [Genre], [Rating], [Poster], [Director], [Actors], [Duration]) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
-            
-            SqlCommand cmmd = new SqlCommand(sql);
-            
-            cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
-            cmmd.Parameters["@p1"].Value = movie.Title ?? (object)DBNull.Value;
-            
-            cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
-            cmmd.Parameters["@p2"].Value = movie.Description ?? (object)DBNull.Value;
-            
-            cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int));
-            cmmd.Parameters["@p3"].Value = movie.Year;
-            
-            cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
-            cmmd.Parameters["@p4"].Value = movie.Genre ?? (object)DBNull.Value;
-            
-            cmmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal));
-            cmmd.Parameters["@p5"].Value = movie.Rating;
-            
-            cmmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.NVarChar));
-            cmmd.Parameters["@p6"].Value = movie.Poster ?? (object)DBNull.Value;
-            
-            cmmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.NVarChar));
-            cmmd.Parameters["@p7"].Value = movie.Director ?? (object)DBNull.Value;
-            
-            cmmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.NVarChar));
-            cmmd.Parameters["@p8"].Value = movie.Actors ?? (object)DBNull.Value;
-            
-            cmmd.Parameters.Add(new SqlParameter("@p9", SqlDbType.Int));
-            cmmd.Parameters["@p9"].Value = movie.Duration;
-            
-            DbActions.MyAction(cmmd, GetPath());
+            sql += " where [Rating]='" + data + "'";
         }
-        catch (Exception ex)
-        {
-            LogError(ex);
-            throw;
-        }
-    }
 
-    [WebMethod]
-    public void UpdateMovie(Movies movie)
-    {
-        try
-        {
-            if (movie == null || movie.MovieId <= 0)
-            {
-                throw new Exception("Valid movie data (with MovieId) is required for update.");
-            }
+      //  sql += " ORDER BY [Rating] DESC, [Year] DESC";
 
-            CreateMoviesTable(); // Ensure table exists
-
-            string sql = @"UPDATE [Movies]
-                           SET [Title]=@p1, [Description]=@p2, [Year]=@p3, [Genre]=@p4,
-                               [Rating]=@p5, [Poster]=@p6, [Director]=@p7, [Actors]=@p8,
-                               [Duration]=@p9
-                           WHERE [MovieId]=@p10";
-
-            SqlCommand cmmd = new SqlCommand(sql);
-
-            cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar));
-            cmmd.Parameters["@p1"].Value = movie.Title ?? (object)DBNull.Value;
-
-            cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar));
-            cmmd.Parameters["@p2"].Value = movie.Description ?? (object)DBNull.Value;
-
-            cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int));
-            cmmd.Parameters["@p3"].Value = movie.Year;
-
-            cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
-            cmmd.Parameters["@p4"].Value = movie.Genre ?? (object)DBNull.Value;
-
-            cmmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal));
-            cmmd.Parameters["@p5"].Value = movie.Rating;
-
-            cmmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.NVarChar));
-            cmmd.Parameters["@p6"].Value = movie.Poster ?? (object)DBNull.Value;
-
-            cmmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.NVarChar));
-            cmmd.Parameters["@p7"].Value = movie.Director ?? (object)DBNull.Value;
-
-            cmmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.NVarChar));
-            cmmd.Parameters["@p8"].Value = movie.Actors ?? (object)DBNull.Value;
-
-            cmmd.Parameters.Add(new SqlParameter("@p9", SqlDbType.Int));
-            cmmd.Parameters["@p9"].Value = movie.Duration;
-
-            cmmd.Parameters.Add(new SqlParameter("@p10", SqlDbType.Int));
-            cmmd.Parameters["@p10"].Value = movie.MovieId;
-
-            DbActions.MyAction(cmmd, GetPath());
-        }
-        catch (Exception ex)
-        {
-            LogError(ex);
-            throw;
-        }
-    }
-
-    [WebMethod]
-    public void DeleteMovie(int movieId)
-    {
-        try
-        {
-            if (movieId <= 0)
-            {
-                throw new Exception("Valid MovieId is required for delete.");
-            }
-
-            CreateMoviesTable(); // Ensure table exists
-
-            string sql = "DELETE FROM [Movies] WHERE [MovieId]=@p1";
-            SqlCommand cmmd = new SqlCommand(sql);
-            cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int));
-            cmmd.Parameters["@p1"].Value = movieId;
-
-            DbActions.MyAction(cmmd, GetPath());
-        }
-        catch (Exception ex)
-        {
-            LogError(ex);
-            throw;
-        }
-    }
-
-    [WebMethod]
-    public DataTable GetMoviesByGenre(string genre)
-    {
-        CreateMoviesTable(); // Ensure table exists
-        string sql = "SELECT * FROM [Movies] WHERE [Genre] = '" + genre.Replace("'", "''") + "' ORDER BY [Rating] DESC, [Year] DESC";
         return DbActions.Search(sql, GetPath());
     }
 
@@ -507,6 +375,26 @@ public class Service : System.Web.Services.WebService
             SqlCommand cmmd = new SqlCommand(createTableSql);
             DbActions.MyAction(cmmd, GetPath());
         }
+    }
+
+    [WebMethod]
+    public DataTable GetWishlistMovies(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            throw new Exception("Username is required.");
+        }
+
+        CreateMoviesTable();
+        CreateWishlistTable();
+
+        string safeUser = username.Replace("'", "''");
+        string sql = @"SELECT m.[MovieId], m.[Title], m.[Poster], m.[Year], m.[Rating]
+                        FROM [Wishlist] w
+                        INNER JOIN [Movies] m ON w.[MovieId] = m.[MovieId]
+                        WHERE w.[Username] = '" + safeUser + "'";
+
+        return DbActions.Search(sql, GetPath());
     }
 
     private void AddToWishlistInternal(string username, int movieId)
@@ -594,22 +482,25 @@ public class Service : System.Web.Services.WebService
     }
 
     [WebMethod]
-    public DataTable GetWishlistMovies(string username)
+    public bool AddWishListMovies(string username, string careCode)
     {
-        if (string.IsNullOrWhiteSpace(username))
-        {
-            throw new Exception("Username is required.");
-        }
+        string sql1 = "SELECT * FROM [WishList] WHERE [code_user]='" + username + "' AND [code_care]='" + careCode + "'";
 
-        CreateMoviesTable();
-        CreateWishlistTable();
+        DataTable dt = DbActions.Search(sql1, GetPath());
+        if (dt.Rows.Count > 0)
+            return false;
 
-        string safeUsername = username.Replace("'", "''");
-        string sql = @"SELECT m.* FROM [Movies] m
-                        INNER JOIN [Wishlist] w ON m.[MovieId] = w.[MovieId]
-                        WHERE w.[Username] = '" + safeUsername + "'";
+        string sql2 = "INSERT INTO [WishList] ([code_user],[code_care]) VALUES (@u, @c)";
 
-        return DbActions.Search(sql, GetPath());
+        SqlCommand cmd = new SqlCommand(sql2);
+        cmd.Parameters.Add(new SqlParameter("@u", SqlDbType.VarChar));
+        cmd.Parameters["@u"].Value = username;
+        cmd.Parameters.Add(new SqlParameter("@c", SqlDbType.VarChar));
+        cmd.Parameters["@c"].Value = careCode;
+
+        DbActions.MyAction(cmd, GetPath());
+
+        return true;
     }
 
     //---------------------------------------------------------------------------------
@@ -789,24 +680,24 @@ public class Service : System.Web.Services.WebService
     }
 
     [WebMethod]
-    public DataTable SearchCelebs(string searchText, string role)
+    public DataTable SearchCelebs(string data, string option)
     {
         CreateCelebsTable(); // Ensure table exists
 
-        string sql = "SELECT * FROM [Celebs] WHERE 1=1";
+        string sql = "SELECT * FROM [Celebs]";
 
-        if (!string.IsNullOrWhiteSpace(searchText))
+        if (option.Equals("Care Name"))
         {
-            string escaped = searchText.Replace("'", "''");
-            sql += " AND ([Name] LIKE '%" + escaped + "%' OR [Bio] LIKE '%" + escaped + "%')";
+            sql += "where [Name]='" + data + "'";
         }
-
-        if (!string.IsNullOrWhiteSpace(role) && role.ToLower() != "all")
+        if (option.Equals("Code"))
         {
-            sql += " AND [Role] = '" + role.Replace("'", "''") + "'";
+            sql += " where [code]='" + data + "'";
         }
-
-        sql += " ORDER BY [Name]";
+        if (option.Equals("Kind of care"))
+        {
+            sql += " where [Kind]='" + data + "'";
+        }
 
         return DbActions.Search(sql, GetPath());
     }
@@ -839,7 +730,7 @@ public class Service : System.Web.Services.WebService
             cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar));
             cmmd.Parameters["@p4"].Value = celeb.Bio ?? (object)DBNull.Value;
 
-            DbActions.MyAction(cmmd, GetPath());
+            DbActions.MyAction(cmmd, GetPath()); 
         }
         catch (Exception ex)
         {
@@ -917,5 +808,85 @@ public class Service : System.Web.Services.WebService
     {
         string sql = "select * from [Movies]";
         return DbActions.Search(sql, GetPath());
+    }
+
+    [WebMethod]
+    public bool AddWishlist(string username, string product)
+    {
+        string sql1 = "Select *from [wishlist] where [Code_User]='" + username + "' and [Code_Films]='" + product + "'";
+        DataTable dt1 = DbActions.Search(sql1, GetPath());
+        if (dt1.Rows.Count > 0)
+            return false;
+
+        string sql2 = "INSERT INTO [wishlist] values('" + username + "','" + product + "')";
+        SqlCommand cmmd = new SqlCommand(sql2);
+
+        DbActions.MyAction(cmmd, GetPath());
+        return true;
+    }
+
+    [WebMethod]
+    public void RemoveWishlist(string username, string product)
+    {
+        string sql = "Delete from [Wishlist]  where [Code_User]='" + username + "' and [Code_Films]='" + product + "'";
+        SqlCommand cmmd = new SqlCommand(sql);
+        DbActions.MyAction(cmmd, GetPath());
+    }
+    [WebMethod]
+    public void RemoveFromWishList(string username, string product)
+    {
+        string sql = "Delete from [Wishlist] where [Code_user] = '" + username + "' and [name_car]='" + product + "'";
+
+        SqlCommand cmmd = new SqlCommand(sql);
+
+        DbActions.MyAction(cmmd, GetPath());
+    }
+    [WebMethod]
+
+    public void AddToCart(string username, string code_prod, string qua, string price)
+    {
+        //Search username in Cart table
+        string sql = "select * from [MyCart] where [usern]='" + username + "'";
+        DataTable dtCart = DbActions.Search(sql, GetPath());
+        double total = 0;
+
+        //Update total for username
+        if (dtCart.Rows.Count != 0)
+        {
+            total = double.Parse(dtCart.Rows[0][1].ToString()) + double.Parse(qua) * double.Parse(price);
+            string sql_update = "Update [Cart] set [total]='" + total + "'";
+            SqlCommand cmmd = new SqlCommand(sql_update);
+            DbActions.MyAction(cmmd, GetPath());
+        }
+        else
+        {
+            total = double.Parse(qua) * double.Parse(price);
+            string sql_add = "Insert into [Cart] values('" + username + "','" + total + "')";
+            SqlCommand cmmd_add = new SqlCommand(sql_add);
+            DbActions.MyAction(cmmd_add, GetPath());
+        }
+
+        //Add new product to Cart details
+        sql = "Select * from [Cart_Details] where [Product]='" + code_prod + "'";
+        double my_qua = 0;
+        DataTable dtSearch = DbActions.Search(sql, GetPath());
+
+        if (dtSearch.Rows.Count != 0)
+        {
+            my_qua += double.Parse(dtSearch.Rows[0][2].ToString());
+            my_qua += double.Parse(qua);
+
+            string sql_update = "Update [Cart_Details] set [Quantity]='" + my_qua + "'";
+            SqlCommand cmmd = new SqlCommand(sql_update);
+            DbActions.MyAction(cmmd, GetPath());
+        }
+        else
+        {
+            string sql_add2 = "Insert into [CartDetails] values('" + username + "','" + code_prod + "','" + qua + "')";
+            SqlCommand cmmd_add2 = new SqlCommand(sql_add2);
+            DbActions.MyAction(cmmd_add2, GetPath());
+
+        }
+
     }
 }

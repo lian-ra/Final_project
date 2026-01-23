@@ -5,18 +5,54 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
+using System.IO;
+using System.Configuration;
+using System.Net.NetworkInformation;
 
 public partial class Films : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service Service = new localhost.Service();
+
+    // Declarations for controls used in the code-behind
+    protected global::System.Web.UI.WebControls.Label LblUser;
+    protected global::System.Web.UI.WebControls.DataList dtlMovies;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
-            dtlMovies.DataSource = myService.GetMovies();
+            DataTable dt = Session["data"] as DataTable;
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                LblUser.Text = dt.Rows[0][0].ToString();
+            }
 
+            dtlMovies.DataSource = Service.GetMovies();
             dtlMovies.DataBind();
         }
+    }
+
+    // DataList EditCommand handler (used for wishlist add)
+    protected void dtlMovies_EditCommand(object source, DataListCommandEventArgs e)
+    {
+        // Only handle the relevant command if needed
+        // if (e.CommandName != "Edit" && e.CommandName != "AddToCart")
+        //     return;
+
+        Label lblName = e.Item.FindControl("lblName") as Label;
+        if (lblName == null)
+            return;
+
+        string movieName = lblName.Text;
+        string username = LblUser.Text;
+
+        bool result = Service.AddWishListMovies(username, movieName);
+
+        string script = result
+            ? @"alert('Movie is added to WishList'); setTimeout(function() {window.location = 'Movies.aspx';}, 10);"
+            : @"alert('You cant add same Movie twice!!!!!'); setTimeout(function() {window.location = 'Movies.aspx';}, 10);";
+
+        ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
     }
 }
 
@@ -91,7 +127,7 @@ public partial class Films : System.Web.UI.Page
 //    {
 //        LinkButton btn = sender as LinkButton;
 //        string genre = btn.CommandArgument;
-        
+
 //        // Update active button
 //        btnAll.CssClass = "genre-btn";
 //        btnAction.CssClass = "genre-btn";
@@ -99,12 +135,12 @@ public partial class Films : System.Web.UI.Page
 //        btnDrama.CssClass = "genre-btn";
 //        btnHorror.CssClass = "genre-btn";
 //        btnSciFi.CssClass = "genre-btn";
-        
+
 //        btn.CssClass = "genre-btn active";
-        
+
 //        // Store selected genre in ViewState
 //        ViewState["SelectedGenre"] = genre;
-        
+
 //        LoadFilms();
 //    }
 
@@ -166,10 +202,10 @@ public partial class Films : System.Web.UI.Page
 //                }
 //                dt = dv.ToTable();
 //            }
-            
+
 //            // Clear existing content
 //            filmsGrid.Controls.Clear();
-            
+
 //            if (dt != null && dt.Rows.Count > 0)
 //            {
 //                foreach (DataRow row in dt.Rows)
@@ -201,13 +237,13 @@ public partial class Films : System.Web.UI.Page
 //        string rating = row["Rating"] != DBNull.Value ? row["Rating"].ToString() : "0.0";
 //        string year = row["Year"] != DBNull.Value ? row["Year"].ToString() : "";
 //        int movieId = row["MovieId"] != DBNull.Value ? Convert.ToInt32(row["MovieId"]) : 0;
-        
+
 //        // Build poster path - check if it starts with ~/ or is relative
 //        if (!poster.StartsWith("http") && !poster.StartsWith("/") && !poster.StartsWith("~/"))
 //        {
 //            poster = "~/" + poster;
 //        }
-        
+
 //        string actionHtml;
 //        if (wishlistMovieIds.Contains(movieId))
 //        {
@@ -235,9 +271,6 @@ public partial class Films : System.Web.UI.Page
 //            actionHtml,
 //            movieId
 //        );
-        
+
 //        return cardHtml;
 //    }
-
-
-

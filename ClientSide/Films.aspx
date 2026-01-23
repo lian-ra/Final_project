@@ -1,4 +1,4 @@
- <%--Page Title="Films" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Films.aspx.cs" Inherits="Films" %>
+<%@ Page Title="Films" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Films.aspx.cs" Inherits="Films" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -101,27 +101,8 @@
             background: #ff6b6b;
             border-color: #ff6b6b;
         }
-    </style>
-</asp:Content>--%>
 
-
-
-
-
-
-
-
- <%@ Page Title="" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Films.aspx.cs" Inherits="Movies" %>
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-    <style type="text/css">
-        .shop-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
+        /* Card layout styles for the DataList */
         .cards-container {
             display: flex;
             flex-wrap: wrap;
@@ -254,11 +235,15 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <br />
+    <asp:Label ID="Label1" runat="server" Text="Username"></asp:Label>
+    <asp:Label ID="LblUser" runat="server" Text="Label"></asp:Label>
+
     <div class="shop-wrapper">
 
     <h1 style="text-align:center">Shop</h1>
 
-    <asp:DataList ID="dtlMovies" runat="server" RepeatColumns="4" RepeatDirection="Horizontal" CssClass="cards-container" OnSelectedIndexChanged="dtlMovies_SelectedIndexChanged">
+    <asp:DataList ID="dtlMovies" runat="server" RepeatColumns="4" RepeatDirection="Horizontal" CssClass="cards-container" OnEditCommand="dtlMovies_EditCommand">
         <itemtemplate>
             <table>
 
@@ -266,7 +251,7 @@
                     <td>
                         <div class="image-container">
                             <asp:Image ID="Image1"
-                                ImageUrl='<%# DataBinder.Eval(Container.DataItem,"pic","MyPics/{0}") %>'
+                                ImageUrl='<%# DataBinder.Eval(Container.DataItem, "pic", "MyPics/{0}") %>'
                                 runat="server" />
                         </div>
                     </td>
@@ -276,27 +261,31 @@
                     <td style="text-align: center" class="info">
                         <div class="name">
                             <asp:Label ID="lblName" runat="server"
-                                Text='<%# DataBinder.Eval(Container.DataItem,"name") %>'></asp:Label>
+                                Text='<%# DataBinder.Eval(Container.DataItem, "name") %>'></asp:Label>
                         </div>
                         <div class="price">
                             <asp:Label ID="lblPrice" runat="server"
-                                Text='<%# DataBinder.Eval(Container.DataItem,"price") %>'></asp:Label>
+                                Text='<%# DataBinder.Eval(Container.DataItem, "price") %>'></asp:Label>
                         </div>
                     </td>
                 </tr>
 
                 <tr>
                     <td>
-                        <asp:LinkButton ID="btnAddCart" runat="server" CssClass="cart-btn" CommandName="AddToCart">
+                        <asp:LinkButton ID="btnAddCart" runat="server" Text="AddToWishlist" CssClass="cart-btn" CommandName="AddToCart">
+
                             <i class="fa fa-cart-plus"></i>
                         </asp:LinkButton>
                     </td>
                 </tr>
-
+                <center>
+                    <asp:Button ID="BtnChoose" CommandName="Select" runat="server" Text="ViewDetails" />
+                    <asp:Button ID="BtnWish" CommandName="Edit" runat="server" Text="ViewDetails" />
+                </center>
             </table>
         </itemtemplate>
     </asp:DataList>
-</div>
+    </div>
 </asp:Content>
 
 

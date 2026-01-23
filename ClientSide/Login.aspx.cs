@@ -10,19 +10,15 @@ public partial class Login : System.Web.UI.Page
 {
     private localhost.Service my_service = new localhost.Service();
 
-
     protected void Page_Load(object sender, EventArgs e)
     {
-      
         if (!IsPostBack)
         {
             string message = "alert('You are Loged out');"; //
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", message, true); //
             Session["status"] = "-1";
             Session["data"] = null;
-        }
-       
-
+        }      
     }
 
     protected void btnsi_Click(object sender, EventArgs e)

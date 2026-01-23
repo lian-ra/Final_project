@@ -21,7 +21,7 @@ public partial class News : System.Web.UI.Page
     {
         try
         {
-            DataTable dt = myService.GetLatestMovies();
+            DataTable dt = myService.GetLatestMovies("");
             phLatestMovies.Controls.Clear();
 
             if (dt != null && dt.Rows.Count > 0)

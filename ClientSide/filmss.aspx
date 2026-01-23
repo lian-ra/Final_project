@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="filmss.aspx.cs" Inherits="filmss" MasterPageFile="~/Design.master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-    <style>
+    <type>
         .shop-wrapper {
             max-width: 1200px;
             margin: 0 auto;
@@ -108,7 +108,7 @@
         @media screen and (max-width: 600px) {
             .cards-container table { width: 90%; }
         }
-    </style>
+    </type>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">

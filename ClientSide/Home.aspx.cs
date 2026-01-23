@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Films : System.Web.UI.Page
+public partial class Home : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -37,6 +37,16 @@ public partial class Films : System.Web.UI.Page
         btn.CssClass = "genre-btn active";
         
         // Filter films by genre (can be implemented with database)
+        LoadFilms();
+    }
+
+    protected void ddlSort_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownList ddl = sender as DropDownList;
+        if (ddl != null)
+        {
+            ViewState["SelectedSort"] = ddl.SelectedValue;
+        }
         LoadFilms();
     }
 
