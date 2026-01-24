@@ -4,20 +4,58 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
 
-public partial class Films : System.Web.UI.Page
+public partial class Home : System.Web.UI.Page
 {
+    private localhost.Service myService = new localhost.Service();
+    private HashSet<int> wishlistMovieIds = new HashSet<int>();
+
     protected void Page_Load(object sender, EventArgs e)
     {
+        LoadWishlistForCurrentUser();
         if (!IsPostBack)
         {
             LoadFilms();
         }
     }
 
+    private void LoadWishlistForCurrentUser()
+    {
+        try
+        {
+            string status = Session["status"] as string;
+            if (status != "1") return;
+
+            DataTable dtUser = Session["data"] as DataTable;
+            if (dtUser == null || dtUser.Rows.Count == 0) return;
+
+            string username;
+            if (dtUser.Columns.Contains("User"))
+                username = dtUser.Rows[0]["User"].ToString();
+            else
+                username = dtUser.Rows[0][0].ToString();
+
+            DataTable dtWishlist = myService.GetWishlistMovies(username);
+            wishlistMovieIds.Clear();
+            if (dtWishlist != null)
+            {
+                foreach (DataRow row in dtWishlist.Rows)
+                {
+                    if (row["MovieId"] != DBNull.Value)
+                    {
+                        int id;
+                        if (int.TryParse(row["MovieId"].ToString(), out id))
+                            wishlistMovieIds.Add(id);
+                    }
+                }
+            }
+        }
+        catch { /* ignore errors */ }
+    }
+
     protected void btnSearchFilms_Click(object sender, EventArgs e)
     {
-        // Search functionality can be implemented here
         LoadFilms();
     }
 
@@ -25,25 +63,107 @@ public partial class Films : System.Web.UI.Page
     {
         LinkButton btn = sender as LinkButton;
         string genre = btn.CommandArgument;
-        
-        // Update active button
+
+        // Reset button styles
         btnAll.CssClass = "genre-btn";
         btnAction.CssClass = "genre-btn";
         btnComedy.CssClass = "genre-btn";
         btnDrama.CssClass = "genre-btn";
         btnHorror.CssClass = "genre-btn";
         btnSciFi.CssClass = "genre-btn";
-        
+
         btn.CssClass = "genre-btn active";
-        
-        // Filter films by genre (can be implemented with database)
+
+        ViewState["SelectedGenre"] = genre;
+        LoadFilms();
+    }
+
+    protected void ddlSort_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownList ddl = sender as DropDownList;
+        if (ddl != null) ViewState["SelectedSort"] = ddl.SelectedValue;
         LoadFilms();
     }
 
     private void LoadFilms()
     {
-        // Films are currently static in the ASPX file
-        // Can be extended to load from database
+        try
+        {
+            string searchTerm = txtSearchFilms.Text.Trim();
+            string genre = ViewState["SelectedGenre"] != null ? ViewState["SelectedGenre"].ToString() : "all";
+
+            if (genre == "all") genre = "";
+            else if (genre == "scifi") genre = "Sci-Fi";
+            else if (genre == "action") genre = "Action";
+            else if (genre == "comedy") genre = "Comedy";
+            else if (genre == "drama") genre = "Drama";
+            else if (genre == "horror") genre = "Horror";
+
+            DataTable dt = myService.SearchMovies(searchTerm, genre);
+            string sortOption = ViewState["SelectedSort"] as string ?? "default";
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                DataView dv = dt.DefaultView;
+                switch (sortOption)
+                {
+                    case "year_desc": dv.Sort = "Year DESC, Rating DESC"; break;
+                    case "year_asc": dv.Sort = "Year ASC, Rating DESC"; break;
+                    case "rating_asc": dv.Sort = "Rating ASC, Year DESC"; break;
+                    case "rating_desc": dv.Sort = "Rating DESC, Year DESC"; break;
+                    default: dv.Sort = "Rating DESC, Year DESC"; break;
+                }
+                dt = dv.ToTable();
+            }
+
+            filmsGrid.Controls.Clear();
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    filmsGrid.Controls.Add(new LiteralControl(GenerateMovieCard(row)));
+                }
+            }
+            else
+            {
+                filmsGrid.Controls.Add(new LiteralControl("<div style='text-align: center; color: white; padding: 40px; grid-column: 1 / -1;'>No movies found.</div>"));
+            }
+        }
+        catch (Exception ex)
+        {
+            filmsGrid.Controls.Add(new LiteralControl("Error loading films: " + ex.Message));
+        }
+    }
+
+    private string GenerateMovieCard(DataRow row)
+    {
+        string title = row["Title"] != DBNull.Value ? row["Title"].ToString() : "Unknown";
+        string poster = row["Poster"] != DBNull.Value ? row["Poster"].ToString() : "images/uploads/slider1.jpg";
+        string rating = row["Rating"] != DBNull.Value ? row["Rating"].ToString() : "0.0";
+        string year = row["Year"] != DBNull.Value ? row["Year"].ToString() : "";
+        int movieId = row["MovieId"] != DBNull.Value ? Convert.ToInt32(row["MovieId"]) : 0;
+
+        if (!poster.StartsWith("http") && !poster.StartsWith("/") && !poster.StartsWith("~/"))
+        {
+            poster = "~/" + poster;
+        }
+
+        string actionHtml = wishlistMovieIds.Contains(movieId)
+            ? "<span style='display:inline-block;margin-top:8px;padding:6px 14px;border-radius:20px;background:#555;color:#ddd;font-size:13px;'>In wishlist</span>"
+            : string.Format("<a href='Wishlist.aspx?action=add&movieId={0}' style='display:inline-block;margin-top:8px;padding:6px 14px;border-radius:20px;background:#ff6b6b;color:white;text-decoration:none;font-size:13px;'>Add to wishlist</a>", movieId);
+
+        return string.Format(@"
+            <div class='film-card'>
+                <a href='MovieDetails.aspx?movieId={5}' style='text-decoration:none; color:inherit;'>
+                    <img src='{0}' alt='{1}' class='film-poster' />
+                    <div class='film-title'>{1}</div>
+                </a>
+                <div class='film-rating'>{2}</div>
+                <div class='film-year'>{3}</div>
+                {4}
+            </div>",
+            ResolveUrl(poster), HttpUtility.HtmlEncode(title), rating, year, actionHtml, movieId
+        );
     }
 }
-
