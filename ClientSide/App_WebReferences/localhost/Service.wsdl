@@ -115,6 +115,23 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetMovies">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetMoviesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMoviesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetLatestMovies">
         <s:complexType />
       </s:element>
@@ -175,6 +192,27 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetMoviesByGenre">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="genre" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMoviesByGenreResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMoviesByGenreResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="AddMovie">
         <s:complexType>
           <s:sequence>
@@ -218,27 +256,6 @@
       </s:element>
       <s:element name="DeleteMovieResponse">
         <s:complexType />
-      </s:element>
-      <s:element name="GetMoviesByGenre">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="genre" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetMoviesByGenreResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetMoviesByGenreResult">
-              <s:complexType>
-                <s:sequence>
-                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
-                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
-                </s:sequence>
-              </s:complexType>
-            </s:element>
-          </s:sequence>
-        </s:complexType>
       </s:element>
       <s:element name="AddToWishlist">
         <s:complexType>
@@ -418,23 +435,6 @@
       <s:element name="DeleteCelebResponse">
         <s:complexType />
       </s:element>
-      <s:element name="GetMovies">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetMoviesResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetMoviesResult">
-              <s:complexType>
-                <s:sequence>
-                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
-                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
-                </s:sequence>
-              </s:complexType>
-            </s:element>
-          </s:sequence>
-        </s:complexType>
-      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="LoginSoapIn">
@@ -473,6 +473,12 @@
   <wsdl:message name="GetAllMoviesSoapOut">
     <wsdl:part name="parameters" element="tns:GetAllMoviesResponse" />
   </wsdl:message>
+  <wsdl:message name="GetMoviesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMovies" />
+  </wsdl:message>
+  <wsdl:message name="GetMoviesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMoviesResponse" />
+  </wsdl:message>
   <wsdl:message name="GetLatestMoviesSoapIn">
     <wsdl:part name="parameters" element="tns:GetLatestMovies" />
   </wsdl:message>
@@ -491,6 +497,12 @@
   <wsdl:message name="GetMovieByIdSoapOut">
     <wsdl:part name="parameters" element="tns:GetMovieByIdResponse" />
   </wsdl:message>
+  <wsdl:message name="GetMoviesByGenreSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMoviesByGenre" />
+  </wsdl:message>
+  <wsdl:message name="GetMoviesByGenreSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMoviesByGenreResponse" />
+  </wsdl:message>
   <wsdl:message name="AddMovieSoapIn">
     <wsdl:part name="parameters" element="tns:AddMovie" />
   </wsdl:message>
@@ -508,12 +520,6 @@
   </wsdl:message>
   <wsdl:message name="DeleteMovieSoapOut">
     <wsdl:part name="parameters" element="tns:DeleteMovieResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetMoviesByGenreSoapIn">
-    <wsdl:part name="parameters" element="tns:GetMoviesByGenre" />
-  </wsdl:message>
-  <wsdl:message name="GetMoviesByGenreSoapOut">
-    <wsdl:part name="parameters" element="tns:GetMoviesByGenreResponse" />
   </wsdl:message>
   <wsdl:message name="AddToWishlistSoapIn">
     <wsdl:part name="parameters" element="tns:AddToWishlist" />
@@ -587,12 +593,6 @@
   <wsdl:message name="DeleteCelebSoapOut">
     <wsdl:part name="parameters" element="tns:DeleteCelebResponse" />
   </wsdl:message>
-  <wsdl:message name="GetMoviesSoapIn">
-    <wsdl:part name="parameters" element="tns:GetMovies" />
-  </wsdl:message>
-  <wsdl:message name="GetMoviesSoapOut">
-    <wsdl:part name="parameters" element="tns:GetMoviesResponse" />
-  </wsdl:message>
   <wsdl:portType name="ServiceSoap">
     <wsdl:operation name="Login">
       <wsdl:input message="tns:LoginSoapIn" />
@@ -618,6 +618,10 @@
       <wsdl:input message="tns:GetAllMoviesSoapIn" />
       <wsdl:output message="tns:GetAllMoviesSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetMovies">
+      <wsdl:input message="tns:GetMoviesSoapIn" />
+      <wsdl:output message="tns:GetMoviesSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetLatestMovies">
       <wsdl:input message="tns:GetLatestMoviesSoapIn" />
       <wsdl:output message="tns:GetLatestMoviesSoapOut" />
@@ -630,6 +634,10 @@
       <wsdl:input message="tns:GetMovieByIdSoapIn" />
       <wsdl:output message="tns:GetMovieByIdSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetMoviesByGenre">
+      <wsdl:input message="tns:GetMoviesByGenreSoapIn" />
+      <wsdl:output message="tns:GetMoviesByGenreSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="AddMovie">
       <wsdl:input message="tns:AddMovieSoapIn" />
       <wsdl:output message="tns:AddMovieSoapOut" />
@@ -641,10 +649,6 @@
     <wsdl:operation name="DeleteMovie">
       <wsdl:input message="tns:DeleteMovieSoapIn" />
       <wsdl:output message="tns:DeleteMovieSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetMoviesByGenre">
-      <wsdl:input message="tns:GetMoviesByGenreSoapIn" />
-      <wsdl:output message="tns:GetMoviesByGenreSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="AddToWishlist">
       <wsdl:input message="tns:AddToWishlistSoapIn" />
@@ -693,10 +697,6 @@
     <wsdl:operation name="DeleteCeleb">
       <wsdl:input message="tns:DeleteCelebSoapIn" />
       <wsdl:output message="tns:DeleteCelebSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetMovies">
-      <wsdl:input message="tns:GetMoviesSoapIn" />
-      <wsdl:output message="tns:GetMoviesSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
@@ -755,6 +755,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetMovies">
+      <soap:operation soapAction="http://tempuri.org/GetMovies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetLatestMovies">
       <soap:operation soapAction="http://tempuri.org/GetLatestMovies" style="document" />
       <wsdl:input>
@@ -782,6 +791,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetMoviesByGenre">
+      <soap:operation soapAction="http://tempuri.org/GetMoviesByGenre" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="AddMovie">
       <soap:operation soapAction="http://tempuri.org/AddMovie" style="document" />
       <wsdl:input>
@@ -802,15 +820,6 @@
     </wsdl:operation>
     <wsdl:operation name="DeleteMovie">
       <soap:operation soapAction="http://tempuri.org/DeleteMovie" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetMoviesByGenre">
-      <soap:operation soapAction="http://tempuri.org/GetMoviesByGenre" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -926,15 +935,6 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetMovies">
-      <soap:operation soapAction="http://tempuri.org/GetMovies" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -992,6 +992,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetMovies">
+      <soap12:operation soapAction="http://tempuri.org/GetMovies" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetLatestMovies">
       <soap12:operation soapAction="http://tempuri.org/GetLatestMovies" style="document" />
       <wsdl:input>
@@ -1019,6 +1028,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetMoviesByGenre">
+      <soap12:operation soapAction="http://tempuri.org/GetMoviesByGenre" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="AddMovie">
       <soap12:operation soapAction="http://tempuri.org/AddMovie" style="document" />
       <wsdl:input>
@@ -1039,15 +1057,6 @@
     </wsdl:operation>
     <wsdl:operation name="DeleteMovie">
       <soap12:operation soapAction="http://tempuri.org/DeleteMovie" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetMoviesByGenre">
-      <soap12:operation soapAction="http://tempuri.org/GetMoviesByGenre" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -1156,15 +1165,6 @@
     </wsdl:operation>
     <wsdl:operation name="DeleteCeleb">
       <soap12:operation soapAction="http://tempuri.org/DeleteCeleb" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetMovies">
-      <soap12:operation soapAction="http://tempuri.org/GetMovies" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
