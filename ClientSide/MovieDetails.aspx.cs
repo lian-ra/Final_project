@@ -10,10 +10,12 @@ public partial class MovieDetails : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!Session["status"].ToString().Equals("2"))
+                string status = Session["status"] as string;
+        if (status != "1" && status != "2")
         {
-            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'login.aspx';}, 10); // 10 = 10/1000 seconds delay";
+            string script = @"alert('You must be logged in to view this page.'); setTimeout(function() {window.location = 'login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
+            return; // Stop further execution
         }
 
         if (!IsPostBack)

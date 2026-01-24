@@ -49,7 +49,8 @@ public class Service : System.Web.Services.WebService
         else
             Sql += "[Admin] where [Usern]='" + username.Replace("'", "''") + "' and [Pass]='" + password.Replace("'", "''") + "'";
 
-        return DbActions.Search(Sql, GetPath());
+        SqlCommand cmd = new SqlCommand(Sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
@@ -94,7 +95,8 @@ public class Service : System.Web.Services.WebService
 
         DbActions.MyAction(cmmd, GetPath());
         sql = "Select * from [Users] where [User]='" + user.UserN.Replace("'", "''") + "'";
-        return DbActions.Search(sql, GetPath());
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
@@ -107,7 +109,8 @@ public class Service : System.Web.Services.WebService
             else if (option.Equals("address")) sql += "WHERE [address]='" + data.Replace("'", "''") + "'";
             else if (option.Equals("username")) sql += "WHERE [User]='" + data.Replace("'", "''") + "'";
         }
-        return DbActions.Search(sql, GetPath());
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     //======================================================
@@ -118,7 +121,8 @@ public class Service : System.Web.Services.WebService
     public void CreateMoviesTable()
     {
         string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Movies'";
-        DataTable dt = DbActions.Search(checkTableSql, GetPath());
+        SqlCommand cmd = new SqlCommand(checkTableSql);
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
         int tableExists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
 
         if (tableExists == 0)
@@ -172,21 +176,27 @@ public class Service : System.Web.Services.WebService
     public DataTable GetAllMovies()
     {
         CreateMoviesTable();
-        return DbActions.Search("SELECT * FROM [Movies] ORDER BY [Year] DESC, [Title]", GetPath());
+        string sql = "SELECT * FROM [Movies] ORDER BY [Year] DESC, [Title]";
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
     public DataTable GetMovies()
     {
         CreateMoviesTable();
-        return DbActions.Search("SELECT * FROM [Movies]", GetPath());
+        string sql = "SELECT * FROM [Movies]";
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
     public DataTable GetLatestMovies()
     {
         CreateMoviesTable();
-        return DbActions.Search("SELECT TOP 5 * FROM [Movies] ORDER BY [MovieId] DESC", GetPath());
+        string sql = "SELECT TOP 5 * FROM [Movies] ORDER BY [MovieId] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
@@ -204,21 +214,28 @@ public class Service : System.Web.Services.WebService
             sql += " AND [Genre] = '" + genre.Replace("'", "''") + "'";
         }
         sql += " ORDER BY [Rating] DESC, [Year] DESC";
-        return DbActions.Search(sql, GetPath());
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
     public DataTable GetMovieById(int movieId)
     {
         CreateMoviesTable();
-        return DbActions.Search("SELECT * FROM [Movies] WHERE [MovieId] = " + movieId, GetPath());
+        string sql = "SELECT * FROM [Movies] WHERE [MovieId] = @p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = movieId;
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
     public DataTable GetMoviesByGenre(string genre)
     {
         CreateMoviesTable();
-        return DbActions.Search("SELECT * FROM [Movies] WHERE [Genre] = '" + genre.Replace("'", "''") + "' ORDER BY [Rating] DESC, [Year] DESC", GetPath());
+        string sql = "SELECT * FROM [Movies] WHERE [Genre] = @p1 ORDER BY [Rating] DESC, [Year] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = genre;
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
@@ -267,12 +284,19 @@ public class Service : System.Web.Services.WebService
     private void CreateWishlistTable()
     {
         string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Wishlist'";
-        DataTable dt = DbActions.Search(checkTableSql, GetPath());
+        SqlCommand cmd = new SqlCommand(checkTableSql);
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
         int tableExists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
 
         if (tableExists == 0)
         {
-            string createTableSql = @"CREATE TABLE [Wishlist] ([Id] INT IDENTITY(1,1) PRIMARY KEY, [Username] NVARCHAR(255) NOT NULL, [MovieId] INT NOT NULL)";
+            string createTableSql = @"CREATE TABLE [Wishlist] (
+                    [Id] INT IDENTITY(1,1) PRIMARY KEY,
+                    [Username] NVARCHAR(255) NOT NULL,
+                    [MovieId] INT NOT NULL,
+                    CONSTRAINT FK_Wishlist_Users FOREIGN KEY ([Username]) REFERENCES [Users]([User]),
+                    CONSTRAINT FK_Wishlist_Movies FOREIGN KEY ([MovieId]) REFERENCES [Movies]([MovieId])
+                )";
             SqlCommand cmmd = new SqlCommand(createTableSql);
             DbActions.MyAction(cmmd, GetPath());
         }
@@ -285,8 +309,11 @@ public class Service : System.Web.Services.WebService
         CreateMoviesTable();
         CreateWishlistTable();
 
-        string checkSql = "SELECT COUNT(*) FROM [Wishlist] WHERE [Username]='" + username.Replace("'", "''") + "' AND [MovieId]=" + movieId;
-        DataTable dt = DbActions.Search(checkSql, GetPath());
+        string checkSql = "SELECT COUNT(*) FROM [Wishlist] WHERE [Username]=@p1 AND [MovieId]=@p2";
+        SqlCommand checkCmd = new SqlCommand(checkSql);
+        checkCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        checkCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
+        DataTable dt = DbActions.SearchWithParameters(checkCmd, GetPath());
         int exists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
 
         if (exists == 0)
@@ -310,6 +337,12 @@ public class Service : System.Web.Services.WebService
         cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
         DbActions.MyAction(cmd, GetPath());
     }
+    public void ResetWishlistTable()
+    {
+        string dropSql = "IF OBJECT_ID('dbo.Wishlist', 'U') IS NOT NULL DROP TABLE dbo.Wishlist";
+        SqlCommand cmd = new SqlCommand(dropSql);
+        CreateWishlistTable(); // Re-create it immediately
+    }
 
     [WebMethod]
     public DataTable GetWishlistMovies(string username)
@@ -317,9 +350,10 @@ public class Service : System.Web.Services.WebService
         if (string.IsNullOrWhiteSpace(username)) throw new Exception("Username is required.");
         CreateMoviesTable();
         CreateWishlistTable();
-        string safeUser = username.Replace("'", "''");
-        string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [Wishlist] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = '" + safeUser + "'";
-        return DbActions.Search(sql, GetPath());
+                string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [Wishlist] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     //======================================================
@@ -329,7 +363,8 @@ public class Service : System.Web.Services.WebService
     private void CreateMovieCommentsTable()
     {
         string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MovieComments'";
-        DataTable dt = DbActions.Search(checkTableSql, GetPath());
+        SqlCommand cmd = new SqlCommand(checkTableSql);
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
         int tableExists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
 
         if (tableExists == 0)
@@ -368,8 +403,10 @@ public class Service : System.Web.Services.WebService
     public DataTable GetMovieComments(int movieId)
     {
         CreateMovieCommentsTable();
-        string sql = "SELECT * FROM [MovieComments] WHERE [MovieId] = " + movieId + " ORDER BY [CreatedAt] DESC";
-        return DbActions.Search(sql, GetPath());
+        string sql = "SELECT * FROM [MovieComments] WHERE [MovieId] = @p1 ORDER BY [CreatedAt] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = movieId;
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     //======================================================
@@ -380,7 +417,8 @@ public class Service : System.Web.Services.WebService
     public void CreateCelebsTable()
     {
         string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Celebs'";
-        DataTable dt = DbActions.Search(checkTableSql, GetPath());
+        SqlCommand cmd = new SqlCommand(checkTableSql);
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
         int tableExists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
 
         if (tableExists == 0)
@@ -424,14 +462,18 @@ public class Service : System.Web.Services.WebService
     public DataTable GetAllCelebs()
     {
         CreateCelebsTable();
-        return DbActions.Search("SELECT * FROM [Celebs] ORDER BY [Name]", GetPath());
+        string sql = "SELECT * FROM [Celebs] ORDER BY [Name]";
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
     public DataTable GetLatestCelebs()
     {
         CreateCelebsTable();
-        return DbActions.Search("SELECT TOP 5 * FROM [Celebs] ORDER BY [CelebId] DESC", GetPath());
+        string sql = "SELECT TOP 5 * FROM [Celebs] ORDER BY [CelebId] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]
@@ -439,17 +481,21 @@ public class Service : System.Web.Services.WebService
     {
         CreateCelebsTable();
         string sql = "SELECT * FROM [Celebs] WHERE 1=1";
+        SqlCommand cmd = new SqlCommand();
+
         if (!string.IsNullOrWhiteSpace(searchText))
         {
-            string escaped = searchText.Replace("'", "''");
-            sql += " AND ([Name] LIKE '%" + escaped + "%' OR [Bio] LIKE '%" + escaped + "%')";
+            sql += " AND ([Name] LIKE @searchText OR [Bio] LIKE @searchText)";
+            cmd.Parameters.Add(new SqlParameter("@searchText", SqlDbType.NVarChar)).Value = "%" + searchText + "%";
         }
         if (!string.IsNullOrWhiteSpace(role) && role.ToLower() != "all")
         {
-            sql += " AND [Role] = '" + role.Replace("'", "''") + "'";
+            sql += " AND [Role] = @role";
+            cmd.Parameters.Add(new SqlParameter("@role", SqlDbType.NVarChar)).Value = role;
         }
         sql += " ORDER BY [Name]";
-        return DbActions.Search(sql, GetPath());
+        cmd.CommandText = sql;
+        return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     [WebMethod]

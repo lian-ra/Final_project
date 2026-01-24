@@ -27,7 +27,7 @@ public partial class Wishlist : System.Web.UI.Page
         try
         {
             string status = Session["status"] as string;
-            if (status != "1")
+            if (status != "1" && status != "2")
             {
                 return null;
             }
