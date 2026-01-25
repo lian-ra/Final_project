@@ -5,6 +5,7 @@
         .films-container {
             padding: 40px 20px;
             color: white;
+            min-height: 600px;
         }
         .films-header {
             text-align: center;
@@ -21,7 +22,7 @@
         }
         .films-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 30px;
             margin-top: 40px;
         }
@@ -32,6 +33,8 @@
             text-align: center;
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
         .film-card:hover {
             transform: translateY(-5px);
@@ -40,7 +43,7 @@
         }
         .film-poster {
             width: 100%;
-            height: 300px;
+            height: 320px;
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 15px;
@@ -50,6 +53,9 @@
             font-weight: bold;
             margin-bottom: 8px;
             color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .film-rating {
             color: #ffd700;
@@ -63,9 +69,12 @@
         .search-section {
             text-align: center;
             margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .search-box {
-            padding: 15px 30px;
+            padding: 12px 30px;
             font-size: 16px;
             width: 400px;
             max-width: 90%;
@@ -77,12 +86,19 @@
         .search-box::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
+        }
         .genre-filters {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 20px;
         }
         .genre-btn {
             padding: 8px 20px;
@@ -91,11 +107,14 @@
             border-radius: 20px;
             color: white;
             cursor: pointer;
+            text-decoration: none;
             transition: all 0.3s;
         }
         .genre-btn:hover {
             background: rgba(255, 255, 255, 0.2);
             border-color: #ff6b6b;
+            text-decoration: none;
+            color: white;
         }
         .genre-btn.active {
             background: #ff6b6b;
@@ -106,122 +125,6 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     
-<div class="slider movie-items">
-	<div class="container">
-		<div class="row">
-	    	<div  class="slick-multiItemSlider">
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="images/uploads/slider1.jpg" alt="" width="285" height="200"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="blue"><a href="#">Sci-fi</a></span>
-	    				</div>
-	    				<h6><a href="#">Interstellar</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-				<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="images/uploads/slider2.jpg" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="yell"><a href="#">action</a></span>
-	    				</div>
-	    				<h6><a href="#">The revenant</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="images/uploads/slider3.jpg" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="green"><a href="#">comedy</a></span>
-	    				</div>
-	    				<h6><a href="#">Die hard</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="images/uploads/slider4.jpg" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="blue"><a href="#">Sci-fi</a></span> <span class="orange"><a href="#">advanture</a></span>
-	    				</div>
-	    				<h6><a href="#">The walk</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="images/uploads/slider1.jpg" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="blue"><a href="#">Sci-fi</a></span>
-	    				</div>
-	    				<h6><a href="#">Interstellar</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-				<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="images/uploads/slider2.jpg" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="yell"><a href="#">action</a></span>
-	    				</div>
-	    				<h6><a href="#">The revenant</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<img src="images/uploads/slider3.jpg" alt="" width="285" height="437">
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="green"><a href="#">comedy</a></span>
-	    				</div>
-	    				<h6><a href="#">Die hard</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<img src="images/uploads/slider4.jpg" alt="" width="285" height="437">
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="blue"><a href="#">Sci-fi</a></span> <span class="orange"><a href="#">advanture</a></span>
-	    				</div>
-	    				<h6><a href="#">The walk</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<img src="images/uploads/slider3.jpg" alt="" width="285" height="437">
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="green"><a href="#">comedy</a></span>
-	    				</div>
-	    				<h6><a href="#">Die hard</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    	</div>
-	    </div>
-	</div>
-</div>
     <div class="films-container">
         <div class="films-header">
             <h1>Films</h1>
@@ -229,14 +132,16 @@
         </div>
 
         <div class="search-section">
-            <asp:TextBox ID="txtSearchFilms" runat="server" CssClass="search-box" placeholder="Search for movies..." />
-            <br />
-            <asp:Button ID="btnSearchFilms" runat="server" Text="Search" OnClick="btnSearchFilms_Click" 
-                style="margin-top: 15px; padding: 12px 40px; background: #333399; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px;" />
-            <br />
-            <div style="display: flex; flex-direction: row;">
+            <asp:Panel ID="pnlSearch" runat="server" DefaultButton="btnSearchFilms">
+                <asp:TextBox ID="txtSearchFilms" runat="server" CssClass="search-box" placeholder="Search for movies..." />
+                <br />
+                <asp:Button ID="btnSearchFilms" runat="server" Text="Search" OnClick="btnSearchFilms_Click" 
+                    style="margin-top: 15px; padding: 10px 40px; background: #333399; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px;" />
+            </asp:Panel>
+            
+            <div class="filters-row">
                 <asp:DropDownList ID="ddlSort" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlSort_SelectedIndexChanged" 
-                    style="width: 200px; margin-top: 28px; padding: 0px 14px; border-radius: 25px; border: 1px solid #333399; background: white; color: black; margin-right: 100px;">
+                    style="padding: 8px 14px; border-radius: 25px; border: 1px solid #333399; background: white; color: black; height: 40px;">
                     <asp:ListItem Value="default" Selected="True">Sort: Best (rating)</asp:ListItem>
                     <asp:ListItem Value="year_desc">Year: Newest first</asp:ListItem>
                     <asp:ListItem Value="year_asc">Year: Oldest first</asp:ListItem>
@@ -245,43 +150,18 @@
                 </asp:DropDownList>
 
                 <div class="genre-filters">
-                <asp:LinkButton ID="btnAll" runat="server" CssClass="genre-btn active" Text="All" OnClick="btnFilter_Click" CommandArgument="all" />
-                <asp:LinkButton ID="btnAction" runat="server" CssClass="genre-btn" Text="Action" OnClick="btnFilter_Click" CommandArgument="action" />
-                <asp:LinkButton ID="btnComedy" runat="server" CssClass="genre-btn" Text="Comedy" OnClick="btnFilter_Click" CommandArgument="comedy" />
-                <asp:LinkButton ID="btnDrama" runat="server" CssClass="genre-btn" Text="Drama" OnClick="btnFilter_Click" CommandArgument="drama" />
-                <asp:LinkButton ID="btnHorror" runat="server" CssClass="genre-btn" Text="Horror" OnClick="btnFilter_Click" CommandArgument="horror" />
-                <asp:LinkButton ID="btnSciFi" runat="server" CssClass="genre-btn" Text="Sci-Fi" OnClick="btnFilter_Click" CommandArgument="scifi" />
+                    <asp:LinkButton ID="btnAll" runat="server" CssClass="genre-btn active" Text="All" OnClick="btnFilter_Click" CommandArgument="all" />
+                    <asp:LinkButton ID="btnAction" runat="server" CssClass="genre-btn" Text="Action" OnClick="btnFilter_Click" CommandArgument="action" />
+                    <asp:LinkButton ID="btnComedy" runat="server" CssClass="genre-btn" Text="Comedy" OnClick="btnFilter_Click" CommandArgument="comedy" />
+                    <asp:LinkButton ID="btnDrama" runat="server" CssClass="genre-btn" Text="Drama" OnClick="btnFilter_Click" CommandArgument="drama" />
+                    <asp:LinkButton ID="btnHorror" runat="server" CssClass="genre-btn" Text="Horror" OnClick="btnFilter_Click" CommandArgument="horror" />
+                    <asp:LinkButton ID="btnSciFi" runat="server" CssClass="genre-btn" Text="Sci-Fi" OnClick="btnFilter_Click" CommandArgument="scifi" />
                 </div>
             </div>
         </div>
 
         <div class="films-grid" id="filmsGrid" runat="server">
-            <!-- Film cards will be generated here -->
-            <div class="film-card">
-                <img src="images/uploads/slider1.jpg" alt="Film Poster" class="film-poster" />
-                <div class="film-title">Interstellar</div>
-                <div class="film-rating">★★★★★ 8.6</div>
-                <div class="film-year">2014</div>
             </div>
-            <div class="film-card">
-                <img src="images/uploads/slider2.jpg" alt="Film Poster" class="film-poster" />
-                <div class="film-title">The Revenant</div>
-                <div class="film-rating">★★★★☆ 8.0</div>
-                <div class="film-year">2015</div>
-            </div>
-            <div class="film-card">
-                <img src="images/uploads/slider3.jpg" alt="Film Poster" class="film-poster" />
-                <div class="film-title">Die Hard</div>
-                <div class="film-rating">★★★★☆ 8.2</div>
-                <div class="film-year">1988</div>
-            </div>
-            <div class="film-card">
-                <img src="images/uploads/slider4.jpg" alt="Film Poster" class="film-poster" />
-                <div class="film-title">The Walk</div>
-                <div class="film-rating">★★★★☆ 7.3</div>
-                <div class="film-year">2015</div>
-            </div>
-        </div>
+
     </div>
 </asp:Content>
-

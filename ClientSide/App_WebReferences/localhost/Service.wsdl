@@ -279,6 +279,12 @@
       <s:element name="RemoveFromWishlistResponse">
         <s:complexType />
       </s:element>
+      <s:element name="ResetWishlistTable">
+        <s:complexType />
+      </s:element>
+      <s:element name="ResetWishlistTableResponse">
+        <s:complexType />
+      </s:element>
       <s:element name="GetWishlistMovies">
         <s:complexType>
           <s:sequence>
@@ -533,6 +539,12 @@
   <wsdl:message name="RemoveFromWishlistSoapOut">
     <wsdl:part name="parameters" element="tns:RemoveFromWishlistResponse" />
   </wsdl:message>
+  <wsdl:message name="ResetWishlistTableSoapIn">
+    <wsdl:part name="parameters" element="tns:ResetWishlistTable" />
+  </wsdl:message>
+  <wsdl:message name="ResetWishlistTableSoapOut">
+    <wsdl:part name="parameters" element="tns:ResetWishlistTableResponse" />
+  </wsdl:message>
   <wsdl:message name="GetWishlistMoviesSoapIn">
     <wsdl:part name="parameters" element="tns:GetWishlistMovies" />
   </wsdl:message>
@@ -657,6 +669,10 @@
     <wsdl:operation name="RemoveFromWishlist">
       <wsdl:input message="tns:RemoveFromWishlistSoapIn" />
       <wsdl:output message="tns:RemoveFromWishlistSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ResetWishlistTable">
+      <wsdl:input message="tns:ResetWishlistTableSoapIn" />
+      <wsdl:output message="tns:ResetWishlistTableSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetWishlistMovies">
       <wsdl:input message="tns:GetWishlistMoviesSoapIn" />
@@ -838,6 +854,15 @@
     </wsdl:operation>
     <wsdl:operation name="RemoveFromWishlist">
       <soap:operation soapAction="http://tempuri.org/RemoveFromWishlist" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResetWishlistTable">
+      <soap:operation soapAction="http://tempuri.org/ResetWishlistTable" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1075,6 +1100,15 @@
     </wsdl:operation>
     <wsdl:operation name="RemoveFromWishlist">
       <soap12:operation soapAction="http://tempuri.org/RemoveFromWishlist" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResetWishlistTable">
+      <soap12:operation soapAction="http://tempuri.org/ResetWishlistTable" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

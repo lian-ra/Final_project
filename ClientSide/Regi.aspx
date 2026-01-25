@@ -1,171 +1,226 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Regi.aspx.cs" Inherits="Regi" %>
+﻿<%@ Page Title="Register" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Regi.aspx.cs" Inherits="Regi" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
-        .auto-style1 {
-            height: 265px;
+        /* Center the registration box on the screen */
+        .register-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
         }
-        .auto-style2 {
-            height: 48px;
+
+        /* The main card container */
+        .register-card {
+            background: rgba(20, 20, 20, 0.85); /* Dark semi-transparent background */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Soft shadow */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 500px; /* Slightly wider than login for more fields */
+            text-align: center;
         }
+
+        .register-card h1 {
+            color: #ffffff;
+            font-size: 32px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Input group styling */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 500;
+        }
+
+        /* Styled TextBoxes */
+        .form-control-custom {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control-custom:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ff4c3b; /* Accent color */
+            box-shadow: 0 0 10px rgba(255, 76, 59, 0.3);
+        }
+
+        /* Dropdown styling */
+        .dropdown-custom {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #222;
+            color: white;
+            font-size: 16px;
+            height: 45px;
+        }
+
+        /* Calendar styling fix */
+        .calendar-container {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 5px;
+            color: black;
+        }
+
+        /* File Upload Styling */
+        .file-upload-custom {
+            color: white;
+            margin-top: 10px;
+        }
+
+        /* Button Styling */
+        .btn-custom {
+            border: none;
+            padding: 12px 0;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        .btn-signup {
+            background: #ff4c3b;
+            color: white;
+        }
+
+        .btn-signup:hover {
+            background: #e04332;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 76, 59, 0.4);
+        }
+
+        /* Profile Image Preview */
+        .profile-img-preview {
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ff4c3b;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
     </style>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-     
-    <center style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 70px;">
-        <h1 style="color: #FFFFFF; margin-bottom: 25px;" > Register </h1>
-     <table>
-         <tr>
-             <td>
-                 <asp:Label ID="label1" runat="server" Text="Username" ForeColor="White" Font-Size="14pt"></asp:Label>
-             </td>
-             <td>
-                <asp:TextBox ID="txtUName" runat="server" Width="295px"></asp:TextBox>
-             </td>
-         </tr>
 
-         <tr>
-             <td>
-                 <asp:Label ID="label2" runat="server" Text="Password" ForeColor="White" Font-Size="14pt"></asp:Label>
-             </td>
-             <td>
-                  <asp:TextBox ID="txtPass" runat="server" Width="295px"></asp:TextBox>
-             </td>
-         </tr>
+    <div class="register-wrapper">
+        <div class="register-card">
+            <h1>Register</h1>
 
-         <tr>
-             <td>
-                  <asp:Label ID="label3" runat="server" Text="Name" ForeColor="White" Font-Size="14pt"></asp:Label>
-             </td>
-             <td>
-                  <asp:TextBox ID="txtFName" runat="server" Width="294px"></asp:TextBox>
-             </td>
-         </tr>
+            <div style="text-align: center;">
+                <asp:Image ID="img" runat="server" CssClass="profile-img-preview" Height="100px" ImageUrl="~/MyPics/Profile.jpg" Width="100px" />
+            </div>
 
-         <tr>
-             <td>
-                  <asp:Label ID="label4" runat="server" Text="Lastname" ForeColor="White" Font-Size="14pt"></asp:Label>
-             </td>
-             <td>
-                 <asp:TextBox ID="txtLName" runat="server" Width="294px"></asp:TextBox>
-             </td>
-         </tr>
+            <div class="form-group">
+                <asp:Label ID="label1" runat="server" Text="Username" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtUName" runat="server" CssClass="form-control-custom" placeholder="Choose a username"></asp:TextBox>
+            </div>
 
-          <tr>
-     <td>
-          <asp:Label ID="label5" runat="server" Text="Adderss" ForeColor="White" Font-Size="14pt"></asp:Label>
-     </td>
-     <td>
-         <asp:TextBox ID="txtAdd" runat="server" Width="294px"></asp:TextBox>
-     </td>
- </tr>
+            <div class="form-group">
+                <asp:Label ID="label2" runat="server" Text="Password" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtPass" runat="server" CssClass="form-control-custom" TextMode="Password" placeholder="Create a password"></asp:TextBox>
+            </div>
 
+            <div class="form-group">
+                <asp:Label ID="label3" runat="server" Text="First Name" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtFName" runat="server" CssClass="form-control-custom" placeholder="Enter first name"></asp:TextBox>
+            </div>
 
-       <tr>
-          <td>
-            <asp:Label ID="label6" runat="server" Text="Email" ForeColor="White" Font-Size="14pt"></asp:Label>
-           </td>
-            <td>
-                <asp:TextBox ID="txtEmail" runat="server" Width="293px"></asp:TextBox>
-           </td>
-        </tr>
+            <div class="form-group">
+                <asp:Label ID="label4" runat="server" Text="Last Name" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtLName" runat="server" CssClass="form-control-custom" placeholder="Enter last name"></asp:TextBox>
+            </div>
 
-         <tr>
-           <td>
-              <asp:Label ID="label7" runat="server" Text="Phone" ForeColor="White" Font-Size="14pt"></asp:Label>
-           </td>
-           <td>
-              <asp:TextBox ID="txtPhone" runat="server" Width="294px"></asp:TextBox>
-          </td>
-     </tr>
+            <div class="form-group">
+                <asp:Label ID="label5" runat="server" Text="Address" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtAdd" runat="server" CssClass="form-control-custom" placeholder="Enter address"></asp:TextBox>
+            </div>
 
-     <tr>
-       <td class="auto-style2">
-          <asp:Label ID="txtGender" runat="server" Text="Gender" ForeColor="White" Font-Size="14pt"></asp:Label>
-      </td>
-       <td class="auto-style2">
-            <asp:DropDownList ID="dpdphone" runat="server" Width="366px">
-       <asp:ListItem>Female</asp:ListItem>
-       <asp:ListItem>Male</asp:ListItem>
-   </asp:DropDownList>
-      </td>
-    </tr>
+            <div class="form-group">
+                <asp:Label ID="label6" runat="server" Text="Email" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control-custom" TextMode="Email" placeholder="Enter email address"></asp:TextBox>
+            </div>
 
-    <%-- <tr>
-       <td>
-         <asp:Label ID="txtBirth" runat="server" Text="Birthday" ForeColor="White" Font-Size="14pt"></asp:Label>
-      </td>
-       <td>
-         <asp:Calendar ID="Calendar1" runat="server" Height="19px" Width="92px"></asp:Calendar>
-       </td>
-     </tr>--%>
-         <tr>
+            <div class="form-group">
+                <asp:Label ID="label7" runat="server" Text="Phone" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control-custom" placeholder="Enter phone number"></asp:TextBox>
+            </div>
 
-    <td class="auto-style1">
-      <asp:Label ID="Label12" runat="server" Text="Birthday" ForeColor="white"></asp:Label>
-   </td>
+            <div class="form-group">
+                <asp:Label ID="txtGender" runat="server" Text="Gender" CssClass="form-label"></asp:Label>
+                <asp:DropDownList ID="dpdphone" runat="server" CssClass="dropdown-custom">
+                    <asp:ListItem>Female</asp:ListItem>
+                    <asp:ListItem>Male</asp:ListItem>
+                </asp:DropDownList>
+            </div>
 
-   <td class="auto-style1">
-        <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
-            <ContentTemplate>
-                <asp:Calendar ID="Calendar1" runat="server" 
-                    SelectionMode="Day" 
-                    ShowDayHeader="True" 
-                    ShowGridLines="True"
-                    ShowTitle="True"
-                    DayNameFormat="Short"
-                    FirstDayOfWeek="Sunday"
-                    NextPrevFormat="ShortMonth"
-                    BackColor="White"
-                    ForeColor="Black"
-                    BorderColor="Black"
-                    BorderStyle="Solid"
-                    BorderWidth="1px"
-                    CellPadding="1"
-                    Font-Names="Verdana"
-                    Font-Size="9pt"
-                    Height="200px"
-                    Width="220px">
-                    <TodayDayStyle BackColor="#CCCCCC" ForeColor="Black" />
-                    <SelectorStyle BackColor="#CCCCCC" />
-                    <NextPrevStyle Font-Size="8pt" ForeColor="White" Font-Bold="True" />
-                    <DayHeaderStyle Font-Size="8pt" Font-Bold="True" Height="8pt" />
-                    <SelectedDayStyle BackColor="#333399" ForeColor="White" />
-                    <TitleStyle BackColor="#333399" Font-Bold="True" Font-Size="9pt" ForeColor="White" Height="9pt" />
-                    <WeekendDayStyle BackColor="#FFFFCC" />
-                </asp:Calendar>
-            </ContentTemplate>
-        </asp:UpdatePanel>
-     <%--  <asp:TextBox ID="txtbirthday" runat="server"></asp:TextBox>--%>
-   </td>
+            <div class="form-group">
+                <asp:Label ID="Label12" runat="server" Text="Birthday" CssClass="form-label"></asp:Label>
+                <div class="calendar-container">
+                    <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <asp:Calendar ID="Calendar1" runat="server" 
+                                SelectionMode="Day" 
+                                ShowDayHeader="True" 
+                                ShowGridLines="False"
+                                ShowTitle="True"
+                                DayNameFormat="Short"
+                                FirstDayOfWeek="Sunday"
+                                NextPrevFormat="ShortMonth"
+                                BackColor="White"
+                                ForeColor="Black"
+                                BorderColor="White"
+                                Width="100%">
+                                <TitleStyle BackColor="#ff4c3b" Font-Bold="True" ForeColor="White" Height="30px" />
+                                <NextPrevStyle Font-Bold="True" ForeColor="White" />
+                                <DayHeaderStyle Font-Bold="True" BackColor="#f0f0f0" />
+                                <SelectedDayStyle BackColor="#ff4c3b" ForeColor="White" />
+                                <TodayDayStyle BackColor="#eeeeee" ForeColor="Black" />
+                                <OtherMonthDayStyle ForeColor="#999999" />
+                            </asp:Calendar>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
 
- </tr>
-         <tr>
-            <td>
-                 <asp:Image ID="img" runat="server" Height="197px" ImageUrl="~/MyPics/Profile.jpg" Width="166px" />
-                 
-            </td>
-             <td>
-                 &nbsp;</td>
-         </tr>
+            <div class="form-group">
+                <asp:Label runat="server" Text="Profile Picture" CssClass="form-label"></asp:Label>
+                <asp:FileUpload ID="FileUpload1" runat="server" CssClass="file-upload-custom" />
+            </div>
 
-         <tr>
-             <td>
-
-                 <asp:FileUpload ID="FileUpload1" runat="server" Width="386px" />
-
-             </td>
-         </tr>
-
-         <tr>
-             <td>
-                 <asp:Button runat="server" id="btnsave"  Text="Sign Up" OnClick="btnsave_Click" style="padding: 12px; border-radius: 20px; background: red; color: white; font-weight: 700; margin-top: 20px" />             </td>
-         </tr>
-
-     </table>
-
- </center>
+            <asp:Button runat="server" ID="btnsave" Text="Sign Up" OnClick="btnsave_Click" CssClass="btn-custom btn-signup" />
+        </div>
+    </div>
 
 </asp:Content>
-

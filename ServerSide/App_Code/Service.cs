@@ -293,9 +293,7 @@ public class Service : System.Web.Services.WebService
             string createTableSql = @"CREATE TABLE [Wishlist] (
                     [Id] INT IDENTITY(1,1) PRIMARY KEY,
                     [Username] NVARCHAR(255) NOT NULL,
-                    [MovieId] INT NOT NULL,
-                    CONSTRAINT FK_Wishlist_Users FOREIGN KEY ([Username]) REFERENCES [Users]([User]),
-                    CONSTRAINT FK_Wishlist_Movies FOREIGN KEY ([MovieId]) REFERENCES [Movies]([MovieId])
+                    [MovieId] INT NOT NULL
                 )";
             SqlCommand cmmd = new SqlCommand(createTableSql);
             DbActions.MyAction(cmmd, GetPath());
@@ -337,10 +335,13 @@ public class Service : System.Web.Services.WebService
         cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
         DbActions.MyAction(cmd, GetPath());
     }
+
+    [WebMethod]
     public void ResetWishlistTable()
     {
         string dropSql = "IF OBJECT_ID('dbo.Wishlist', 'U') IS NOT NULL DROP TABLE dbo.Wishlist";
         SqlCommand cmd = new SqlCommand(dropSql);
+        DbActions.MyAction(cmd, GetPath()); // Executing the command to drop the table
         CreateWishlistTable(); // Re-create it immediately
     }
 
@@ -350,7 +351,7 @@ public class Service : System.Web.Services.WebService
         if (string.IsNullOrWhiteSpace(username)) throw new Exception("Username is required.");
         CreateMoviesTable();
         CreateWishlistTable();
-                string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [Wishlist] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1";
+        string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [Wishlist] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
         return DbActions.SearchWithParameters(cmd, GetPath());

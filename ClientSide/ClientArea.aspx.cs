@@ -10,11 +10,13 @@ public partial class ClientArea : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!Session["status"].ToString().Equals("1"))
+        if (Session["status"] == null || !Session["status"].ToString().Equals("1"))
         {
-            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'login.aspx';}, 10); // 10 = 10/1000 seconds delay";
+            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'Login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
+            return;
         }
+
         try
         {
             string status = Session["status"] as string;
@@ -37,6 +39,21 @@ public partial class ClientArea : System.Web.UI.Page
         catch
         {
             Response.Redirect("Login.aspx");
+        }
+    }
+
+    protected void btnResetWishlist_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            localhost.Service service = new localhost.Service();
+            service.ResetWishlistTable();
+            // Message updated: removed "attempted" and "temporary" wording
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Wishlist table has been reset successfully.');", true);
+        }
+        catch (Exception ex)
+        {
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('An error occurred: " + ex.Message.Replace("'", "\\'") + "');", true);
         }
     }
 }
