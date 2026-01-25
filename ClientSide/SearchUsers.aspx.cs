@@ -41,7 +41,7 @@ public partial class SearchUsers : System.Web.UI.Page
             DataTable dt = myService.SearchUser(searchText, searchOption);
             GrdUsers.DataSource = dt;
             GrdUsers.DataBind();
-            detailsSection.Visible = false;
+            pnlModal.Visible = false;
         }
         catch (Exception ex)
         {
@@ -54,7 +54,7 @@ public partial class SearchUsers : System.Web.UI.Page
         TxtSearch.Text = "";
         DrpSearch.SelectedIndex = 0;
         LoadAllUsers();
-        detailsSection.Visible = false;
+        pnlModal.Visible = false;
         GrdUsers.SelectedIndex = -1;
     }
 
@@ -76,13 +76,91 @@ public partial class SearchUsers : System.Web.UI.Page
     {
         if (GrdUsers.SelectedRow != null)
         {
-            // Note: Indices depend on visible columns. 
-            // In ASPX: Col 0 is button, Col 1 is Username, Col 2 is FName, Col 3 is LName
-            TxtName.Text = GrdUsers.SelectedRow.Cells[2].Text; // First Name
-            TxtLast.Text = GrdUsers.SelectedRow.Cells[3].Text; // Last Name
+            // Get Username from DataKey
+            string username = GrdUsers.DataKeys[GrdUsers.SelectedRow.RowIndex].Value.ToString();
+            HiddenUsername.Value = username;
 
-            detailsSection.Visible = true;
+            // To populate all fields (Phone, Email, Address), it is safer to fetch the record again
+            // because columns might be hidden or formatted in the GridView.
+            try
+            {
+                DataTable dt = myService.SearchUser(username, "username");
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    DataRow row = dt.Rows[0];
+                    TxtName.Text = row["FName"].ToString();
+                    TxtLast.Text = row["LName"].ToString();
+                    TxtEmail.Text = row["email"].ToString();
+                    TxtAddress.Text = row["address"].ToString();
+
+                    // Handle phone/gender column confusion logic just in case, but usually Service returns raw data
+                    if (dt.Columns.Contains("phone"))
+                        TxtPhone.Text = row["phone"].ToString();
+                    else
+                        TxtPhone.Text = "";
+                }
+            }
+            catch { }
+
+            // Show the Modal
+            pnlModal.Visible = true;
         }
+    }
+
+    protected void BtnUpdateUser_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string username = HiddenUsername.Value;
+            if (string.IsNullOrEmpty(username)) return;
+
+            // 1. Fetch current user data to preserve other fields (like password, picture)
+            DataTable dt = myService.SearchUser(username, "username");
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                DataRow row = dt.Rows[0];
+
+                localhost.Users user = new localhost.Users();
+                user.UserN = username;
+
+                // Update modified fields from TextBoxes
+                user.NameF = TxtName.Text.Trim();
+                user.LastN = TxtLast.Text.Trim();
+                user.Email = TxtEmail.Text.Trim();
+                user.Fulladdres = TxtAddress.Text.Trim();
+                user.PhoneN = TxtPhone.Text.Trim();
+
+                // Preserve existing fields (Pass, Pic)
+                user.Pass = row["pass"].ToString();
+
+                if (row.Table.Columns.Contains("pic"))
+                    user.Pic = row["pic"].ToString();
+                else if (row.ItemArray.Length > 9)
+                    user.Pic = row[9].ToString();
+                else
+                    user.Pic = "Profile.jpg";
+
+                // 2. Send update
+                myService.UpdateUser(user);
+
+                // 3. Refresh Grid and Close Modal
+                LoadAllUsers();
+                pnlModal.Visible = false;
+
+                string script = "alert('User updated successfully!');";
+                ClientScript.RegisterStartupScript(this.GetType(), "Success", script, true);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowError("Update failed: " + ex.Message);
+        }
+    }
+
+    protected void BtnClose_Click(object sender, EventArgs e)
+    {
+        pnlModal.Visible = false;
+        GrdUsers.SelectedIndex = -1;
     }
 
     private void ShowError(string msg)

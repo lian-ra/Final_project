@@ -4,7 +4,7 @@
     <style type="text/css">
         .search-wrapper {
             padding: 40px 20px;
-            max-width: 95%; /* Made wider to fit data */
+            max-width: 95%;
             margin: 0 auto;
             color: #ddd;
         }
@@ -37,11 +37,7 @@
             margin-right: auto;
         }
 
-        .search-label {
-            font-size: 16px;
-            font-weight: 500;
-            color: white;
-        }
+        .search-label { font-size: 16px; font-weight: 500; color: white; }
 
         .form-control {
             padding: 10px 15px;
@@ -90,9 +86,9 @@
             width: 100%;
             border-collapse: collapse;
             background-color: #222;
-            font-size: 13px; /* Slightly smaller text to fit more */
+            font-size: 13px;
             border: 1px solid #444;
-            table-layout: fixed; /* IMPORTANT: Keeps columns from exploding */
+            table-layout: fixed;
         }
 
         .users-grid th {
@@ -110,15 +106,12 @@
             border-bottom: 1px solid #333;
             color: #ddd;
             vertical-align: top;
-            
-            /* CRITICAL: Wraps long text to prevent overlap */
             word-wrap: break-word;
             word-break: break-word; 
             white-space: normal; 
         }
 
         .users-grid tr:hover { background-color: #2a2a2a; }
-
         .users-grid tr.selected-row {
             background-color: rgba(255, 76, 59, 0.15) !important;
             border-left: 4px solid #ff4c3b;
@@ -130,25 +123,73 @@
             border: 2px solid #555;
         }
 
-        /* Selected Details Area */
-        .details-card {
-            margin-top: 30px;
-            background: rgba(40, 40, 40, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #444;
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
             display: flex;
             align-items: center;
-            gap: 20px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+            justify-content: center;
+            backdrop-filter: blur(5px);
         }
 
-        .details-title {
+        .modal-content {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: bold;
             color: #ff4c3b;
-            font-weight: 600;
-            margin-right: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-footer {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .input-group label {
+            display: block;
+            color: #ccc;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        
+        .modal-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background: #1a1a1a;
+            color: white;
+            box-sizing: border-box;
         }
     </style>
 </asp:Content>
@@ -175,7 +216,7 @@
                 OnSelectedIndexChanged="GrdUsers_SelectedIndexChanged"
                 DataKeyNames="User">
                 <Columns>
-                    <asp:CommandField ButtonType="Button" SelectText="Select" ShowSelectButton="True" ControlStyle-CssClass="btn-custom btn-secondary" ItemStyle-Width="8%" />
+                    <asp:CommandField ButtonType="Button" SelectText="Edit" ShowSelectButton="True" ControlStyle-CssClass="btn-custom btn-secondary" ItemStyle-Width="8%" />
                     <asp:BoundField DataField="User" HeaderText="Username" ItemStyle-Width="10%" />
                     <asp:BoundField DataField="FName" HeaderText="First Name" ItemStyle-Width="10%" />
                     <asp:BoundField DataField="LName" HeaderText="Last Name" ItemStyle-Width="10%" />
@@ -210,19 +251,39 @@
             </asp:GridView>
         </div>
 
-        <div class="details-card" id="detailsSection" runat="server" visible="false">
-            <span class="details-title">Selected User:</span>
-            
-            <div style="display:flex; gap: 10px; align-items: center;">
-                <label style="color: #ccc;">First Name:</label>
-                <asp:TextBox ID="TxtName" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+        <asp:Panel ID="pnlModal" runat="server" Visible="false" CssClass="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">Edit User</div>
+                <div class="modal-body">
+                    <asp:HiddenField ID="HiddenUsername" runat="server" />
+                    
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <asp:TextBox ID="TxtName" runat="server" CssClass="modal-control"></asp:TextBox>
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <asp:TextBox ID="TxtLast" runat="server" CssClass="modal-control"></asp:TextBox>
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <asp:TextBox ID="TxtEmail" runat="server" CssClass="modal-control"></asp:TextBox>
+                    </div>
+                    <div class="input-group">
+                        <label>Address</label>
+                        <asp:TextBox ID="TxtAddress" runat="server" CssClass="modal-control"></asp:TextBox>
+                    </div>
+                    <div class="input-group">
+                        <label>Phone</label>
+                        <asp:TextBox ID="TxtPhone" runat="server" CssClass="modal-control"></asp:TextBox>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <asp:Button ID="BtnClose" runat="server" Text="Cancel" OnClick="BtnClose_Click" CssClass="btn-custom btn-secondary" />
+                    <asp:Button ID="BtnUpdateUser" runat="server" Text="Save Changes" OnClick="BtnUpdateUser_Click" CssClass="btn-custom btn-primary" />
+                </div>
             </div>
-            
-            <div style="display:flex; gap: 10px; align-items: center;">
-                <label style="color: #ccc;">Last Name:</label>
-                <asp:TextBox ID="TxtLast" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
-            </div>
-        </div>
+        </asp:Panel>
 
     </div>
 </asp:Content>

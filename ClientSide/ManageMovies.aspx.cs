@@ -10,21 +10,15 @@ public partial class ManageMovies : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!Session["status"].ToString().Equals("2"))
+        if (Session["status"] == null || !Session["status"].ToString().Equals("2"))
         {
-            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'login.aspx';}, 10); // 10 = 10/1000 seconds delay";
+            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
+            return;
         }
 
         if (!IsPostBack)
         {
-            // Only admins (status "2") can access this page
-            string status = Session["status"] as string;
-            if (status != "2")
-            {
-                Response.Redirect("Login.aspx");
-            }
-
             BindMoviesGrid();
         }
     }
@@ -100,6 +94,11 @@ public partial class ManageMovies : System.Web.UI.Page
         lblManageMessage.Visible = false;
     }
 
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        BindMoviesGrid();
+    }
+
     private void ClearForm()
     {
         txtTitle.Text = "";
@@ -117,21 +116,25 @@ public partial class ManageMovies : System.Web.UI.Page
     {
         lblManageMessage.Text = message;
         lblManageMessage.Visible = true;
-        if (isSuccess)
-        {
-            lblManageMessage.CssClass = "message-label message-success";
-        }
-        else
-        {
-            lblManageMessage.CssClass = "message-label message-error";
-        }
+        lblManageMessage.CssClass = isSuccess ? "message-label message-success" : "message-label message-error";
     }
 
     private void BindMoviesGrid()
     {
         try
         {
-            var dt = myService.GetAllMovies();
+            string searchTerm = txtSearch.Text.Trim();
+            DataTable dt;
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                dt = myService.SearchMovies(searchTerm, "all");
+            }
+            else
+            {
+                dt = myService.GetAllMovies();
+            }
+
             grdMovies.DataSource = dt;
             grdMovies.DataBind();
         }
@@ -158,38 +161,56 @@ public partial class ManageMovies : System.Web.UI.Page
         try
         {
             int movieId = (int)grdMovies.DataKeys[e.RowIndex].Value;
-
             GridViewRow row = grdMovies.Rows[e.RowIndex];
 
-            string title = ((TextBox)row.Cells[2].Controls[0]).Text.Trim();
-            string yearText = ((TextBox)row.Cells[3].Controls[0]).Text.Trim();
-            string genre = ((TextBox)row.Cells[4].Controls[0]).Text.Trim();
-            string ratingText = ((TextBox)row.Cells[5].Controls[0]).Text.Trim();
-            string poster = ((TextBox)row.Cells[6].Controls[0]).Text.Trim();
-            string director = ((TextBox)row.Cells[7].Controls[0]).Text.Trim();
-            string actors = ((TextBox)row.Cells[8].Controls[0]).Text.Trim();
-            string durationText = ((TextBox)row.Cells[9].Controls[0]).Text.Trim();
+            // Accessing cells by index since we have known columns
+            // Cell 0: ID (ReadOnly) - we can't edit it
+            // Cell 1: Title
+            // Cell 2: Year
+            // Cell 3: Genre
+            // Cell 4: Rating
+            // Cell 5: Director
+            // Cell 6: Actors
+            // Cell 7: Duration
+            // Cell 8: Actions
+
+            // Note: The index shifts based on AutoGenerateColumns=False. 
+            // In the ASPX above:
+            // 0: ID
+            // 1: Title
+            // 2: Year
+            // 3: Genre
+            // 4: Rating
+            // 5: Director
+            // 6: Actors
+            // 7: Duration
+            // 8: Actions (CommandField)
+
+            // TextBoxes are the first control in the cell during edit mode
+            string title = ((TextBox)row.Cells[1].Controls[0]).Text.Trim();
+            string yearText = ((TextBox)row.Cells[2].Controls[0]).Text.Trim();
+            string genre = ((TextBox)row.Cells[3].Controls[0]).Text.Trim();
+            string ratingText = ((TextBox)row.Cells[4].Controls[0]).Text.Trim();
+            string director = ((TextBox)row.Cells[5].Controls[0]).Text.Trim();
+            string actors = ((TextBox)row.Cells[6].Controls[0]).Text.Trim();
+            string durationText = ((TextBox)row.Cells[7].Controls[0]).Text.Trim();
+
+            // Poster and Description are not in grid to save space, but we must provide them for the update object
+            // Ideally we should fetch the existing record first to preserve them, but for now we'll send defaults or empties
+            // Note: In a real app, you'd Fetch Movie By ID -> Update Fields -> Save. 
+            // Since we can't easily fetch here without rewriting service logic in C#, we will just assume existing logic handles nulls gracefully or we might overwrite poster with empty.
+            // WORKAROUND: We will just update what we see. The Service UpdateMovie SQL updates everything. 
+            // If we send null/empty for Poster/Desc, they might get wiped. 
+            // Let's rely on Service handling or just accept that grid editing is limited.
 
             int year;
-            if (!int.TryParse(yearText, out year))
-            {
-                ShowMessage("Year must be a valid number.", false);
-                return;
-            }
+            int.TryParse(yearText, out year);
 
-            decimal rating = 0m;
-            if (!string.IsNullOrEmpty(ratingText) && !decimal.TryParse(ratingText, out rating))
-            {
-                ShowMessage("Rating must be a valid decimal number.", false);
-                return;
-            }
+            decimal rating;
+            decimal.TryParse(ratingText, out rating);
 
-            int duration = 0;
-            if (!string.IsNullOrEmpty(durationText) && !int.TryParse(durationText, out duration))
-            {
-                ShowMessage("Duration must be a valid number.", false);
-                return;
-            }
+            int duration;
+            int.TryParse(durationText, out duration);
 
             localhost.Movies movie = new localhost.Movies();
             movie.MovieId = movieId;
@@ -197,11 +218,21 @@ public partial class ManageMovies : System.Web.UI.Page
             movie.Year = year;
             movie.Genre = genre;
             movie.Rating = rating;
-            movie.Poster = poster;
+            movie.Poster = ""; // Warning: This might wipe the poster if not handled in SP/Service. 
+                               // Since the Service.cs UpdateMovie updates ALL fields, this is risky. 
+                               // To do this properly, we need to get the current movie first.
+
+            // --- CORRECT APPROACH TO PRESERVE DATA ---
+            DataTable dtCurrent = myService.GetMovieById(movieId);
+            if (dtCurrent != null && dtCurrent.Rows.Count > 0)
+            {
+                movie.Poster = dtCurrent.Rows[0]["Poster"].ToString();
+                movie.Description = dtCurrent.Rows[0]["Description"].ToString();
+            }
+
             movie.Director = director;
             movie.Actors = actors;
             movie.Duration = duration;
-            movie.Description = ""; // description is not in grid; keep as empty or could be fetched if needed
 
             myService.UpdateMovie(movie);
 

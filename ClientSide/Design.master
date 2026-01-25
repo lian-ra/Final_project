@@ -74,8 +74,9 @@
 
                                                         <ul class="dropdown-menu level1">
                                                            <%-- <li><a href="Films.aspx">Films</a></li>--%>
-                                                             <li><a href="Films.aspx">Films</a></li>
+                                                             <li><a href="Home.aspx">Films</a></li>
                                                             <li><a href="Wishlist.aspx">Wishlist</a></li>
+                                                            <li><a href="FindUsers.aspx">Find Friends</a></li>
                                                         </ul>
                                                     </li>
                                                     <li class="dropdown first">
@@ -99,7 +100,7 @@
                                                             Pages <i class="fa fa-angle-down" aria-hidden="true"></i>
                                                         </a>
                                                         <ul class="dropdown-menu level1">
-															<li><a href="Films.aspx">Homepage</a></li>
+															<li><a href="Home.aspx">Homepage</a></li>
                                                             <li><a href="SearchUsers.aspx">Search Users</a></li>
                                                             <li><a href="ClientArea.aspx">Client Area</a></li>
                                                             <li><a href="AdminArea.aspx">Admin Area</a></li>
