@@ -9,8 +9,7 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Data.OleDb;
 using MDb.App_Code;
-
-// REMOVED: using MDb.App_Code; 
+// using MDb.App_Code; // Not needed if in same App_Code folder
 
 [WebService(Namespace = "http://tempuri.org/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
@@ -531,4 +530,97 @@ public class Service : System.Web.Services.WebService
         cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = celebId;
         DbActions.MyAction(cmmd, GetPath());
     }
+
+
+    //======================================================
+    // FOLLOWERS
+    //======================================================
+
+    // Helper to fix the "my_db.GetOneField" error you saw. 
+    // Now we use DbActions.SearchWithParameters just like Login() method.
+
+    [WebMethod]
+    public bool IsFollowing(string follower, string following)
+    {
+        // Checks if 'follower' is already following 'following'
+        string sql = "SELECT COUNT(*) FROM [Followers] WHERE [FollowerUser]=@p1 AND [FollowingUser]=@p2";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = follower;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = following;
+
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
+        int count = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+        return count > 0;
+    }
+
+    [WebMethod]
+    public void FollowUser(string follower, string following)
+    {
+        // Prevent following yourself
+        if (follower == following) return;
+
+        if (!IsFollowing(follower, following))
+        {
+            string sql = "INSERT INTO [Followers] ([FollowerUser], [FollowingUser]) VALUES (@p1, @p2)";
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = follower;
+            cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = following;
+            DbActions.MyAction(cmd, GetPath());
+        }
+    }
+
+    [WebMethod]
+    public void UnfollowUser(string follower, string following)
+    {
+        string sql = "DELETE FROM [Followers] WHERE [FollowerUser]=@p1 AND [FollowingUser]=@p2";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = follower;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = following;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public int GetFollowersCount(string username)
+    {
+        // Count how many people follow this user
+        string sql = "SELECT COUNT(*) FROM [Followers] WHERE [FollowingUser]=@p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
+        return (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+    }
+
+    [WebMethod]
+    public int GetFollowingCount(string username)
+    {
+        // Count how many people this user follows
+        string sql = "SELECT COUNT(*) FROM [Followers] WHERE [FollowerUser]=@p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
+        return (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+    }
+
+    [WebMethod]
+    public DataTable GetFollowersList(string username)
+    {
+        // Gets list of people following 'username'
+        string sql = "SELECT * FROM [Followers] WHERE [FollowingUser] = @p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetFollowingList(string username)
+    {
+        // Gets list of people 'username' is following
+        string sql = "SELECT * FROM [Followers] WHERE [FollowerUser] = @p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
 }

@@ -441,6 +441,113 @@
       <s:element name="DeleteCelebResponse">
         <s:complexType />
       </s:element>
+      <s:element name="IsFollowing">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="follower" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="following" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsFollowingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsFollowingResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FollowUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="follower" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="following" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FollowUserResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UnfollowUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="follower" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="following" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UnfollowUserResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetFollowersCount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFollowersCountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetFollowersCountResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFollowingCount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFollowingCountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetFollowingCountResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFollowersList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFollowersListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetFollowersListResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFollowingList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFollowingListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetFollowingListResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="LoginSoapIn">
@@ -605,6 +712,48 @@
   <wsdl:message name="DeleteCelebSoapOut">
     <wsdl:part name="parameters" element="tns:DeleteCelebResponse" />
   </wsdl:message>
+  <wsdl:message name="IsFollowingSoapIn">
+    <wsdl:part name="parameters" element="tns:IsFollowing" />
+  </wsdl:message>
+  <wsdl:message name="IsFollowingSoapOut">
+    <wsdl:part name="parameters" element="tns:IsFollowingResponse" />
+  </wsdl:message>
+  <wsdl:message name="FollowUserSoapIn">
+    <wsdl:part name="parameters" element="tns:FollowUser" />
+  </wsdl:message>
+  <wsdl:message name="FollowUserSoapOut">
+    <wsdl:part name="parameters" element="tns:FollowUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="UnfollowUserSoapIn">
+    <wsdl:part name="parameters" element="tns:UnfollowUser" />
+  </wsdl:message>
+  <wsdl:message name="UnfollowUserSoapOut">
+    <wsdl:part name="parameters" element="tns:UnfollowUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFollowersCountSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFollowersCount" />
+  </wsdl:message>
+  <wsdl:message name="GetFollowersCountSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFollowersCountResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFollowingCountSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFollowingCount" />
+  </wsdl:message>
+  <wsdl:message name="GetFollowingCountSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFollowingCountResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFollowersListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFollowersList" />
+  </wsdl:message>
+  <wsdl:message name="GetFollowersListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFollowersListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFollowingListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFollowingList" />
+  </wsdl:message>
+  <wsdl:message name="GetFollowingListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFollowingListResponse" />
+  </wsdl:message>
   <wsdl:portType name="ServiceSoap">
     <wsdl:operation name="Login">
       <wsdl:input message="tns:LoginSoapIn" />
@@ -713,6 +862,34 @@
     <wsdl:operation name="DeleteCeleb">
       <wsdl:input message="tns:DeleteCelebSoapIn" />
       <wsdl:output message="tns:DeleteCelebSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsFollowing">
+      <wsdl:input message="tns:IsFollowingSoapIn" />
+      <wsdl:output message="tns:IsFollowingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FollowUser">
+      <wsdl:input message="tns:FollowUserSoapIn" />
+      <wsdl:output message="tns:FollowUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UnfollowUser">
+      <wsdl:input message="tns:UnfollowUserSoapIn" />
+      <wsdl:output message="tns:UnfollowUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowersCount">
+      <wsdl:input message="tns:GetFollowersCountSoapIn" />
+      <wsdl:output message="tns:GetFollowersCountSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowingCount">
+      <wsdl:input message="tns:GetFollowingCountSoapIn" />
+      <wsdl:output message="tns:GetFollowingCountSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowersList">
+      <wsdl:input message="tns:GetFollowersListSoapIn" />
+      <wsdl:output message="tns:GetFollowersListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowingList">
+      <wsdl:input message="tns:GetFollowingListSoapIn" />
+      <wsdl:output message="tns:GetFollowingListSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
@@ -960,6 +1137,69 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="IsFollowing">
+      <soap:operation soapAction="http://tempuri.org/IsFollowing" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FollowUser">
+      <soap:operation soapAction="http://tempuri.org/FollowUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnfollowUser">
+      <soap:operation soapAction="http://tempuri.org/UnfollowUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowersCount">
+      <soap:operation soapAction="http://tempuri.org/GetFollowersCount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowingCount">
+      <soap:operation soapAction="http://tempuri.org/GetFollowingCount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowersList">
+      <soap:operation soapAction="http://tempuri.org/GetFollowersList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowingList">
+      <soap:operation soapAction="http://tempuri.org/GetFollowingList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -1199,6 +1439,69 @@
     </wsdl:operation>
     <wsdl:operation name="DeleteCeleb">
       <soap12:operation soapAction="http://tempuri.org/DeleteCeleb" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsFollowing">
+      <soap12:operation soapAction="http://tempuri.org/IsFollowing" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FollowUser">
+      <soap12:operation soapAction="http://tempuri.org/FollowUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnfollowUser">
+      <soap12:operation soapAction="http://tempuri.org/UnfollowUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowersCount">
+      <soap12:operation soapAction="http://tempuri.org/GetFollowersCount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowingCount">
+      <soap12:operation soapAction="http://tempuri.org/GetFollowingCount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowersList">
+      <soap12:operation soapAction="http://tempuri.org/GetFollowersList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFollowingList">
+      <soap12:operation soapAction="http://tempuri.org/GetFollowingList" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

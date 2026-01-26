@@ -159,8 +159,7 @@
             <asp:Repeater ID="rptUsers" runat="server">
                 <ItemTemplate>
 
-                    <div class="profile-card">
-                    <a href='UserProfile.aspx?username=<%# Eval("User") %>' class="profile-card" style="display:block; text-decoration:none;">
+                    <a class="profile-card" href='UserProfile.aspx?username=<%# Eval("User") %>' class="profile-card" style="width: 100%; text-decoration:none;">
                         <div class="profile-img-container">
                             <img src='<%# ResolveUrl("~/MyPics/" + (string.IsNullOrEmpty(Eval("pic").ToString()) ? "Profile.jpg" : Eval("pic"))) %>' class="profile-img" alt="User Pic" />
                         </div>
@@ -179,7 +178,6 @@
                             <%# Eval("email") %>
                         </div>
                      </a>
-                    </div>
                 </ItemTemplate>
             </asp:Repeater>
             

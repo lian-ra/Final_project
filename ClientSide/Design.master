@@ -31,7 +31,7 @@
 </head>
 <body>
     <form id="form1" runat="server" >
-						<li class="dropdown first" style="margin-bottom: 60px; ">
+						<li class="dropdown first" >
                             <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
                                 <!--preloading-->
                                 <div id="preloader">
@@ -74,46 +74,23 @@
 
                                                         <ul class="dropdown-menu level1">
                                                            <%-- <li><a href="Films.aspx">Films</a></li>--%>
-                                                             <li><a href="Home.aspx">Films</a></li>
-                                                            <li><a href="Wishlist.aspx">Wishlist</a></li>
-                                                            <li><a href="FindUsers.aspx">Find Friends</a></li>
+                                                             <li><a href="Home.aspx">Search Films</a></li>
+                                                            <li><a href="Wishlist.aspx">My Wishlist</a></li>
                                                         </ul>
                                                     </li>
-                                                    <li class="dropdown first">
-                                                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" href="Celebs.aspx">
-                                                            Celebs <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu level1">
-                                                            <li><a href="Celebs.aspx">Celebs</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="dropdown first">
-                                                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-                                                            News <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu level1">
-                                                            <li><a href="News.aspx">News</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="dropdown first">
-                                                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-                                                            Pages <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu level1">
-															<li><a href="Home.aspx">Homepage</a></li>
-                                                            <li><a href="SearchUsers.aspx">Search Users</a></li>
-                                                            <li><a href="ClientArea.aspx">Client Area</a></li>
-                                                            <li><a href="AdminArea.aspx">Admin Area</a></li>
-                                                            <li class="it-last"><a href="UpdateMyUser.aspx">Update My User</a></li>
-                                                        </ul>
-                                                    </li>
+                                                    <li><a href="Celebs.aspx">Celebs</a></li>
+                                                    <li><a href="FindUsers.aspx">Find Friends</a></li>
+                                                    <li><a href="News.aspx">News</a></li>
+                                                    <li><a href="ClientArea.aspx">My Profile</a></li>
+                                                    <li><a href="AdminArea.aspx">Admin Area</a></li>
+                                                   
                                                 </ul>
                                                 <ul class="nav navbar-nav flex-child-menu menu-right">
                                                     <li id="liLoggedOut" runat="server">
-                                                        <a href="Login.aspx">LOG In</a>
+                                                        <a href="Login.aspx">Login</a>
                                                     </li>
                                                     <li id="liSignUp" class="btn" runat="server">
-                                                        <a href="Regi.aspx">sign up</a>
+                                                        <a href="Regi.aspx">Signup</a>
                                                     </li>
                                                     <li id="liLoggedIn" runat="server" visible="false">
                                                         <span style="color: white; padding: 10px 15px; display: inline-block;">
@@ -133,7 +110,7 @@
 <!-- END | Header -->
 
 <div class="movie-items">
-    <div class:"flex-center">
+    <div class:"flex-center" style="margin-top:30px;"">
         <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
         </asp:ContentPlaceHolder>
     </div>

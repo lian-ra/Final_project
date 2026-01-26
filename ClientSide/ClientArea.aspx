@@ -5,7 +5,7 @@
         .client-wrapper {
             padding: 50px 20px;
             min-height: 80vh;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -26,8 +26,10 @@
         .dashboard-grid {
             display: flex;
             justify-content: center;
+            gap: 30px;
             width: 100%;
             margin-bottom: 50px;
+            flex-wrap: wrap;
         }
 
         .dash-card {
@@ -43,7 +45,7 @@
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
-            width: 250px;
+            width: 220px;
         }
 
         .dash-card:hover {
@@ -55,28 +57,29 @@
 
         /* Image handling inside the card */
         .card-image-container {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             overflow: hidden;
             border: 3px solid #444;
             margin-bottom: 20px;
             transition: border-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222;
         }
+        
+        .dash-card:hover .card-image-container { border-color: #ff4c3b; }
 
-        .dash-card:hover .card-image-container {
-            border-color: #ff4c3b;
-        }
-
-        .dash-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .dash-card img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .dash-icon { font-size: 40px; color: #ccc; }
+        .dash-card:hover .dash-icon { color: #ff4c3b; }
 
         .dash-text {
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -110,24 +113,14 @@
             border: 2px solid #aaa;
             color: #aaa;
         }
-
-        .btn-logout:hover {
-            border-color: white;
-            color: white;
-            background-color: rgba(255,255,255,0.1);
-        }
+        .btn-logout:hover { border-color: white; color: white; background-color: rgba(255,255,255,0.1); }
 
         .btn-danger {
             background-color: rgba(255, 68, 68, 0.1);
             border: 2px solid #ff4444;
             color: #ff4444;
         }
-
-        .btn-danger:hover {
-            background-color: #ff4444;
-            color: white;
-            box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
-        }
+        .btn-danger:hover { background-color: #ff4444; color: white; box-shadow: 0 0 15px rgba(255, 68, 68, 0.4); }
     </style>
 </asp:Content>
 
@@ -142,6 +135,20 @@
                     <asp:Image ID="imgUpdateUser" runat="server" ImageUrl="~/MyPics/update_user.jpg" />
                 </div>
                 <span class="dash-text">Update Profile</span>
+            </a>
+
+            <a href="MyFollowers.aspx" class="dash-card">
+                <div class="card-image-container">
+                    <i class="fa fa-users dash-icon"></i>
+                </div>
+                <span class="dash-text">My Friends</span>
+            </a>
+            
+            <a href="UserProfile.aspx" class="dash-card">
+                <div class="card-image-container">
+                    <i class="fa fa-user dash-icon"></i>
+                </div>
+                <span class="dash-text">View My Profile</span>
             </a>
         </div>
 

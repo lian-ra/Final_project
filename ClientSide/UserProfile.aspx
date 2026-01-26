@@ -24,7 +24,7 @@
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             position: sticky;
-            top: 100px; /* Sticks when scrolling */
+            top: 100px; 
         }
 
         .user-avatar-large {
@@ -52,6 +52,58 @@
             display: block;
         }
 
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 15px 0;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-item { text-align: center; }
+
+        .stat-value {
+            display: block;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            display: block;
+            color: #aaa;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .btn-follow {
+            width: 100%;
+            padding: 10px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-follow-action {
+            background-color: #ff4c3b;
+            color: white;
+        }
+        
+        .btn-follow-action:hover { background-color: #e04332; }
+
+        .btn-unfollow {
+            background-color: transparent;
+            border: 2px solid #555;
+            color: #ccc;
+        }
+
+        .btn-unfollow:hover { border-color: #ff4c3b; color: #ff4c3b; }
+
         .user-info-row {
             display: flex;
             align-items: center;
@@ -62,10 +114,7 @@
             font-size: 14px;
         }
 
-        .user-info-row i {
-            color: #ff4c3b;
-            width: 20px;
-        }
+        .user-info-row i { color: #ff4c3b; width: 20px; }
 
         /* --- Right Side: Wishlist --- */
         .wishlist-section {
@@ -111,9 +160,7 @@
             object-fit: cover;
         }
 
-        .movie-info {
-            padding: 15px;
-        }
+        .movie-info { padding: 15px; }
 
         .movie-title {
             color: white;
@@ -143,6 +190,7 @@
             padding: 30px;
             border-radius: 10px;
             text-align: center;
+            display: block;
         }
 
         @media (max-width: 768px) {
@@ -164,25 +212,29 @@
             </div>
             <span class="user-handle">@<asp:Label ID="lblUsername" runat="server"></asp:Label></span>
 
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-value"><asp:Label ID="lblFollowersCount" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Followers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value"><asp:Label ID="lblFollowingCount" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Following</span>
+                </div>
+            </div>
+
+            <asp:Button ID="btnFollow" runat="server" Text="Follow" OnClick="btnFollow_Click" CssClass="btn-follow btn-follow-action" Visible="false" />
+
             <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;" />
 
             <div class="user-info-row">
                 <i class="fa fa-envelope"></i>
                 <asp:Label ID="lblEmail" runat="server"></asp:Label>
             </div>
-            <div class="user-info-row">
-                <i class="fa fa-map-marker"></i>
-                <asp:Label ID="lblAddress" runat="server"></asp:Label>
-            </div>
-            
-            <div id="divPhone" runat="server" class="user-info-row" visible="false">
-                <i class="fa fa-phone"></i>
-                <asp:Label ID="lblPhone" runat="server"></asp:Label>
-            </div>
         </div>
 
         <div class="wishlist-section">
-            <h2 class="section-title">Favorite Movies</h2>
+            <h2 class="section-title">Movies In Wishlist</h2>
 
             <asp:Repeater ID="rptWishlist" runat="server">
                 <HeaderTemplate>
