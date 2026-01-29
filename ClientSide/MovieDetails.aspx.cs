@@ -175,7 +175,7 @@ public partial class MovieDetails : System.Web.UI.Page
                         <div class='details-section-title'>Actors</div>
                         <div class='details-actors'>{7}</div>
                         <div class='details-actions'>
-                            <a href='Films.aspx' class='btn-back'>Back to films</a>
+                            <a href='Home.aspx' class='btn-back'>Back to films</a>
                             {8}
                         </div>
                     </div>

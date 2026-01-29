@@ -24,6 +24,8 @@ public class Service : System.Web.Services.WebService
         return Server.MapPath("App_Data/Db.mdf");
     }
 
+    //    הפעולה מתעדת את פרטי השגיאה והזמן הנוכחי לקובץ טקסט בשרת(service_errors.log),
+    //    ומונעת מהתוכנה לקרוס גם אם הכתיבה לקובץ נכשלת.
     private void LogError(Exception ex)
     {
         try
@@ -39,6 +41,9 @@ public class Service : System.Web.Services.WebService
     // USERS
     //======================================================
 
+
+  //  פעולה מבצעת אימות כניסה(Login) על ידי הרצת שאילתת SQL הבודקת אם קיים משתמש או מנהל עם שם המשתמש
+  //  והסיסמה שהוזנו בטבלאות המתאימות במסד הנתונים.
     [WebMethod]
     public DataTable Login(string username, string password, bool Choice)
     {
@@ -52,6 +57,9 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+
+   // פעולה רושמת משתמש חדש למסד הנתונים על ידי קבלת אובייקט Users והכנסת פרטיו(כמו שם, סיסמה, אימייל ותאריך לידה)
+   // לטבלת Users תוך שימוש בפרמטרים מאובטחים למניעת הזרקות SQL.
     [WebMethod]
     public void Regi(Users users)
     {
@@ -76,6 +84,9 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmmd, GetPath());
     }
 
+
+   // הפעולה מעדכנת את פרטי המשתמש במסד הנתונים
+   // לפי שם המשתמש שלו, ולאחר מכן שולפת ומחזירה את הנתונים המעודכנים כטבלה(DataTable).
     [WebMethod]
     public DataTable UpdateUser(Users user)
     {
@@ -98,6 +109,8 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה מחפשת ושולפת משתמשים מטבלת Users על פי קריטריון שנבחר (שם, כתובת או שם משתמש),
+    //ומחזירה את התוצאות כטבלה (DataTable).
     [WebMethod]
     public DataTable SearchUser(string data, string option)
     {
@@ -116,6 +129,8 @@ public class Service : System.Web.Services.WebService
     // MOVIES
     //======================================================
 
+    //הפעולה בודקת אם טבלת הסרטים (Movies) קיימת במסד הנתונים, ואם לא – היא יוצרת אותה עם
+    //מבנה עמודות מפורט (כמו כותרת, ז'אנר ודירוג) ומכניסה אליה נתוני דוגמה ראשוניים.
     [WebMethod]
     public void CreateMoviesTable()
     {
@@ -143,7 +158,8 @@ public class Service : System.Web.Services.WebService
             InsertSampleMovies();
         }
     }
-
+    //הפעולה יוצרת מערך של אובייקטי סרטים המכילים נתוני דוגמה
+    //(כמו "בין כוכבים" ו"מת לחיות"), ומכניסה אותם בזה אחר זה למסד הנתונים באמצעות קריאה לפעולה AddMovieInternal.
     private void InsertSampleMovies()
     {
         Movies[] sampleMovies = new Movies[] {
@@ -155,6 +171,8 @@ public class Service : System.Web.Services.WebService
         foreach (Movies movie in sampleMovies) AddMovieInternal(movie);
     }
 
+    //הפעולה מקבלת אובייקט של סרט ומכניסה את כל פרטיו לטבלת מוביס
+    // במסד הנתונים תוך שימוש בפרמטרים מאובטחים ובדיקה האם
     private void AddMovieInternal(Movies movie)
     {
         string sql = "INSERT INTO [Movies] ([Title], [Description], [Year], [Genre], [Rating], [Poster], [Director], [Actors], [Duration]) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
