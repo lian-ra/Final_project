@@ -70,8 +70,9 @@
 
             .events-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
                 gap: 25px;
+                padding-bottom: 40px;
             }
 
             .event-card {
@@ -81,6 +82,9 @@
                 transition: all 0.3s;
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 position: relative;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
             }
 
             .event-card:hover {
@@ -91,9 +95,10 @@
 
             .event-poster {
                 width: 100%;
-                height: 200px;
+                height: 250px;
                 object-fit: cover;
                 position: relative;
+                flex-shrink: 0;
             }
 
             .event-status-badge {
@@ -105,6 +110,7 @@
                 font-size: 12px;
                 font-weight: 600;
                 text-transform: uppercase;
+                z-index: 2;
             }
 
             .status-open {
@@ -124,6 +130,9 @@
 
             .event-content {
                 padding: 20px;
+                display: flex;
+                flex-direction: column;
+                flex: 1;
             }
 
             .event-movie-title {
@@ -131,6 +140,12 @@
                 font-weight: 700;
                 color: white;
                 margin-bottom: 10px;
+                min-height: 44px;
+                /* Ensure 2 lines of text */
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
             }
 
             .event-host {
@@ -312,6 +327,40 @@
                 font-size: 13px;
                 color: #aaa;
             }
+
+            .search-container {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .search-box {
+                padding: 10px 15px;
+                border-radius: 25px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                width: 250px;
+            }
+
+            .btn-search {
+                background: transparent;
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s;
+            }
+
+            .btn-search:hover {
+                background: rgba(255, 76, 59, 0.2);
+                border-color: #ff4c3b;
+            }
         </style>
     </asp:Content>
 
@@ -319,8 +368,15 @@
         <div class="events-wrapper">
             <div class="events-header">
                 <h1 class="events-title">Movie Watching Events</h1>
-                <asp:Button ID="btnCreateEvent" runat="server" Text="+ Create Event" CssClass="btn-create-event"
-                    OnClick="btnCreateEvent_Click" />
+                <div class="search-container">
+                    <asp:TextBox ID="txtSearchLocation" runat="server" CssClass="search-box"
+                        placeholder="Search by location..." />
+                    <asp:LinkButton ID="btnSearch" runat="server" CssClass="btn-search" OnClick="btnSearch_Click">
+                        <i class="fa fa-search"></i>
+                    </asp:LinkButton>
+                    <asp:Button ID="btnCreateEvent" runat="server" Text="+ Create Event" CssClass="btn-create-event"
+                        OnClick="btnCreateEvent_Click" />
+                </div>
             </div>
 
             <div class="events-filters">
@@ -365,6 +421,12 @@
                     <label>Price (ILS)</label>
                     <asp:TextBox ID="txtPrice" runat="server" TextMode="Number" CssClass="form-control"
                         placeholder="0.00"></asp:TextBox>
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <asp:TextBox ID="txtLocation" runat="server" CssClass="form-control"
+                        placeholder="e.g. Tel Aviv, My House, Cinema City..."></asp:TextBox>
                 </div>
 
                 <div class="form-group">

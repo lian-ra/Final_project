@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -24,8 +24,8 @@ public class Service : System.Web.Services.WebService
         return Server.MapPath("App_Data/Db.mdf");
     }
 
-    //    äôòåìä îúòãú àú ôøèé äùâéàä åäæîï äðåëçé ì÷åáõ è÷ñè áùøú(service_errors.log),
-    //    åîåðòú îäúåëðä ì÷øåñ âí àí äëúéáä ì÷åáõ ðëùìú.
+    //    ×”×¤×¢×•×œ×” ×ž×ª×¢×“×ª ××ª ×¤×¨×˜×™ ×”×©×’×™××” ×•×”×–×ž×Ÿ ×”× ×•×›×—×™ ×œ×§×•×‘×¥ ×˜×§×¡×˜ ×‘×©×¨×ª(service_errors.log),
+    //    ×•×ž×•× ×¢×ª ×ž×”×ª×•×›× ×” ×œ×§×¨×•×¡ ×’× ×× ×”×›×ª×™×‘×” ×œ×§×•×‘×¥ × ×›×©×œ×ª.
     private void LogError(Exception ex)
     {
         try
@@ -42,8 +42,8 @@ public class Service : System.Web.Services.WebService
     //======================================================
 
 
-  //  ôòåìä îáöòú àéîåú ëðéñä(Login) òì éãé äøöú ùàéìúú SQL äáåã÷ú àí ÷ééí îùúîù àå îðäì òí ùí äîùúîù
-  //  åäñéñîä ùäåæðå áèáìàåú äîúàéîåú áîñã äðúåðéí.
+  //  ×¤×¢×•×œ×” ×ž×‘×¦×¢×ª ××™×ž×•×ª ×›× ×™×¡×”(Login) ×¢×œ ×™×“×™ ×”×¨×¦×ª ×©××™×œ×ª×ª SQL ×”×‘×•×“×§×ª ×× ×§×™×™× ×ž×©×ª×ž×© ××• ×ž× ×”×œ ×¢× ×©× ×”×ž×©×ª×ž×©
+  //  ×•×”×¡×™×¡×ž×” ×©×”×•×–× ×• ×‘×˜×‘×œ××•×ª ×”×ž×ª××™×ž×•×ª ×‘×ž×¡×“ ×”× ×ª×•× ×™×.
     [WebMethod]
     public DataTable Login(string username, string password, bool Choice)
     {
@@ -53,13 +53,13 @@ public class Service : System.Web.Services.WebService
         else
             Sql += "[Admin] where [Usern]='" + username.Replace("'", "''") + "' and [Pass]='" + password.Replace("'", "''") + "'";
 
-        SqlCommand cmd = new SqlCommand(Sql);
+        SqlCommand cmd = new SqlCommand(Sql); // ×ž×¨×™×¥ ×¤×§×•×“×” ×¢×œ ×”DB
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
 
-   // ôòåìä øåùîú îùúîù çãù ìîñã äðúåðéí òì éãé ÷áìú àåáéé÷è Users åäëðñú ôøèéå(ëîå ùí, ñéñîä, àéîééì åúàøéê ìéãä)
-   // ìèáìú Users úåê ùéîåù áôøîèøéí îàåáèçéí ìîðéòú äæø÷åú SQL.
+   // ×¤×¢×•×œ×” ×¨×•×©×ž×ª ×ž×©×ª×ž×© ×—×“×© ×œ×ž×¡×“ ×”× ×ª×•× ×™× ×¢×œ ×™×“×™ ×§×‘×œ×ª ××•×‘×™×™×§×˜ Users ×•×”×›× ×¡×ª ×¤×¨×˜×™×•(×›×ž×• ×©×, ×¡×™×¡×ž×”, ××™×ž×™×™×œ ×•×ª××¨×™×š ×œ×™×“×”)
+   // ×œ×˜×‘×œ×ª Users ×ª×•×š ×©×™×ž×•×© ×‘×¤×¨×ž×˜×¨×™× ×ž××•×‘×˜×—×™× ×œ×ž× ×™×¢×ª ×”×–×¨×§×•×ª SQL.
     [WebMethod]
     public void Regi(Users users)
     {
@@ -85,8 +85,8 @@ public class Service : System.Web.Services.WebService
     }
 
 
-   // äôòåìä îòãëðú àú ôøèé äîùúîù áîñã äðúåðéí
-   // ìôé ùí äîùúîù ùìå, åìàçø îëï ùåìôú åîçæéøä àú äðúåðéí äîòåãëðéí ëèáìä(DataTable).
+   // ×”×¤×¢×•×œ×” ×ž×¢×“×›× ×ª ××ª ×¤×¨×˜×™ ×”×ž×©×ª×ž×© ×‘×ž×¡×“ ×”× ×ª×•× ×™×
+   // ×œ×¤×™ ×©× ×”×ž×©×ª×ž×© ×©×œ×•, ×•×œ××—×¨ ×ž×›×Ÿ ×©×•×œ×¤×ª ×•×ž×—×–×™×¨×” ××ª ×”× ×ª×•× ×™× ×”×ž×¢×•×“×›× ×™× ×›×˜×‘×œ×”(DataTable).
     [WebMethod]
     public DataTable UpdateUser(Users user)
     {
@@ -119,8 +119,8 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmd, GetPath());
     }
 
-    //äôòåìä îçôùú åùåìôú îùúîùéí îèáìú Users òì ôé ÷øéèøéåï ùðáçø (ùí, ëúåáú àå ùí îùúîù),
-    //åîçæéøä àú äúåöàåú ëèáìä (DataTable).
+    //×”×¤×¢×•×œ×” ×ž×—×¤×©×ª ×•×©×•×œ×¤×ª ×ž×©×ª×ž×©×™× ×ž×˜×‘×œ×ª Users ×¢×œ ×¤×™ ×§×¨×™×˜×¨×™×•×Ÿ ×©× ×‘×—×¨ (×©×, ×›×ª×•×‘×ª ××• ×©× ×ž×©×ª×ž×©),
+    //×•×ž×—×–×™×¨×” ××ª ×”×ª×•×¦××•×ª ×›×˜×‘×œ×” (DataTable).
     [WebMethod]
     public DataTable SearchUser(string data, string option)
     {
@@ -139,8 +139,8 @@ public class Service : System.Web.Services.WebService
     // MOVIES
     //======================================================
 
-    //äôòåìä áåã÷ú àí èáìú äñøèéí (Movies) ÷ééîú áîñã äðúåðéí, åàí ìà – äéà éåöøú àåúä òí
-    //îáðä òîåãåú îôåøè (ëîå ëåúøú, æ'àðø åãéøåâ) åîëðéñä àìéä ðúåðé ãåâîä øàùåðééí.
+    //×”×¤×¢×•×œ×” ×‘×•×“×§×ª ×× ×˜×‘×œ×ª ×”×¡×¨×˜×™× (Movies) ×§×™×™×ž×ª ×‘×ž×¡×“ ×”× ×ª×•× ×™×, ×•×× ×œ× â€“ ×”×™× ×™×•×¦×¨×ª ××•×ª×” ×¢×
+    //×ž×‘× ×” ×¢×ž×•×“×•×ª ×ž×¤×•×¨×˜ (×›×ž×• ×›×•×ª×¨×ª, ×–'×× ×¨ ×•×“×™×¨×•×’) ×•×ž×›× ×™×¡×” ××œ×™×” × ×ª×•× ×™ ×“×•×’×ž×” ×¨××©×•× ×™×™×.
     [WebMethod]
     public void CreateMoviesTable()
     {
@@ -168,8 +168,8 @@ public class Service : System.Web.Services.WebService
             InsertSampleMovies();
         }
     }
-    //äôòåìä éåöøú îòøê ùì àåáéé÷èé ñøèéí äîëéìéí ðúåðé ãåâîä
-    //(ëîå "áéï ëåëáéí" å"îú ìçéåú"), åîëðéñä àåúí áæä àçø æä ìîñã äðúåðéí áàîöòåú ÷øéàä ìôòåìä AddMovieInternal.
+    //×”×¤×¢×•×œ×” ×™×•×¦×¨×ª ×ž×¢×¨×š ×©×œ ××•×‘×™×™×§×˜×™ ×¡×¨×˜×™× ×”×ž×›×™×œ×™× × ×ª×•× ×™ ×“×•×’×ž×”
+    //(×›×ž×• "×‘×™×Ÿ ×›×•×›×‘×™×" ×•"×ž×ª ×œ×—×™×•×ª"), ×•×ž×›× ×™×¡×” ××•×ª× ×‘×–×” ××—×¨ ×–×” ×œ×ž×¡×“ ×”× ×ª×•× ×™× ×‘××ž×¦×¢×•×ª ×§×¨×™××” ×œ×¤×¢×•×œ×” AddMovieInternal.
     private void InsertSampleMovies()
     {
         Movies[] sampleMovies = new Movies[] {
@@ -181,13 +181,13 @@ public class Service : System.Web.Services.WebService
         foreach (Movies movie in sampleMovies) AddMovieInternal(movie);
     }
 
-    //äôòåìä î÷áìú àåáéé÷è ùì ñøè åîëðéñä àú ëì ôøèéå ìèáìú îåáéñ
-    // áîñã äðúåðéí úåê ùéîåù áôøîèøéí îàåáèçéí åáãé÷ä äàí
+    //×”×¤×¢×•×œ×” ×ž×§×‘×œ×ª ××•×‘×™×™×§×˜ ×©×œ ×¡×¨×˜ ×•×ž×›× ×™×¡×” ××ª ×›×œ ×¤×¨×˜×™×• ×œ×˜×‘×œ×ª ×ž×•×‘×™×¡
+    // ×‘×ž×¡×“ ×”× ×ª×•× ×™× ×ª×•×š ×©×™×ž×•×© ×‘×¤×¨×ž×˜×¨×™× ×ž××•×‘×˜×—×™× ×•×‘×“×™×§×” ×”××
     private void AddMovieInternal(Movies movie)
     {
         string sql = "INSERT INTO [Movies] ([Title], [Description], [Year], [Genre], [Rating], [Poster], [Director], [Actors], [Duration]) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
         SqlCommand cmmd = new SqlCommand(sql);
-        cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = movie.Title ?? (object)DBNull.Value;
+        cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = movie.Title ?? (object)DBNull.Value; // ?? => if first value exist use it, else use the value after ??
         cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = movie.Description ?? (object)DBNull.Value;
         cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int)).Value = movie.Year;
         cmmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar)).Value = movie.Genre ?? (object)DBNull.Value;
@@ -202,15 +202,17 @@ public class Service : System.Web.Services.WebService
     [WebMethod]
     public DataTable GetAllMovies()
     {
-        CreateMoviesTable();
-        string sql = "SELECT * FROM [Movies] ORDER BY [Year] DESC, [Title]";
-        SqlCommand cmd = new SqlCommand(sql);
-        return DbActions.SearchWithParameters(cmd, GetPath());
+        // ×ž×—×–×™×¨ ××ª ×›×œ ×”×¡×¨×˜×™× ×ž×”×˜×‘×œ×” ×©×œ ×”×¡×¨×˜×™× ×œ×¤×™ ×¡×“×¨ ×”×•×¦××” ×©×œ ×”×©× ×”
+        CreateMoviesTable();  // ×ª×™×¦×•×¨ ××ª ×”×˜×‘×œ×” ×× ×œ× ×§×™×™×ž×ª ×›×‘×¨
+        string sql = "SELECT * FROM [Movies] ORDER BY [Year] DESC, [Title]"; //×©××™×œ×ª×
+        SqlCommand cmd = new SqlCommand(sql); // ×ž×›×™×Ÿ ××•×‘×™×™×§×˜ ×©×œ ×”×©××™×œ×ª× ×œ×¡×•×’ ×”×˜×‘×œ×” - sql
+        return DbActions.SearchWithParameters(cmd, GetPath()); // ×ª×¨×™×¥ ××ª ×”×©××™×œ×ª× ×ž×•×œ ×”×˜×‘×œ×”
     }
 
     [WebMethod]
     public DataTable GetMovies()
     {
+        // ×œ×”×—×–×™×¨ ××ª ×›×œ ×”×¡×¨×˜×™× ×‘×œ×™ ×ž×™×•×Ÿ
         CreateMoviesTable();
         string sql = "SELECT * FROM [Movies]";
         SqlCommand cmd = new SqlCommand(sql);
@@ -220,6 +222,7 @@ public class Service : System.Web.Services.WebService
     [WebMethod]
     public DataTable GetLatestMovies()
     {
+        // ×œ×”×—×–×™×¨ ××ª ×—×ž×©×ª ×”×¡×¨×˜×™× ×”××—×¨×•× ×™×
         CreateMoviesTable();
         string sql = "SELECT TOP 5 * FROM [Movies] ORDER BY [MovieId] DESC";
         SqlCommand cmd = new SqlCommand(sql);
@@ -229,6 +232,7 @@ public class Service : System.Web.Services.WebService
     [WebMethod]
     public DataTable SearchMovies(string searchTerm, string genre)
     {
+        // ×—×™×¤×•×© ×¡×¨×˜×™× ×‘×˜×‘×œ×”
         CreateMoviesTable();
         string sql = "SELECT * FROM [Movies] WHERE 1=1";
         if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -248,6 +252,7 @@ public class Service : System.Web.Services.WebService
     [WebMethod]
     public DataTable GetMovieById(int movieId)
     {
+        // ×§×‘×œ×ª ×¡×¨×˜ ×¡×¤×¦×™×¤×™ ×œ×¤×™ ×”×ž×¡×¤×¨ ×”×ž×–×”×” ×©×œ×•
         CreateMoviesTable();
         string sql = "SELECT * FROM [Movies] WHERE [MovieId] = @p1";
         SqlCommand cmd = new SqlCommand(sql);
@@ -280,6 +285,7 @@ public class Service : System.Web.Services.WebService
         CreateMoviesTable();
         string sql = @"UPDATE [Movies] SET [Title]=@p1, [Description]=@p2, [Year]=@p3, [Genre]=@p4, [Rating]=@p5, [Poster]=@p6, [Director]=@p7, [Actors]=@p8, [Duration]=@p9 WHERE [MovieId]=@p10";
         SqlCommand cmmd = new SqlCommand(sql);
+        // under explained : @p1 = movie.title 
         cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = movie.Title ?? (object)DBNull.Value;
         cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = movie.Description ?? (object)DBNull.Value;
         cmmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int)).Value = movie.Year;
@@ -684,9 +690,6 @@ public class Service : System.Web.Services.WebService
     // FOLLOWERS
     //======================================================
 
-    // Helper to fix the "my_db.GetOneField" error you saw. 
-    // Now we use DbActions.SearchWithParameters just like Login() method.
-
     [WebMethod]
     public bool IsFollowing(string follower, string following)
     {
@@ -793,12 +796,28 @@ public class Service : System.Web.Services.WebService
                 [EventDate] DATE NOT NULL,
                 [StartTime] TIME NOT NULL,
                 [Price] DECIMAL(10,2) DEFAULT 0.0,
+                [Location] NVARCHAR(100) DEFAULT '',
                 [Status] NVARCHAR(20) DEFAULT 'Open',
                 [CreatedAt] DATETIME DEFAULT GETDATE(),
                 FOREIGN KEY ([MovieId]) REFERENCES [Movies]([MovieId])
             )";
             SqlCommand cmmd = new SqlCommand(createEventsSql);
             DbActions.MyAction(cmmd, GetPath());
+        }
+        else
+        {
+            // Check if Location column exists, if not add it
+            string checkColSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Events' AND COLUMN_NAME = 'Location'";
+            SqlCommand colCmd = new SqlCommand(checkColSql);
+            DataTable dtCol = DbActions.SearchWithParameters(colCmd, GetPath());
+            int colExists = (dtCol != null && dtCol.Rows.Count > 0) ? Convert.ToInt32(dtCol.Rows[0][0]) : 0;
+            
+            if (colExists == 0)
+            {
+                string addColSql = "ALTER TABLE [Events] ADD [Location] NVARCHAR(100) DEFAULT ''";
+                SqlCommand addCmd = new SqlCommand(addColSql);
+                DbActions.MyAction(addCmd, GetPath());
+            }
         }
 
         string checkSubsSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EventSubscriptions'";
@@ -822,22 +841,23 @@ public class Service : System.Web.Services.WebService
     }
 
     [WebMethod]
-    public int CreateEvent(string username, int movieId, string eventDate, string startTime, decimal price, string status)
+    public int CreateEvent(string username, int movieId, string eventDate, string startTime, decimal price, string location, string status)
     {
         if (string.IsNullOrWhiteSpace(username) || movieId <= 0) throw new Exception("Username and MovieId are required.");
         CreateMoviesTable();
         CreateEventsTable();
 
-        string sql = @"INSERT INTO [Events] ([Username], [MovieId], [EventDate], [StartTime], [Price], [Status], [CreatedAt]) 
-                       VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7); SELECT SCOPE_IDENTITY();";
+        string sql = @"INSERT INTO [Events] ([Username], [MovieId], [EventDate], [StartTime], [Price], [Location], [Status], [CreatedAt]) 
+                       VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8); SELECT SCOPE_IDENTITY();";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
         cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
         cmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Date)).Value = DateTime.Parse(eventDate);
         cmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.Time)).Value = TimeSpan.Parse(startTime);
         cmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal)).Value = price;
-        cmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.NVarChar)).Value = status ?? "Open";
-        cmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.DateTime)).Value = DateTime.Now;
+        cmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.NVarChar)).Value = location ?? "";
+        cmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.NVarChar)).Value = status ?? "Open";
+        cmd.Parameters.Add(new SqlParameter("@p8", SqlDbType.DateTime)).Value = DateTime.Now;
 
         DataTable result = DbActions.SearchWithParameters(cmd, GetPath());
         if (result != null && result.Rows.Count > 0)
@@ -1000,6 +1020,20 @@ public class Service : System.Web.Services.WebService
                        ORDER BY e.[EventDate] DESC, e.[StartTime] DESC";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetEventsByLocation(string location)
+    {
+        CreateEventsTable();
+        string sql = @"SELECT e.*, m.Title, m.Poster, m.Genre, m.Rating
+                       FROM [Events] e
+                       INNER JOIN [Movies] m ON e.[MovieId] = m.[MovieId]
+                       WHERE e.[Location] LIKE @p1
+                       ORDER BY e.[EventDate] DESC, e.[StartTime] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = "%" + location + "%";
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 }

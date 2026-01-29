@@ -28,6 +28,7 @@ namespace MDb.App_Code
 
         public static DataTable Search(string sql,string path)
         {
+            // General search in any sql table
             Connect_Me(path);
 
             DataSet ds = new DataSet();
@@ -52,6 +53,7 @@ namespace MDb.App_Code
 
         public static DataTable SearchWithParameters(SqlCommand cmmd, string path)
         {
+            // general search with any parameters
             Connect_Me(path);
 
             DataSet ds = new DataSet();

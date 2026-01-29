@@ -75,6 +75,7 @@ public partial class EventDetails : System.Web.UI.Page
             string director = row["Director"] != DBNull.Value ? row["Director"].ToString() : "";
             string actors = row["Actors"] != DBNull.Value ? row["Actors"].ToString() : "";
             int movieId = Convert.ToInt32(row["MovieId"]);
+            string location = row.Table.Columns.Contains("Location") && row["Location"] != DBNull.Value ? row["Location"].ToString() : "TBD";
 
             if (!poster.StartsWith("http") && !poster.StartsWith("/") && !poster.StartsWith("~/"))
             {
@@ -128,8 +129,11 @@ public partial class EventDetails : System.Web.UI.Page
                                     <div class='event-detail-value'><i class='fa fa-clock-o'></i>{6}</div>
                                 </div>
                                 <div class='event-detail-card'>
-                                    <div class='event-detail-label'>Genre</div>
                                     <div class='event-detail-value'><i class='fa fa-film'></i>{7}</div>
+                                </div>
+                                <div class='event-detail-card'>
+                                    <div class='event-detail-label'>Location</div>
+                                    <div class='event-detail-value'><i class='fa fa-map-marker'></i>{12}</div>
                                 </div>
                                 <div class='event-detail-card'>
                                     <div class='event-detail-label'>Price</div>
@@ -161,7 +165,8 @@ public partial class EventDetails : System.Web.UI.Page
                 price.ToString("F2"),
                 Server.HtmlEncode(director),
                 movieId,
-                subscriptionButton
+                subscriptionButton,
+                Server.HtmlEncode(location)
             );
 
             phEventDetails.Controls.Add(new LiteralControl(html));

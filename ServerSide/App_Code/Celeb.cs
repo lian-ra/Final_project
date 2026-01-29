@@ -12,7 +12,6 @@ namespace MDb.App_Code
     {
         public Celeb()
         {
-            // TODO: Add constructor logic here
         }
 
         private int celebId;

@@ -91,6 +91,12 @@ public partial class Events : System.Web.UI.Page
             {
                 dt = myService.GetUserSubscriptions(username);
             }
+            else if (!string.IsNullOrEmpty(Request.QueryString["search"]))
+            {
+                string location = Request.QueryString["search"];
+                dt = myService.GetEventsByLocation(location);
+                txtSearchLocation.Text = location;
+            }
             else
             {
                 dt = myService.GetAllEvents();
@@ -148,9 +154,12 @@ public partial class Events : System.Web.UI.Page
                                     <i class='fa fa-clock-o'></i>
                                     <span>{6}</span>
                                 </div>
-                                <div class='event-detail-row'>
                                     <i class='fa fa-film'></i>
                                     <span>{7}</span>
+                                </div>
+                                <div class='event-detail-row'>
+                                    <i class='fa fa-map-marker'></i>
+                                    <span>{11}</span>
                                 </div>
                                 <div class='event-detail-row'>
                                     <i class='fa fa-users'></i>
@@ -173,7 +182,8 @@ public partial class Events : System.Web.UI.Page
                     Server.HtmlEncode(genre),
                     subscriberCount,
                     price.ToString("F2"),
-                    eventId
+                    eventId,
+                    row.Table.Columns.Contains("Location") && row["Location"] != DBNull.Value ? Server.HtmlEncode(row["Location"].ToString()) : "TBD"
                 );
             }
 
@@ -252,8 +262,9 @@ public partial class Events : System.Web.UI.Page
             }
 
             string status = ddlStatus.SelectedValue;
+            string location = txtLocation.Text;
 
-            int eventId = myService.CreateEvent(username, movieId, txtEventDate.Text, txtStartTime.Text, price, status);
+            int eventId = myService.CreateEvent(username, movieId, txtEventDate.Text, txtStartTime.Text, price, location, status);
 
             if (eventId > 0)
             {
@@ -267,8 +278,21 @@ public partial class Events : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            lblModalMessage.Text = "Error: " + ex.Message;
             lblModalMessage.Visible = true;
+            lblModalMessage.Text = "Error: " + ex.Message;
+        }
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        string location = txtSearchLocation.Text.Trim();
+        if (!string.IsNullOrEmpty(location))
+        {
+            Response.Redirect("Events.aspx?search=" + Server.UrlEncode(location));
+        }
+        else
+        {
+            Response.Redirect("Events.aspx");
         }
     }
 }
