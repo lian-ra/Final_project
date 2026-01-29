@@ -37,8 +37,14 @@ public partial class UserProfile : System.Web.UI.Page
         {
             LoadUserProfile(profileUser);
             LoadUserWishlist(profileUser);
+            LoadUserWatched(profileUser);
             LoadFollowData();
         }
+    }
+
+    public string GetLoggedInUsername()
+    {
+         return currentUser;
     }
 
     private void LoadFollowData()
@@ -54,9 +60,11 @@ public partial class UserProfile : System.Web.UI.Page
             if (currentUser == profileUser)
             {
                 btnFollow.Visible = false;
+                btnEditProfile.Visible = true;
             }
             else
             {
+                btnEditProfile.Visible = false;
                 btnFollow.Visible = true;
                 bool isFollowing = myService.IsFollowing(currentUser, profileUser);
                 if (isFollowing)
@@ -91,6 +99,86 @@ public partial class UserProfile : System.Web.UI.Page
         catch { }
     }
 
+    protected void btnEditProfile_Click(object sender, EventArgs e)
+    {
+        // Populate fields
+        DataTable dt = myService.SearchUser(currentUser, "username");
+        if (dt != null && dt.Rows.Count > 0)
+        {
+            DataRow row = dt.Rows[0];
+            txtEditFName.Text = row["FName"].ToString();
+            txtEditLName.Text = row["LName"].ToString();
+            txtEditEmail.Text = row["email"].ToString();
+            txtEditPass.Text = row["pass"].ToString();
+            
+            pnlEditModal.Visible = true;
+        }
+    }
+
+    protected void btnCancelEdit_Click(object sender, EventArgs e)
+    {
+        pnlEditModal.Visible = false;
+    }
+
+    protected void btnSaveProfile_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            // Get current user info to preserve what hasn't changed if needed
+            // But we will overwrite everything with what's in textboxes
+            
+            // Handle Pic
+            string picName = "Profile.jpg"; // default
+            DataTable dt = myService.SearchUser(currentUser, "username");
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                if (dt.Columns.Contains("pic")) picName = dt.Rows[0]["pic"].ToString();
+            }
+
+            if (fuProfilePic.HasFile)
+            {
+                string fileName = System.IO.Path.GetFileName(fuProfilePic.FileName);
+                string savePath = Server.MapPath("~/MyPics/") + fileName;
+                fuProfilePic.SaveAs(savePath);
+                picName = fileName;
+            }
+
+            // Create User object
+            localhost.Users user = new localhost.Users();
+            user.UserN = currentUser;
+            user.NameF = txtEditFName.Text;
+            user.LastN = txtEditLName.Text;
+            user.Email = txtEditEmail.Text;
+            user.Pass = txtEditPass.Text;
+            user.Pic = picName;
+            
+            // These might be required by Service but not in form
+            // Retrieve existing for address/phone
+            user.Fulladdres = ""; 
+            user.PhoneN = "";
+            
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                user.Fulladdres = dt.Rows[0]["address"].ToString();
+                user.PhoneN = dt.Rows[0]["phone"].ToString();
+            }
+
+            // Update
+            DataTable dtNew = myService.UpdateUser(user);
+            
+            // Update Session
+            Session["data"] = dtNew;
+
+            // Refresh Page
+            Response.Redirect("UserProfile.aspx");
+        }
+        catch (Exception ex)
+        {
+            string msg = "alert('Update failed: " + ex.Message.Replace("'", "\\'") + "');";
+            ClientScript.RegisterStartupScript(this.GetType(), "UpdateError", msg, true);
+        }
+    }
+
     private void LoadUserProfile(string username)
     {
         DataTable dt = myService.SearchUser(username, "username");
@@ -118,7 +206,21 @@ public partial class UserProfile : System.Web.UI.Page
 
             if (dtWishlist != null && dtWishlist.Rows.Count > 0)
             {
-                rptWishlist.DataSource = dtWishlist;
+                // Limit to 5 movies
+                if (dtWishlist.Rows.Count > 5)
+                {
+                    DataTable dtTop5 = dtWishlist.Clone();
+                    for (int i = 0; i < 5; i++)
+                    {
+                        dtTop5.ImportRow(dtWishlist.Rows[i]);
+                    }
+                    rptWishlist.DataSource = dtTop5;
+                }
+                else
+                {
+                    rptWishlist.DataSource = dtWishlist;
+                }
+                
                 rptWishlist.DataBind();
                 lblEmptyWishlist.Visible = false;
             }
@@ -130,7 +232,52 @@ public partial class UserProfile : System.Web.UI.Page
         catch
         {
             lblEmptyWishlist.Text = "Error loading wishlist.";
-            lblEmptyWishlist.Visible = true;
         }
+    }
+
+    private void LoadUserWatched(string username)
+    {
+        try
+        {
+            DataTable dtWatched = myService.GetWatchedMovies(username);
+
+            if (dtWatched != null && dtWatched.Rows.Count > 0)
+            {
+                rptWatched.DataSource = dtWatched;
+                rptWatched.DataBind();
+                lblEmptyWatched.Visible = false;
+            }
+            else
+            {
+                lblEmptyWatched.Visible = true;
+            }
+        }
+        catch
+        {
+            lblEmptyWatched.Text = "Error loading watched movies.";
+            lblEmptyWatched.Visible = true;
+        }
+    }
+
+    public string GetStarRatingHtml(object ratingObj)
+    {
+        double rating = 0;
+        if (ratingObj != null && ratingObj != DBNull.Value)
+        {
+            double.TryParse(ratingObj.ToString(), out rating);
+        }
+
+        // Convert 10-scale to 5-scale
+        double stars = rating / 2.0;
+        int fullStars = (int)stars;
+        bool halfStar = (stars - fullStars) >= 0.5;
+        int emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+        string html = "";
+        for (int i = 0; i < fullStars; i++) html += "<i class='fa fa-star rating-star'></i>";
+        if (halfStar) html += "<i class='fa fa-star-half-o rating-star'></i>";
+        for (int i = 0; i < emptyStars; i++) html += "<i class='fa fa-star-o rating-star'></i>";
+
+        return html;
     }
 }

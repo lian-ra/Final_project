@@ -267,7 +267,9 @@
                     <asp:BoundField DataField="Director" HeaderText="Director" ControlStyle-CssClass="form-control" ItemStyle-Width="12%" />
                     <asp:BoundField DataField="Actors" HeaderText="Actors" ControlStyle-CssClass="form-control" ItemStyle-Width="20%" />
                     <asp:BoundField DataField="Duration" HeaderText="Min" ControlStyle-CssClass="form-control" ItemStyle-Width="6%" />
-                    <asp:CommandField ShowEditButton="True" ShowDeleteButton="True" HeaderText="Actions" ItemStyle-Width="12%" />
+                    <asp:BoundField DataField="Poster" HeaderText="Poster" ControlStyle-CssClass="form-control" ItemStyle-Width="8%" />
+                    <asp:BoundField DataField="Description" HeaderText="Description" ControlStyle-CssClass="form-control" ItemStyle-Width="10%" />
+                    <asp:CommandField ShowEditButton="True" ShowDeleteButton="True" HeaderText="Actions" ItemStyle-Width="10%" />
                 </Columns>
             </asp:GridView>
         </div>

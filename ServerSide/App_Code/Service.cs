@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -24,8 +24,8 @@ public class Service : System.Web.Services.WebService
         return Server.MapPath("App_Data/Db.mdf");
     }
 
-    //    ×”×¤×¢×•×œ×” ×ž×ª×¢×“×ª ××ª ×¤×¨×˜×™ ×”×©×’×™××” ×•×”×–×ž×Ÿ ×”× ×•×›×—×™ ×œ×§×•×‘×¥ ×˜×§×¡×˜ ×‘×©×¨×ª(service_errors.log),
-    //    ×•×ž×•× ×¢×ª ×ž×”×ª×•×›× ×” ×œ×§×¨×•×¡ ×’× ×× ×”×›×ª×™×‘×” ×œ×§×•×‘×¥ × ×›×©×œ×ª.
+    //    äôòåìä îúòãú àú ôøèé äùâéàä åäæîï äðåëçé ì÷åáõ è÷ñè áùøú(service_errors.log),
+    //    åîåðòú îäúåëðä ì÷øåñ âí àí äëúéáä ì÷åáõ ðëùìú.
     private void LogError(Exception ex)
     {
         try
@@ -42,8 +42,8 @@ public class Service : System.Web.Services.WebService
     //======================================================
 
 
-  //  ×¤×¢×•×œ×” ×ž×‘×¦×¢×ª ××™×ž×•×ª ×›× ×™×¡×”(Login) ×¢×œ ×™×“×™ ×”×¨×¦×ª ×©××™×œ×ª×ª SQL ×”×‘×•×“×§×ª ×× ×§×™×™× ×ž×©×ª×ž×© ××• ×ž× ×”×œ ×¢× ×©× ×”×ž×©×ª×ž×©
-  //  ×•×”×¡×™×¡×ž×” ×©×”×•×–× ×• ×‘×˜×‘×œ××•×ª ×”×ž×ª××™×ž×•×ª ×‘×ž×¡×“ ×”× ×ª×•× ×™×.
+  //  ôòåìä îáöòú àéîåú ëðéñä(Login) òì éãé äøöú ùàéìúú SQL äáåã÷ú àí ÷ééí îùúîù àå îðäì òí ùí äîùúîù
+  //  åäñéñîä ùäåæðå áèáìàåú äîúàéîåú áîñã äðúåðéí.
     [WebMethod]
     public DataTable Login(string username, string password, bool Choice)
     {
@@ -58,8 +58,8 @@ public class Service : System.Web.Services.WebService
     }
 
 
-   // ×¤×¢×•×œ×” ×¨×•×©×ž×ª ×ž×©×ª×ž×© ×—×“×© ×œ×ž×¡×“ ×”× ×ª×•× ×™× ×¢×œ ×™×“×™ ×§×‘×œ×ª ××•×‘×™×™×§×˜ Users ×•×”×›× ×¡×ª ×¤×¨×˜×™×•(×›×ž×• ×©×, ×¡×™×¡×ž×”, ××™×ž×™×™×œ ×•×ª××¨×™×š ×œ×™×“×”)
-   // ×œ×˜×‘×œ×ª Users ×ª×•×š ×©×™×ž×•×© ×‘×¤×¨×ž×˜×¨×™× ×ž××•×‘×˜×—×™× ×œ×ž× ×™×¢×ª ×”×–×¨×§×•×ª SQL.
+   // ôòåìä øåùîú îùúîù çãù ìîñã äðúåðéí òì éãé ÷áìú àåáéé÷è Users åäëðñú ôøèéå(ëîå ùí, ñéñîä, àéîééì åúàøéê ìéãä)
+   // ìèáìú Users úåê ùéîåù áôøîèøéí îàåáèçéí ìîðéòú äæø÷åú SQL.
     [WebMethod]
     public void Regi(Users users)
     {
@@ -85,8 +85,8 @@ public class Service : System.Web.Services.WebService
     }
 
 
-   // ×”×¤×¢×•×œ×” ×ž×¢×“×›× ×ª ××ª ×¤×¨×˜×™ ×”×ž×©×ª×ž×© ×‘×ž×¡×“ ×”× ×ª×•× ×™×
-   // ×œ×¤×™ ×©× ×”×ž×©×ª×ž×© ×©×œ×•, ×•×œ××—×¨ ×ž×›×Ÿ ×©×•×œ×¤×ª ×•×ž×—×–×™×¨×” ××ª ×”× ×ª×•× ×™× ×”×ž×¢×•×“×›× ×™× ×›×˜×‘×œ×”(DataTable).
+   // äôòåìä îòãëðú àú ôøèé äîùúîù áîñã äðúåðéí
+   // ìôé ùí äîùúîù ùìå, åìàçø îëï ùåìôú åîçæéøä àú äðúåðéí äîòåãëðéí ëèáìä(DataTable).
     [WebMethod]
     public DataTable UpdateUser(Users user)
     {
@@ -109,8 +109,18 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
-    //×”×¤×¢×•×œ×” ×ž×—×¤×©×ª ×•×©×•×œ×¤×ª ×ž×©×ª×ž×©×™× ×ž×˜×‘×œ×ª Users ×¢×œ ×¤×™ ×§×¨×™×˜×¨×™×•×Ÿ ×©× ×‘×—×¨ (×©×, ×›×ª×•×‘×ª ××• ×©× ×ž×©×ª×ž×©),
-    //×•×ž×—×–×™×¨×” ××ª ×”×ª×•×¦××•×ª ×›×˜×‘×œ×” (DataTable).
+    [WebMethod]
+    public void DeleteUser(string username)
+    {
+        if (string.IsNullOrEmpty(username)) throw new Exception("Username is required");
+        string sql = "DELETE FROM [Users] WHERE [User] = @p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.VarChar)).Value = username;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    //äôòåìä îçôùú åùåìôú îùúîùéí îèáìú Users òì ôé ÷øéèøéåï ùðáçø (ùí, ëúåáú àå ùí îùúîù),
+    //åîçæéøä àú äúåöàåú ëèáìä (DataTable).
     [WebMethod]
     public DataTable SearchUser(string data, string option)
     {
@@ -129,8 +139,8 @@ public class Service : System.Web.Services.WebService
     // MOVIES
     //======================================================
 
-    //×”×¤×¢×•×œ×” ×‘×•×“×§×ª ×× ×˜×‘×œ×ª ×”×¡×¨×˜×™× (Movies) ×§×™×™×ž×ª ×‘×ž×¡×“ ×”× ×ª×•× ×™×, ×•×× ×œ× â€“ ×”×™× ×™×•×¦×¨×ª ××•×ª×” ×¢×
-    //×ž×‘× ×” ×¢×ž×•×“×•×ª ×ž×¤×•×¨×˜ (×›×ž×• ×›×•×ª×¨×ª, ×–'×× ×¨ ×•×“×™×¨×•×’) ×•×ž×›× ×™×¡×” ××œ×™×” × ×ª×•× ×™ ×“×•×’×ž×” ×¨××©×•× ×™×™×.
+    //äôòåìä áåã÷ú àí èáìú äñøèéí (Movies) ÷ééîú áîñã äðúåðéí, åàí ìà – äéà éåöøú àåúä òí
+    //îáðä òîåãåú îôåøè (ëîå ëåúøú, æ'àðø åãéøåâ) åîëðéñä àìéä ðúåðé ãåâîä øàùåðééí.
     [WebMethod]
     public void CreateMoviesTable()
     {
@@ -158,21 +168,21 @@ public class Service : System.Web.Services.WebService
             InsertSampleMovies();
         }
     }
-    //×”×¤×¢×•×œ×” ×™×•×¦×¨×ª ×ž×¢×¨×š ×©×œ ××•×‘×™×™×§×˜×™ ×¡×¨×˜×™× ×”×ž×›×™×œ×™× × ×ª×•× ×™ ×“×•×’×ž×”
-    //(×›×ž×• "×‘×™×Ÿ ×›×•×›×‘×™×" ×•"×ž×ª ×œ×—×™×•×ª"), ×•×ž×›× ×™×¡×” ××•×ª× ×‘×–×” ××—×¨ ×–×” ×œ×ž×¡×“ ×”× ×ª×•× ×™× ×‘××ž×¦×¢×•×ª ×§×¨×™××” ×œ×¤×¢×•×œ×” AddMovieInternal.
+    //äôòåìä éåöøú îòøê ùì àåáéé÷èé ñøèéí äîëéìéí ðúåðé ãåâîä
+    //(ëîå "áéï ëåëáéí" å"îú ìçéåú"), åîëðéñä àåúí áæä àçø æä ìîñã äðúåðéí áàîöòåú ÷øéàä ìôòåìä AddMovieInternal.
     private void InsertSampleMovies()
     {
         Movies[] sampleMovies = new Movies[] {
             new Movies { Title = "Interstellar", Description = "Explorers travel through a wormhole...", Year = 2014, Genre = "Sci-Fi", Rating = 8.6m, Poster = "images/uploads/slider1.jpg", Director = "Christopher Nolan", Actors = "Matthew McConaughey", Duration = 169 },
-            new Movies { Title = "The Revenant", Description = "A frontiersman fights for survival...", Year = 2015, Genre = "Drama", Rating = 8.0m, Poster = "images/uploads/slider2.jpg", Director = "Alejandro G. IÃ±Ã¡rritu", Actors = "Leonardo DiCaprio", Duration = 156 },
+            new Movies { Title = "The Revenant", Description = "A frontiersman fights for survival...", Year = 2015, Genre = "Drama", Rating = 8.0m, Poster = "images/uploads/slider2.jpg", Director = "Alejandro G. I??rritu", Actors = "Leonardo DiCaprio", Duration = 156 },
             new Movies { Title = "Die Hard", Description = "NYPD officer saves wife...", Year = 1988, Genre = "Action", Rating = 8.2m, Poster = "images/uploads/slider3.jpg", Director = "John McTiernan", Actors = "Bruce Willis", Duration = 132 },
             new Movies { Title = "The Walk", Description = "High-wire artist...", Year = 2015, Genre = "Drama", Rating = 7.3m, Poster = "images/uploads/slider4.jpg", Director = "Robert Zemeckis", Actors = "Joseph Gordon-Levitt", Duration = 123 }
         };
         foreach (Movies movie in sampleMovies) AddMovieInternal(movie);
     }
 
-    //×”×¤×¢×•×œ×” ×ž×§×‘×œ×ª ××•×‘×™×™×§×˜ ×©×œ ×¡×¨×˜ ×•×ž×›× ×™×¡×” ××ª ×›×œ ×¤×¨×˜×™×• ×œ×˜×‘×œ×ª ×ž×•×‘×™×¡
-    // ×‘×ž×¡×“ ×”× ×ª×•× ×™× ×ª×•×š ×©×™×ž×•×© ×‘×¤×¨×ž×˜×¨×™× ×ž××•×‘×˜×—×™× ×•×‘×“×™×§×” ×”××
+    //äôòåìä î÷áìú àåáéé÷è ùì ñøè åîëðéñä àú ëì ôøèéå ìèáìú îåáéñ
+    // áîñã äðúåðéí úåê ùéîåù áôøîèøéí îàåáèçéí åáãé÷ä äàí
     private void AddMovieInternal(Movies movie)
     {
         string sql = "INSERT INTO [Movies] ([Title], [Description], [Year], [Genre], [Rating], [Poster], [Director], [Actors], [Duration]) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
@@ -371,6 +381,126 @@ public class Service : System.Web.Services.WebService
         string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [Wishlist] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetUsersWhoWishlistedMovie(int movieId)
+    {
+        // Join Wishlist with Users to get user details (pic)
+        CreateWishlistTable();
+        string sql = @"
+            SELECT u.[User] as Username, u.[pic] 
+            FROM [Wishlist] w 
+            INNER JOIN [Users] u ON w.[Username] = u.[User] 
+            WHERE w.[MovieId] = @p1";
+        
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = movieId;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    //======================================================
+    // WATCHED
+    //======================================================
+
+    private void CreateWatchedTable()
+    {
+        string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Watched'";
+        SqlCommand cmd = new SqlCommand(checkTableSql);
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
+        int tableExists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+
+        if (tableExists == 0)
+        {
+            string createTableSql = @"CREATE TABLE [Watched] (
+                    [Id] INT IDENTITY(1,1) PRIMARY KEY,
+                    [Username] NVARCHAR(255) NOT NULL,
+                    [MovieId] INT NOT NULL
+                )";
+            SqlCommand cmmd = new SqlCommand(createTableSql);
+            DbActions.MyAction(cmmd, GetPath());
+        }
+    }
+
+    [WebMethod]
+    public void AddToWatched(string username, int movieId)
+    {
+        if (string.IsNullOrWhiteSpace(username) || movieId <= 0) throw new Exception("Data required.");
+        CreateMoviesTable();
+        CreateWatchedTable();
+
+        string checkSql = "SELECT COUNT(*) FROM [Watched] WHERE [Username]=@p1 AND [MovieId]=@p2";
+        SqlCommand checkCmd = new SqlCommand(checkSql);
+        checkCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        checkCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
+        DataTable dt = DbActions.SearchWithParameters(checkCmd, GetPath());
+        int exists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+
+        if (exists == 0)
+        {
+            string insertSql = "INSERT INTO [Watched] ([Username], [MovieId]) VALUES (@p1, @p2)";
+            SqlCommand insertCmd = new SqlCommand(insertSql);
+            insertCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+            insertCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
+            DbActions.MyAction(insertCmd, GetPath());
+
+            // Remove from wishlist if it exists there
+            try { RemoveFromWishlist(username, movieId); } catch { }
+        }
+    }
+
+    [WebMethod]
+    public void RemoveFromWatched(string username, int movieId)
+    {
+        if (string.IsNullOrWhiteSpace(username)) throw new Exception("Data required.");
+        CreateWatchedTable();
+        string deleteSql = "DELETE FROM [Watched] WHERE [Username]=@p1 AND [MovieId]=@p2";
+        SqlCommand cmd = new SqlCommand(deleteSql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetWatchedMovies(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username)) throw new Exception("Username is required.");
+        CreateMoviesTable();
+        CreateWatchedTable();
+        string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [Watched] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public bool IsWatched(string username, int movieId)
+    {
+        if (string.IsNullOrWhiteSpace(username) || movieId <= 0) return false;
+        CreateWatchedTable();
+        string sql = "SELECT COUNT(*) FROM [Watched] WHERE [Username]=@p1 AND [MovieId]=@p2";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
+        int count = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+        return count > 0;
+    }
+
+    [WebMethod]
+    public DataTable GetUsersWhoWatchedMovie(int movieId)
+    {
+        // Join Watched with Users to get user details (pic)
+        CreateWatchedTable();
+        string sql = @"
+            SELECT u.[User] as Username, u.[pic] 
+            FROM [Watched] w 
+            INNER JOIN [Users] u ON w.[Username] = u.[User] 
+            WHERE w.[MovieId] = @p1";
+        
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = movieId;
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
@@ -641,4 +771,235 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+
+    //======================================================
+    // EVENTS - ADD THESE METHODS TO Service.cs BEFORE THE CLOSING }
+    //======================================================
+
+    [WebMethod]
+    public void CreateEventsTable()
+    {
+        string checkEventsSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Events'";
+        SqlCommand cmd = new SqlCommand(checkEventsSql);
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
+        int eventsExists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+
+        if (eventsExists == 0)
+        {
+            string createEventsSql = @"CREATE TABLE [Events] (
+                [EventId] INT IDENTITY(1,1) PRIMARY KEY,
+                [Username] NVARCHAR(50) NOT NULL,
+                [MovieId] INT NOT NULL,
+                [EventDate] DATE NOT NULL,
+                [StartTime] TIME NOT NULL,
+                [Price] DECIMAL(10,2) DEFAULT 0.0,
+                [Status] NVARCHAR(20) DEFAULT 'Open',
+                [CreatedAt] DATETIME DEFAULT GETDATE(),
+                FOREIGN KEY ([MovieId]) REFERENCES [Movies]([MovieId])
+            )";
+            SqlCommand cmmd = new SqlCommand(createEventsSql);
+            DbActions.MyAction(cmmd, GetPath());
+        }
+
+        string checkSubsSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EventSubscriptions'";
+        SqlCommand cmd2 = new SqlCommand(checkSubsSql);
+        DataTable dt2 = DbActions.SearchWithParameters(cmd2, GetPath());
+        int subsExists = (dt2 != null && dt2.Rows.Count > 0) ? Convert.ToInt32(dt2.Rows[0][0]) : 0;
+
+        if (subsExists == 0)
+        {
+            string createSubsSql = @"CREATE TABLE [EventSubscriptions] (
+                [SubscriptionId] INT IDENTITY(1,1) PRIMARY KEY,
+                [EventId] INT NOT NULL,
+                [Username] NVARCHAR(50) NOT NULL,
+                [SubscribedAt] DATETIME DEFAULT GETDATE(),
+                FOREIGN KEY ([EventId]) REFERENCES [Events]([EventId]) ON DELETE CASCADE,
+                UNIQUE([EventId], [Username])
+            )";
+            SqlCommand cmmd2 = new SqlCommand(createSubsSql);
+            DbActions.MyAction(cmmd2, GetPath());
+        }
+    }
+
+    [WebMethod]
+    public int CreateEvent(string username, int movieId, string eventDate, string startTime, decimal price, string status)
+    {
+        if (string.IsNullOrWhiteSpace(username) || movieId <= 0) throw new Exception("Username and MovieId are required.");
+        CreateMoviesTable();
+        CreateEventsTable();
+
+        string sql = @"INSERT INTO [Events] ([Username], [MovieId], [EventDate], [StartTime], [Price], [Status], [CreatedAt]) 
+                       VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7); SELECT SCOPE_IDENTITY();";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
+        cmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Date)).Value = DateTime.Parse(eventDate);
+        cmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.Time)).Value = TimeSpan.Parse(startTime);
+        cmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal)).Value = price;
+        cmd.Parameters.Add(new SqlParameter("@p6", SqlDbType.NVarChar)).Value = status ?? "Open";
+        cmd.Parameters.Add(new SqlParameter("@p7", SqlDbType.DateTime)).Value = DateTime.Now;
+
+        DataTable result = DbActions.SearchWithParameters(cmd, GetPath());
+        if (result != null && result.Rows.Count > 0)
+        {
+            return Convert.ToInt32(result.Rows[0][0]);
+        }
+        return 0;
+    }
+
+    [WebMethod]
+    public DataTable GetEventById(int eventId)
+    {
+        CreateEventsTable();
+        string sql = @"SELECT e.*, m.Title, m.Poster, m.Genre, m.Rating, m.Year, m.Director, m.Actors
+                       FROM [Events] e
+                       INNER JOIN [Movies] m ON e.[MovieId] = m.[MovieId]
+                       WHERE e.[EventId] = @p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetAllEvents()
+    {
+        CreateEventsTable();
+        string sql = @"SELECT e.*, m.Title, m.Poster, m.Genre, m.Rating
+                       FROM [Events] e
+                       INNER JOIN [Movies] m ON e.[MovieId] = m.[MovieId]
+                       ORDER BY e.[EventDate] DESC, e.[StartTime] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetEventsByUser(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username)) throw new Exception("Username is required.");
+        CreateEventsTable();
+        string sql = @"SELECT e.*, m.Title, m.Poster, m.Genre, m.Rating
+                       FROM [Events] e
+                       INNER JOIN [Movies] m ON e.[MovieId] = m.[MovieId]
+                       WHERE e.[Username] = @p1
+                       ORDER BY e.[EventDate] DESC, e.[StartTime] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetUpcomingEvents()
+    {
+        CreateEventsTable();
+        string sql = @"SELECT e.*, m.Title, m.Poster, m.Genre, m.Rating
+                       FROM [Events] e
+                       INNER JOIN [Movies] m ON e.[MovieId] = m.[MovieId]
+                       WHERE e.[Status] = 'Open' AND e.[EventDate] >= CAST(GETDATE() AS DATE)
+                       ORDER BY e.[EventDate] ASC, e.[StartTime] ASC";
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public void UpdateEventStatus(int eventId, string status)
+    {
+        if (eventId <= 0 || string.IsNullOrWhiteSpace(status)) throw new Exception("EventId and Status are required.");
+        CreateEventsTable();
+        string sql = "UPDATE [Events] SET [Status] = @p1 WHERE [EventId] = @p2";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = status;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = eventId;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public void DeleteEvent(int eventId)
+    {
+        if (eventId <= 0) throw new Exception("Valid EventId is required.");
+        CreateEventsTable();
+        string sql = "DELETE FROM [Events] WHERE [EventId] = @p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public void SubscribeToEvent(int eventId, string username)
+    {
+        if (eventId <= 0 || string.IsNullOrWhiteSpace(username)) throw new Exception("EventId and Username are required.");
+        CreateEventsTable();
+
+        string checkSql = "SELECT COUNT(*) FROM [EventSubscriptions] WHERE [EventId]=@p1 AND [Username]=@p2";
+        SqlCommand checkCmd = new SqlCommand(checkSql);
+        checkCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        checkCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = username;
+        DataTable dt = DbActions.SearchWithParameters(checkCmd, GetPath());
+        int exists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+
+        if (exists == 0)
+        {
+            string insertSql = "INSERT INTO [EventSubscriptions] ([EventId], [Username], [SubscribedAt]) VALUES (@p1, @p2, @p3)";
+            SqlCommand insertCmd = new SqlCommand(insertSql);
+            insertCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+            insertCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = username;
+            insertCmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.DateTime)).Value = DateTime.Now;
+            DbActions.MyAction(insertCmd, GetPath());
+        }
+    }
+
+    [WebMethod]
+    public void UnsubscribeFromEvent(int eventId, string username)
+    {
+        if (eventId <= 0 || string.IsNullOrWhiteSpace(username)) throw new Exception("EventId and Username are required.");
+        CreateEventsTable();
+        string sql = "DELETE FROM [EventSubscriptions] WHERE [EventId]=@p1 AND [Username]=@p2";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = username;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetEventSubscribers(int eventId)
+    {
+        CreateEventsTable();
+        string sql = @"SELECT u.[User] as Username, u.[FName], u.[LName], u.[pic], es.[SubscribedAt]
+                       FROM [EventSubscriptions] es
+                       INNER JOIN [Users] u ON es.[Username] = u.[User]
+                       WHERE es.[EventId] = @p1
+                       ORDER BY es.[SubscribedAt] ASC";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public bool IsUserSubscribed(int eventId, string username)
+    {
+        if (eventId <= 0 || string.IsNullOrWhiteSpace(username)) return false;
+        CreateEventsTable();
+        string sql = "SELECT COUNT(*) FROM [EventSubscriptions] WHERE [EventId]=@p1 AND [Username]=@p2";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = username;
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
+        int count = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+        return count > 0;
+    }
+
+    [WebMethod]
+    public DataTable GetUserSubscriptions(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username)) throw new Exception("Username is required.");
+        CreateEventsTable();
+        string sql = @"SELECT e.*, m.Title, m.Poster, m.Genre, m.Rating, es.[SubscribedAt]
+                       FROM [EventSubscriptions] es
+                       INNER JOIN [Events] e ON es.[EventId] = e.[EventId]
+                       INNER JOIN [Movies] m ON e.[MovieId] = m.[MovieId]
+                       WHERE es.[Username] = @p1
+                       ORDER BY e.[EventDate] DESC, e.[StartTime] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
 }

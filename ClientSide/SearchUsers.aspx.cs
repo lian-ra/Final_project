@@ -133,12 +133,26 @@ public partial class SearchUsers : System.Web.UI.Page
                 // Preserve existing fields (Pass, Pic)
                 user.Pass = row["pass"].ToString();
 
-                if (row.Table.Columns.Contains("pic"))
-                    user.Pic = row["pic"].ToString();
-                else if (row.ItemArray.Length > 9)
-                    user.Pic = row[9].ToString();
+                if (fileUploadPic.HasFile)
+                {
+                    try
+                    {
+                        string fileName = System.IO.Path.GetFileName(fileUploadPic.FileName);
+                        string savePath = Server.MapPath("~/MyPics/") + fileName;
+                        fileUploadPic.SaveAs(savePath);
+                        user.Pic = fileName;
+                    }
+                    catch { user.Pic = "Profile.jpg"; }
+                }
                 else
-                    user.Pic = "Profile.jpg";
+                {
+                    if (row.Table.Columns.Contains("pic"))
+                        user.Pic = row["pic"].ToString();
+                    else if (row.ItemArray.Length > 9)
+                        user.Pic = row[9].ToString();
+                    else
+                        user.Pic = "Profile.jpg";
+                }
 
                 // 2. Send update
                 myService.UpdateUser(user);
@@ -154,6 +168,25 @@ public partial class SearchUsers : System.Web.UI.Page
         catch (Exception ex)
         {
             ShowError("Update failed: " + ex.Message);
+        }
+    }
+
+    protected void BtnDeleteUser_Click(object sender, EventArgs e)
+    {
+        string username = HiddenUsername.Value;
+        if (!string.IsNullOrEmpty(username))
+        {
+            try
+            {
+                myService.DeleteUser(username);
+                LoadAllUsers();
+                pnlModal.Visible = false;
+                ClientScript.RegisterStartupScript(this.GetType(), "Deleted", "alert('User deleted successfully.');", true);
+            }
+            catch (Exception ex)
+            {
+                ShowError("Delete failed: " + ex.Message);
+            }
         }
     }
 

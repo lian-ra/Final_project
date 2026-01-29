@@ -194,14 +194,8 @@ public partial class ManageMovies : System.Web.UI.Page
             string director = ((TextBox)row.Cells[5].Controls[0]).Text.Trim();
             string actors = ((TextBox)row.Cells[6].Controls[0]).Text.Trim();
             string durationText = ((TextBox)row.Cells[7].Controls[0]).Text.Trim();
-
-            // Poster and Description are not in grid to save space, but we must provide them for the update object
-            // Ideally we should fetch the existing record first to preserve them, but for now we'll send defaults or empties
-            // Note: In a real app, you'd Fetch Movie By ID -> Update Fields -> Save. 
-            // Since we can't easily fetch here without rewriting service logic in C#, we will just assume existing logic handles nulls gracefully or we might overwrite poster with empty.
-            // WORKAROUND: We will just update what we see. The Service UpdateMovie SQL updates everything. 
-            // If we send null/empty for Poster/Desc, they might get wiped. 
-            // Let's rely on Service handling or just accept that grid editing is limited.
+            string poster = ((TextBox)row.Cells[8].Controls[0]).Text.Trim();
+            string description = ((TextBox)row.Cells[9].Controls[0]).Text.Trim();
 
             int year;
             int.TryParse(yearText, out year);
@@ -218,21 +212,13 @@ public partial class ManageMovies : System.Web.UI.Page
             movie.Year = year;
             movie.Genre = genre;
             movie.Rating = rating;
-            movie.Poster = ""; // Warning: This might wipe the poster if not handled in SP/Service. 
-                               // Since the Service.cs UpdateMovie updates ALL fields, this is risky. 
-                               // To do this properly, we need to get the current movie first.
-
-            // --- CORRECT APPROACH TO PRESERVE DATA ---
-            DataTable dtCurrent = myService.GetMovieById(movieId);
-            if (dtCurrent != null && dtCurrent.Rows.Count > 0)
-            {
-                movie.Poster = dtCurrent.Rows[0]["Poster"].ToString();
-                movie.Description = dtCurrent.Rows[0]["Description"].ToString();
-            }
-
+            movie.Poster = poster;
             movie.Director = director;
             movie.Actors = actors;
             movie.Duration = duration;
+            movie.Description = description;
+
+
 
             myService.UpdateMovie(movie);
 

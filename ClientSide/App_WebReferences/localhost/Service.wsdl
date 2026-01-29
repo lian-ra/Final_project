@@ -70,6 +70,16 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="DeleteUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteUserResponse">
+        <s:complexType />
+      </s:element>
       <s:element name="SearchUser">
         <s:complexType>
           <s:sequence>
@@ -296,6 +306,106 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetWishlistMoviesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUsersWhoWishlistedMovie">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="movieId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUsersWhoWishlistedMovieResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUsersWhoWishlistedMovieResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddToWatched">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="movieId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddToWatchedResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="RemoveFromWatched">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="movieId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveFromWatchedResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetWatchedMovies">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetWatchedMoviesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetWatchedMoviesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsWatched">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="movieId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsWatchedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsWatchedResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUsersWhoWatchedMovie">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="movieId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUsersWhoWatchedMovieResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUsersWhoWatchedMovieResult">
               <s:complexType>
                 <s:sequence>
                   <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
@@ -548,6 +658,207 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="CreateEventsTable">
+        <s:complexType />
+      </s:element>
+      <s:element name="CreateEventsTableResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="CreateEvent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="movieId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="eventDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="startTime" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="price" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateEventResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateEventResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventById">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventByIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventByIdResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAllEvents">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetAllEventsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAllEventsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventsByUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventsByUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventsByUserResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUpcomingEvents">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetUpcomingEventsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUpcomingEventsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateEventStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateEventStatusResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="DeleteEvent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteEventResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="SubscribeToEvent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubscribeToEventResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UnsubscribeFromEvent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UnsubscribeFromEventResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetEventSubscribers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventSubscribersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventSubscribersResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsUserSubscribed">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsUserSubscribedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsUserSubscribedResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserSubscriptions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserSubscriptionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserSubscriptionsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="LoginSoapIn">
@@ -567,6 +878,12 @@
   </wsdl:message>
   <wsdl:message name="UpdateUserSoapOut">
     <wsdl:part name="parameters" element="tns:UpdateUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteUser" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteUserResponse" />
   </wsdl:message>
   <wsdl:message name="SearchUserSoapIn">
     <wsdl:part name="parameters" element="tns:SearchUser" />
@@ -657,6 +974,42 @@
   </wsdl:message>
   <wsdl:message name="GetWishlistMoviesSoapOut">
     <wsdl:part name="parameters" element="tns:GetWishlistMoviesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersWhoWishlistedMovieSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUsersWhoWishlistedMovie" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersWhoWishlistedMovieSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUsersWhoWishlistedMovieResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddToWatchedSoapIn">
+    <wsdl:part name="parameters" element="tns:AddToWatched" />
+  </wsdl:message>
+  <wsdl:message name="AddToWatchedSoapOut">
+    <wsdl:part name="parameters" element="tns:AddToWatchedResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveFromWatchedSoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveFromWatched" />
+  </wsdl:message>
+  <wsdl:message name="RemoveFromWatchedSoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveFromWatchedResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetWatchedMoviesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetWatchedMovies" />
+  </wsdl:message>
+  <wsdl:message name="GetWatchedMoviesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetWatchedMoviesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsWatchedSoapIn">
+    <wsdl:part name="parameters" element="tns:IsWatched" />
+  </wsdl:message>
+  <wsdl:message name="IsWatchedSoapOut">
+    <wsdl:part name="parameters" element="tns:IsWatchedResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersWhoWatchedMovieSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUsersWhoWatchedMovie" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersWhoWatchedMovieSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUsersWhoWatchedMovieResponse" />
   </wsdl:message>
   <wsdl:message name="AddMovieCommentSoapIn">
     <wsdl:part name="parameters" element="tns:AddMovieComment" />
@@ -754,6 +1107,84 @@
   <wsdl:message name="GetFollowingListSoapOut">
     <wsdl:part name="parameters" element="tns:GetFollowingListResponse" />
   </wsdl:message>
+  <wsdl:message name="CreateEventsTableSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateEventsTable" />
+  </wsdl:message>
+  <wsdl:message name="CreateEventsTableSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateEventsTableResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateEventSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateEvent" />
+  </wsdl:message>
+  <wsdl:message name="CreateEventSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateEventResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEventByIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventById" />
+  </wsdl:message>
+  <wsdl:message name="GetEventByIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAllEventsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAllEvents" />
+  </wsdl:message>
+  <wsdl:message name="GetAllEventsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAllEventsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEventsByUserSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventsByUser" />
+  </wsdl:message>
+  <wsdl:message name="GetEventsByUserSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventsByUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUpcomingEventsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUpcomingEvents" />
+  </wsdl:message>
+  <wsdl:message name="GetUpcomingEventsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUpcomingEventsResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateEventStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateEventStatus" />
+  </wsdl:message>
+  <wsdl:message name="UpdateEventStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateEventStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteEventSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteEvent" />
+  </wsdl:message>
+  <wsdl:message name="DeleteEventSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteEventResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubscribeToEventSoapIn">
+    <wsdl:part name="parameters" element="tns:SubscribeToEvent" />
+  </wsdl:message>
+  <wsdl:message name="SubscribeToEventSoapOut">
+    <wsdl:part name="parameters" element="tns:SubscribeToEventResponse" />
+  </wsdl:message>
+  <wsdl:message name="UnsubscribeFromEventSoapIn">
+    <wsdl:part name="parameters" element="tns:UnsubscribeFromEvent" />
+  </wsdl:message>
+  <wsdl:message name="UnsubscribeFromEventSoapOut">
+    <wsdl:part name="parameters" element="tns:UnsubscribeFromEventResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEventSubscribersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventSubscribers" />
+  </wsdl:message>
+  <wsdl:message name="GetEventSubscribersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventSubscribersResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsUserSubscribedSoapIn">
+    <wsdl:part name="parameters" element="tns:IsUserSubscribed" />
+  </wsdl:message>
+  <wsdl:message name="IsUserSubscribedSoapOut">
+    <wsdl:part name="parameters" element="tns:IsUserSubscribedResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserSubscriptionsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserSubscriptions" />
+  </wsdl:message>
+  <wsdl:message name="GetUserSubscriptionsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserSubscriptionsResponse" />
+  </wsdl:message>
   <wsdl:portType name="ServiceSoap">
     <wsdl:operation name="Login">
       <wsdl:input message="tns:LoginSoapIn" />
@@ -766,6 +1197,10 @@
     <wsdl:operation name="UpdateUser">
       <wsdl:input message="tns:UpdateUserSoapIn" />
       <wsdl:output message="tns:UpdateUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <wsdl:input message="tns:DeleteUserSoapIn" />
+      <wsdl:output message="tns:DeleteUserSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SearchUser">
       <wsdl:input message="tns:SearchUserSoapIn" />
@@ -826,6 +1261,30 @@
     <wsdl:operation name="GetWishlistMovies">
       <wsdl:input message="tns:GetWishlistMoviesSoapIn" />
       <wsdl:output message="tns:GetWishlistMoviesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersWhoWishlistedMovie">
+      <wsdl:input message="tns:GetUsersWhoWishlistedMovieSoapIn" />
+      <wsdl:output message="tns:GetUsersWhoWishlistedMovieSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddToWatched">
+      <wsdl:input message="tns:AddToWatchedSoapIn" />
+      <wsdl:output message="tns:AddToWatchedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveFromWatched">
+      <wsdl:input message="tns:RemoveFromWatchedSoapIn" />
+      <wsdl:output message="tns:RemoveFromWatchedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetWatchedMovies">
+      <wsdl:input message="tns:GetWatchedMoviesSoapIn" />
+      <wsdl:output message="tns:GetWatchedMoviesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsWatched">
+      <wsdl:input message="tns:IsWatchedSoapIn" />
+      <wsdl:output message="tns:IsWatchedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersWhoWatchedMovie">
+      <wsdl:input message="tns:GetUsersWhoWatchedMovieSoapIn" />
+      <wsdl:output message="tns:GetUsersWhoWatchedMovieSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="AddMovieComment">
       <wsdl:input message="tns:AddMovieCommentSoapIn" />
@@ -891,6 +1350,58 @@
       <wsdl:input message="tns:GetFollowingListSoapIn" />
       <wsdl:output message="tns:GetFollowingListSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="CreateEventsTable">
+      <wsdl:input message="tns:CreateEventsTableSoapIn" />
+      <wsdl:output message="tns:CreateEventsTableSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateEvent">
+      <wsdl:input message="tns:CreateEventSoapIn" />
+      <wsdl:output message="tns:CreateEventSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEventById">
+      <wsdl:input message="tns:GetEventByIdSoapIn" />
+      <wsdl:output message="tns:GetEventByIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllEvents">
+      <wsdl:input message="tns:GetAllEventsSoapIn" />
+      <wsdl:output message="tns:GetAllEventsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEventsByUser">
+      <wsdl:input message="tns:GetEventsByUserSoapIn" />
+      <wsdl:output message="tns:GetEventsByUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUpcomingEvents">
+      <wsdl:input message="tns:GetUpcomingEventsSoapIn" />
+      <wsdl:output message="tns:GetUpcomingEventsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEventStatus">
+      <wsdl:input message="tns:UpdateEventStatusSoapIn" />
+      <wsdl:output message="tns:UpdateEventStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteEvent">
+      <wsdl:input message="tns:DeleteEventSoapIn" />
+      <wsdl:output message="tns:DeleteEventSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubscribeToEvent">
+      <wsdl:input message="tns:SubscribeToEventSoapIn" />
+      <wsdl:output message="tns:SubscribeToEventSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UnsubscribeFromEvent">
+      <wsdl:input message="tns:UnsubscribeFromEventSoapIn" />
+      <wsdl:output message="tns:UnsubscribeFromEventSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEventSubscribers">
+      <wsdl:input message="tns:GetEventSubscribersSoapIn" />
+      <wsdl:output message="tns:GetEventSubscribersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsUserSubscribed">
+      <wsdl:input message="tns:IsUserSubscribedSoapIn" />
+      <wsdl:output message="tns:IsUserSubscribedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserSubscriptions">
+      <wsdl:input message="tns:GetUserSubscriptionsSoapIn" />
+      <wsdl:output message="tns:GetUserSubscriptionsSoapOut" />
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -914,6 +1425,15 @@
     </wsdl:operation>
     <wsdl:operation name="UpdateUser">
       <soap:operation soapAction="http://tempuri.org/UpdateUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <soap:operation soapAction="http://tempuri.org/DeleteUser" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1049,6 +1569,60 @@
     </wsdl:operation>
     <wsdl:operation name="GetWishlistMovies">
       <soap:operation soapAction="http://tempuri.org/GetWishlistMovies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersWhoWishlistedMovie">
+      <soap:operation soapAction="http://tempuri.org/GetUsersWhoWishlistedMovie" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddToWatched">
+      <soap:operation soapAction="http://tempuri.org/AddToWatched" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveFromWatched">
+      <soap:operation soapAction="http://tempuri.org/RemoveFromWatched" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetWatchedMovies">
+      <soap:operation soapAction="http://tempuri.org/GetWatchedMovies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsWatched">
+      <soap:operation soapAction="http://tempuri.org/IsWatched" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersWhoWatchedMovie">
+      <soap:operation soapAction="http://tempuri.org/GetUsersWhoWatchedMovie" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1200,6 +1774,123 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="CreateEventsTable">
+      <soap:operation soapAction="http://tempuri.org/CreateEventsTable" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateEvent">
+      <soap:operation soapAction="http://tempuri.org/CreateEvent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventById">
+      <soap:operation soapAction="http://tempuri.org/GetEventById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllEvents">
+      <soap:operation soapAction="http://tempuri.org/GetAllEvents" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventsByUser">
+      <soap:operation soapAction="http://tempuri.org/GetEventsByUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUpcomingEvents">
+      <soap:operation soapAction="http://tempuri.org/GetUpcomingEvents" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEventStatus">
+      <soap:operation soapAction="http://tempuri.org/UpdateEventStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteEvent">
+      <soap:operation soapAction="http://tempuri.org/DeleteEvent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubscribeToEvent">
+      <soap:operation soapAction="http://tempuri.org/SubscribeToEvent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnsubscribeFromEvent">
+      <soap:operation soapAction="http://tempuri.org/UnsubscribeFromEvent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventSubscribers">
+      <soap:operation soapAction="http://tempuri.org/GetEventSubscribers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsUserSubscribed">
+      <soap:operation soapAction="http://tempuri.org/IsUserSubscribed" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserSubscriptions">
+      <soap:operation soapAction="http://tempuri.org/GetUserSubscriptions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -1223,6 +1914,15 @@
     </wsdl:operation>
     <wsdl:operation name="UpdateUser">
       <soap12:operation soapAction="http://tempuri.org/UpdateUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <soap12:operation soapAction="http://tempuri.org/DeleteUser" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -1358,6 +2058,60 @@
     </wsdl:operation>
     <wsdl:operation name="GetWishlistMovies">
       <soap12:operation soapAction="http://tempuri.org/GetWishlistMovies" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersWhoWishlistedMovie">
+      <soap12:operation soapAction="http://tempuri.org/GetUsersWhoWishlistedMovie" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddToWatched">
+      <soap12:operation soapAction="http://tempuri.org/AddToWatched" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveFromWatched">
+      <soap12:operation soapAction="http://tempuri.org/RemoveFromWatched" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetWatchedMovies">
+      <soap12:operation soapAction="http://tempuri.org/GetWatchedMovies" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsWatched">
+      <soap12:operation soapAction="http://tempuri.org/IsWatched" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersWhoWatchedMovie">
+      <soap12:operation soapAction="http://tempuri.org/GetUsersWhoWatchedMovie" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -1502,6 +2256,123 @@
     </wsdl:operation>
     <wsdl:operation name="GetFollowingList">
       <soap12:operation soapAction="http://tempuri.org/GetFollowingList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateEventsTable">
+      <soap12:operation soapAction="http://tempuri.org/CreateEventsTable" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateEvent">
+      <soap12:operation soapAction="http://tempuri.org/CreateEvent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventById">
+      <soap12:operation soapAction="http://tempuri.org/GetEventById" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllEvents">
+      <soap12:operation soapAction="http://tempuri.org/GetAllEvents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventsByUser">
+      <soap12:operation soapAction="http://tempuri.org/GetEventsByUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUpcomingEvents">
+      <soap12:operation soapAction="http://tempuri.org/GetUpcomingEvents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEventStatus">
+      <soap12:operation soapAction="http://tempuri.org/UpdateEventStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteEvent">
+      <soap12:operation soapAction="http://tempuri.org/DeleteEvent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubscribeToEvent">
+      <soap12:operation soapAction="http://tempuri.org/SubscribeToEvent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnsubscribeFromEvent">
+      <soap12:operation soapAction="http://tempuri.org/UnsubscribeFromEvent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventSubscribers">
+      <soap12:operation soapAction="http://tempuri.org/GetEventSubscribers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsUserSubscribed">
+      <soap12:operation soapAction="http://tempuri.org/IsUserSubscribed" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserSubscriptions">
+      <soap12:operation soapAction="http://tempuri.org/GetUserSubscriptions" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

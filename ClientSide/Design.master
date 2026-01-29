@@ -31,86 +31,74 @@
 </head>
 <body>
     <form id="form1" runat="server" >
-						<li class="dropdown first" >
-                            <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-                                <!--preloading-->
-                                <div id="preloader">
-                                    <img class="logo" src="images/logo1.png" alt="" width="119" height="58">
-                                    <div id="status">
-                                        <span></span>
-                                        <span></span>
-                                    </div>
-                                </div>
-                        
-                                <!-- BEGIN | Header -->
-                                <header class="ht-header">
-                                    <div class="container">
-                                        <nav class="navbar navbar-default navbar-custom">
-                                            <!-- Brand and toggle get grouped for better mobile display -->
-                                            <div class="navbar-header logo">
-                                                <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                                    <span class="sr-only">Toggle navigation</span>
-                                                    <div id="nav-icon1">
-                                                        <span></span>
-                                                        <span></span>
-                                                        <span></span>
-                                                    </div>
-                                                </div>
-                                                <a href="Home.aspx"><img class="logo" src="images/logo1.png" alt="" width="119" height="58"></a>
-                                            </div>
-                                            <!-- Collect the nav links, forms, and other content for toggling -->
-                                         
+    <div id="preloader">
+        <img class="logo" src="images/logo1.png" alt="" width="119" height="58">
+        <div id="status">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- BEGIN | Header -->
+    <header class="ht-header">
+        <div class="container">
+            <nav class="navbar navbar-default navbar-custom">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header logo">
+                    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <div id="nav-icon1">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <a href="Home.aspx"><img class="logo" src="images/logo1.png" alt="" width="119" height="58"></a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+             
 
 
 
 
-											<div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
-                                                <ul class="nav navbar-nav flex-child-menu menu-left">
-                                                    <li class="dropdown first">
-                                                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-                                                            Films <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                                        </a>
+                <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav flex-child-menu menu-left">
+                      
+                        <li><a href="Home.aspx">Search Films</a></li>
+                        <li><a href="Celebs.aspx">Celebs</a></li>
+                        <li><a href="FindUsers.aspx">Find Friends</a></li>
+                        <li><a href="Events.aspx">Events</a></li>
+                        <li><a href="News.aspx">News</a></li>
+                        <li><a href="ClientArea.aspx">My Profile</a></li>
+                        <li><a href="AdminArea.aspx">Admin Area</a></li>
+                       
+                    </ul>
+                    <ul class="nav navbar-nav flex-child-menu menu-right">
+                        <li id="liLoggedOut" runat="server">
+                            <a href="Login.aspx">Login</a>
+                        </li>
+                        <li id="liSignUp" class="btn" runat="server">
+                            <a href="Regi.aspx">Signup</a>
+                        </li>
+                        <li id="liLoggedIn" runat="server" visible="false">
+                            <span style="color: white; padding: 10px 15px; display: inline-block;">
+                                Hello, <asp:Label ID="lblUsername" runat="server" style="font-weight: bold;"></asp:Label>
+                            </span>
+                        </li>
+                        <li id="liLogout" runat="server" visible="false" class="btn">
+                            <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" style="color: white; padding: 10px 15px; display: inline-block; text-decoration: none; cursor: pointer;">Log Out</asp:LinkButton>
+                        </li>
+                    </ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
 
-
-                                                        <ul class="dropdown-menu level1">
-                                                           <%-- <li><a href="Films.aspx">Films</a></li>--%>
-                                                             <li><a href="Home.aspx">Search Films</a></li>
-                                                            <li><a href="Wishlist.aspx">My Wishlist</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="Celebs.aspx">Celebs</a></li>
-                                                    <li><a href="FindUsers.aspx">Find Friends</a></li>
-                                                    <li><a href="News.aspx">News</a></li>
-                                                    <li><a href="ClientArea.aspx">My Profile</a></li>
-                                                    <li><a href="AdminArea.aspx">Admin Area</a></li>
-                                                   
-                                                </ul>
-                                                <ul class="nav navbar-nav flex-child-menu menu-right">
-                                                    <li id="liLoggedOut" runat="server">
-                                                        <a href="Login.aspx">Login</a>
-                                                    </li>
-                                                    <li id="liSignUp" class="btn" runat="server">
-                                                        <a href="Regi.aspx">Signup</a>
-                                                    </li>
-                                                    <li id="liLoggedIn" runat="server" visible="false">
-                                                        <span style="color: white; padding: 10px 15px; display: inline-block;">
-                                                            Hello, <asp:Label ID="lblUsername" runat="server" style="font-weight: bold;"></asp:Label>
-                                                        </span>
-                                                    </li>
-                                                    <li id="liLogout" runat="server" visible="false" class="btn">
-                                                        <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" style="color: white; padding: 10px 15px; display: inline-block; text-decoration: none; cursor: pointer;">Log Out</asp:LinkButton>
-                                                    </li>
-                                                </ul>
-				</div>
-			<!-- /.navbar-collapse -->
-	    </nav>
-	    
-	</div>
+</div>
 </header>
 <!-- END | Header -->
 
 <div class="movie-items">
-    <div class:"flex-center" style="margin-top:30px;"">
+<div class="flex-center" style="margin-top:30px;">
         <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
         </asp:ContentPlaceHolder>
     </div>

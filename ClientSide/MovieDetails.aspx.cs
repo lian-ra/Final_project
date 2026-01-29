@@ -20,9 +20,66 @@ public partial class MovieDetails : System.Web.UI.Page
 
         if (!IsPostBack)
         {
+            HandleActions();
             LoadMovie();
             LoadComments();
+            
+            // Load Watched By Users
+            int movieId = GetCurrentMovieId();
+            if (movieId > 0)
+            {
+               DataTable dtWatched = myService.GetUsersWhoWatchedMovie(movieId);
+               if (dtWatched != null && dtWatched.Rows.Count > 0)
+               {
+                   rptWatchedUsers.DataSource = dtWatched;
+                   rptWatchedUsers.DataBind();
+               }
+               else
+               {
+                   lblNoWatched.Visible = true;
+               }
+
+               // Load Wishlisted By Users
+               DataTable dtWishlist = myService.GetUsersWhoWishlistedMovie(movieId);
+               if (dtWishlist != null && dtWishlist.Rows.Count > 0)
+               {
+                   rptWishlistUsers.DataSource = dtWishlist;
+                   rptWishlistUsers.DataBind();
+               }
+               else
+               {
+                   lblNoWishlist.Visible = true;
+               }
+            }
+            
             SetupCommentFormVisibility();
+        }
+        else
+        {
+            // Also handle actions on postback if needed, or primarily GET actions
+             HandleActions();
+        }
+    }
+
+    private void HandleActions()
+    {
+        string username = GetLoggedInUsername();
+        string action = Request.QueryString["action"];
+        string movieIdStr = Request.QueryString["movieId"];
+        int movieId;
+
+        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(action) && int.TryParse(movieIdStr, out movieId) && movieId > 0)
+        {
+             if (action == "addToWatched")
+             {
+                 myService.AddToWatched(username, movieId);
+                 Response.Redirect("MovieDetails.aspx?movieId=" + movieId);
+             }
+             else if (action == "removeFromWatched")
+             {
+                 myService.RemoveFromWatched(username, movieId);
+                 Response.Redirect("MovieDetails.aspx?movieId=" + movieId);
+             }
         }
     }
 
@@ -78,6 +135,17 @@ public partial class MovieDetails : System.Web.UI.Page
         }
 
         return false;
+    }
+
+    private bool IsMovieWatched(int movieId)
+    {
+         try
+        {
+            string username = GetLoggedInUsername();
+            if (string.IsNullOrEmpty(username) || movieId <= 0) return false;
+            return myService.IsWatched(username, movieId);
+        }
+        catch { return false; }
     }
 
     private int GetCurrentMovieId()
@@ -155,9 +223,21 @@ public partial class MovieDetails : System.Web.UI.Page
             {
                 actionHtml = "<span class='actor-badge' style='background:#555;border-color:#555;color:#ddd;'>In wishlist</span>";
             }
+
             else
             {
                 actionHtml = "<a href='Wishlist.aspx?action=add&movieId=" + movieId + "' class='btn-wishlist'>Add to wishlist</a>";
+            }
+
+            bool isWatched = IsMovieWatched(movieId);
+            string watchedHtml;
+            if (isWatched)
+            {
+                watchedHtml = "<a href='MovieDetails.aspx?action=removeFromWatched&movieId=" + movieId + "' class='btn-watched applied'>Watched</a>";
+            }
+            else
+            {
+                watchedHtml = "<a href='MovieDetails.aspx?action=addToWatched&movieId=" + movieId + "' class='btn-watched'>Mark as Watched</a>";
             }
 
             string html = string.Format(@"<div class='details-layout'>
@@ -177,6 +257,7 @@ public partial class MovieDetails : System.Web.UI.Page
                         <div class='details-actions'>
                             <a href='Home.aspx' class='btn-back'>Back to films</a>
                             {8}
+                            {9}
                         </div>
                     </div>
                 </div>",
@@ -188,7 +269,8 @@ public partial class MovieDetails : System.Web.UI.Page
                 HttpUtility.HtmlEncode(description),
                 HttpUtility.HtmlEncode(director),
                 actorsHtml,
-                actionHtml
+                actionHtml,
+                watchedHtml
             );
 
             phDetails.Controls.Add(new LiteralControl(html));

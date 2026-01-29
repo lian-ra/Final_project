@@ -15,11 +15,16 @@ public partial class Wishlist : System.Web.UI.Page
             HandleActions();
             LoadWishlist();
         }
-        else
+    }
+
+    private string GetTargetUsername()
+    {
+        string queryUser = Request.QueryString["username"];
+        if (!string.IsNullOrEmpty(queryUser))
         {
-            HandleActions();
-            LoadWishlist();
+            return queryUser;
         }
+        return GetLoggedInUsername();
     }
 
     private string GetLoggedInUsername()
@@ -52,12 +57,23 @@ public partial class Wishlist : System.Web.UI.Page
         string username = GetLoggedInUsername();
         if (string.IsNullOrEmpty(username))
         {
-            Response.Redirect("Login.aspx");
+            // Only redirect if trying to perform an action or viewing own wishlist without login
+            if (string.IsNullOrEmpty(Request.QueryString["username"])) 
+            {
+                 Response.Redirect("Login.aspx");
+            }
             return;
         }
 
         string action = Request.QueryString["action"];
         string movieIdStr = Request.QueryString["movieId"];
+
+        // Prevent modifying others' wishlists
+        string targetUser = GetTargetUsername();
+        if (targetUser != username && !string.IsNullOrEmpty(action))
+        {
+             return; 
+        }
 
         int movieId;
         if (!string.IsNullOrEmpty(action) && int.TryParse(movieIdStr, out movieId))
@@ -85,7 +101,7 @@ public partial class Wishlist : System.Web.UI.Page
 
     private void LoadWishlist()
     {
-        string username = GetLoggedInUsername();
+        string username = GetTargetUsername();
         if (string.IsNullOrEmpty(username))
         {
             return;
@@ -98,14 +114,16 @@ public partial class Wishlist : System.Web.UI.Page
 
             if (dt != null && dt.Rows.Count > 0)
             {
+                bool isOwner = (username == GetLoggedInUsername());
                 foreach (DataRow row in dt.Rows)
                 {
-                    phWishlist.Controls.Add(new LiteralControl(GenerateWishlistCard(row)));
+                    phWishlist.Controls.Add(new LiteralControl(GenerateWishlistCard(row, isOwner)));
                 }
             }
             else
             {
-                phWishlist.Controls.Add(new LiteralControl("<div class='wishlist-empty'>Your wishlist is empty. Browse films and add some!</div>"));
+                string msg = (username == GetLoggedInUsername()) ? "Your wishlist is empty. Browse films and add some!" : "This user's wishlist is empty.";
+                phWishlist.Controls.Add(new LiteralControl("<div class='wishlist-empty'>" + msg + "</div>"));
             }
         }
         catch (Exception ex)
@@ -117,7 +135,7 @@ public partial class Wishlist : System.Web.UI.Page
         }
     }
 
-    private string GenerateWishlistCard(DataRow row)
+    private string GenerateWishlistCard(DataRow row, bool isOwner)
     {
         string title = row["Title"] != DBNull.Value ? row["Title"].ToString() : "Unknown";
         string poster = row["Poster"] != DBNull.Value ? row["Poster"].ToString() : "images/uploads/slider1.jpg";
@@ -130,17 +148,24 @@ public partial class Wishlist : System.Web.UI.Page
             poster = "~/" + poster;
         }
 
+        string removeBtn = "";
+        if (isOwner)
+        {
+            removeBtn = "<a href='Wishlist.aspx?action=remove&movieId=" + movieId + "' class='wishlist-remove'>Remove</a>";
+        }
+
         string html = string.Format(@"<div class='wishlist-card'>
                 <img src='{0}' alt='{1}' class='wishlist-poster' />
                 <div class='wishlist-title'>{1}</div>
                 <div class='wishlist-meta'>Year: {2} | Rating: {3}</div>
-                <a href='Wishlist.aspx?action=remove&movieId={4}' class='wishlist-remove'>Remove</a>
+                {5}
             </div>",
             ResolveUrl(poster),
             HttpUtility.HtmlEncode(title),
             HttpUtility.HtmlEncode(year),
             HttpUtility.HtmlEncode(rating),
-            movieId);
+            movieId,
+            removeBtn);
 
         return html;
     }

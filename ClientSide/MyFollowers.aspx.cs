@@ -25,14 +25,27 @@ public partial class MyNetwork : System.Web.UI.Page
         try
         {
             string currentUser = "";
-            DataTable dtSession = Session["data"] as DataTable;
-            if (dtSession != null && dtSession.Rows.Count > 0)
+            
+            // Check for query string username first
+            string queryUser = Request.QueryString["username"];
+            if (!string.IsNullOrEmpty(queryUser))
             {
-                if (dtSession.Columns.Contains("User"))
-                    currentUser = dtSession.Rows[0]["User"].ToString();
-                else
-                    currentUser = dtSession.Rows[0][0].ToString();
+                currentUser = queryUser;
             }
+            else
+            {
+                // Fallback to session user
+                DataTable dtSession = Session["data"] as DataTable;
+                if (dtSession != null && dtSession.Rows.Count > 0)
+                {
+                    if (dtSession.Columns.Contains("User"))
+                        currentUser = dtSession.Rows[0]["User"].ToString();
+                    else
+                        currentUser = dtSession.Rows[0][0].ToString();
+                }
+            }
+
+            if (string.IsNullOrEmpty(currentUser)) return;
 
             // Load Following
             DataTable dtFollowing = myService.GetFollowingList(currentUser);
