@@ -69,13 +69,16 @@
             }
 
             .events-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 25px;
-                padding-bottom: 40px;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;       /* חשוב מאוד! זה מה שגורם להם לרדת שורה */
+                gap: 20px;
+                padding-bottom: 30px;
+                justify-content: flex-start; /* מתחיל מצד שמאל (או ימין בעברית) */
             }
-
+            
             .event-card {
+                /* ...הרקע והבורדר נשארים אותו דבר... */
                 background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
                 border-radius: 15px;
                 overflow: hidden;
@@ -83,8 +86,18 @@
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 position: relative;
                 display: flex;
-                flex-direction: column;
-                height: 100%;
+                flex-direction: row; /* תמונה לצד טקסט */
+                
+                /* התיקון החשוב לגודל הכרטיס: */
+                width: 48%; /* שים 2 בשורה (עם רווח קטן) */
+                min-width: 450px; /* שלא יהיו קטנים מדי */
+            }
+
+            /* התאמה למסכים קטנים - שירד לכרטיס אחד בשורה */
+            @media (max-width: 1000px) {
+                .event-card {
+                    width: 100%;
+                }
             }
 
             .event-card:hover {
@@ -173,8 +186,20 @@
                 font-size: 14px;
                 color: #ccc;
             }
+            .fa-film {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 14px;
+                color: #ccc;
+            }
 
             .event-detail-row i {
+                color: #ff4c3b;
+                width: 20px;
+            }
+            
+            .fa-film {
                 color: #ff4c3b;
                 width: 20px;
             }
@@ -385,9 +410,9 @@
                 <a href="Events.aspx?filter=myevents" class="filter-btn">My Events</a>
                 <a href="Events.aspx?filter=subscribed" class="filter-btn">My Subscriptions</a>
             </div>
-
-            <asp:PlaceHolder ID="phEvents" runat="server"></asp:PlaceHolder>
-
+            <div class="events-grid">
+                <asp:PlaceHolder ID="phEvents" runat="server"></asp:PlaceHolder>
+            </div>
             <asp:Label ID="lblEmpty" runat="server" CssClass="empty-state" Visible="false">
                 <i class="fa fa-calendar"></i><br />
                 No events found. Be the first to create one!

@@ -111,7 +111,8 @@ public partial class Events : System.Web.UI.Page
             }
 
             lblEmpty.Visible = false;
-            string html = "<div class='events-grid'>";
+
+            string html = "";
 
             foreach (DataRow row in dt.Rows)
             {
@@ -136,6 +137,7 @@ public partial class Events : System.Web.UI.Page
 
                 string statusClass = "status-" + eventStatus.ToLower();
 
+                // יצירת הכרטיס בלבד
                 html += string.Format(@"
                     <div class='event-card'>
                         <div style='position: relative;'>
@@ -154,6 +156,7 @@ public partial class Events : System.Web.UI.Page
                                     <i class='fa fa-clock-o'></i>
                                     <span>{6}</span>
                                 </div>
+                                <div class='event-detail-row'>
                                     <i class='fa fa-film'></i>
                                     <span>{7}</span>
                                 </div>
@@ -187,7 +190,7 @@ public partial class Events : System.Web.UI.Page
                 );
             }
 
-            html += "</div>";
+            // תיקון: מחקנו גם את סגירת ה-div מכאן
             phEvents.Controls.Add(new LiteralControl(html));
         }
         catch (Exception ex)
@@ -195,6 +198,8 @@ public partial class Events : System.Web.UI.Page
             phEvents.Controls.Add(new LiteralControl("<div class='empty-state'>Error loading events: " + Server.HtmlEncode(ex.Message) + "</div>"));
         }
     }
+
+
 
     protected void btnCreateEvent_Click(object sender, EventArgs e)
     {

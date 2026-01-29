@@ -98,7 +98,7 @@
 <!-- END | Header -->
 
 <div class="movie-items">
-<div class="flex-center" style="margin-top:30px;">
+<div class="flex-center" style="margin-top:40px;" >
         <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
         </asp:ContentPlaceHolder>
     </div>
