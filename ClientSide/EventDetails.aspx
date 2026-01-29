@@ -280,6 +280,94 @@
                 transform: translateY(-2px);
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             }
+
+            /* Modal Styles */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 1000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .modal-content {
+                background: #1a1a1a;
+                width: 90%;
+                max-width: 500px;
+                border-radius: 15px;
+                padding: 30px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+                color: white;
+            }
+
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 25px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding-bottom: 15px;
+            }
+
+            .modal-header h2 {
+                margin: 0;
+                font-size: 24px;
+                color: white;
+            }
+
+            .close-btn {
+                font-size: 30px;
+                color: #aaa;
+                text-decoration: none;
+                cursor: pointer;
+                background: none;
+                border: none;
+            }
+
+            .close-btn:hover {
+                color: white;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: #ccc;
+                font-size: 14px;
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 12px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                color: white;
+                font-size: 16px;
+                box-sizing: border-box;
+                /* Important for padding */
+            }
+
+            .form-control:focus {
+                outline: none;
+                border-color: #ff4c3b;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .modal-footer {
+                margin-top: 30px;
+                display: flex;
+                justify-content: flex-end;
+            }
         </style>
     </asp:Content>
 
@@ -296,6 +384,44 @@
                         CssClass="btn-status btn-status-closed" OnClick="btnSetClosed_Click" />
                     <asp:Button ID="btnSetCanceled" runat="server" Text="Cancel Event"
                         CssClass="btn-status btn-status-canceled" OnClick="btnSetCanceled_Click" />
+                    <asp:Button ID="btnUpdateEvent" runat="server" Text="Update Details"
+                        CssClass="btn-status btn-status-open" style="background: #e67e22;"
+                        OnClick="btnUpdateEvent_Click" />
+                </div>
+            </asp:Panel>
+
+            <asp:Panel ID="pnlUpdateModal" runat="server" Visible="false" CssClass="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Update Event</h2>
+                        <asp:LinkButton ID="btnCloseModal" runat="server" OnClick="btnCloseModal_Click"
+                            CssClass="close-btn">&times;</asp:LinkButton>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Event Date</label>
+                            <asp:TextBox ID="txtUpdateDate" runat="server" TextMode="Date" CssClass="form-control">
+                            </asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label>Start Time</label>
+                            <asp:TextBox ID="txtUpdateTime" runat="server" TextMode="Time" CssClass="form-control">
+                            </asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (ILS)</label>
+                            <asp:TextBox ID="txtUpdatePrice" runat="server" TextMode="Number" step="0.01"
+                                CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <asp:TextBox ID="txtUpdateLocation" runat="server" CssClass="form-control"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <asp:Button ID="btnSaveUpdate" runat="server" Text="Save Changes"
+                            CssClass="btn-action btn-subscribe" OnClick="btnSaveUpdate_Click" />
+                    </div>
                 </div>
             </asp:Panel>
 

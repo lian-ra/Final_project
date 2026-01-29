@@ -933,6 +933,23 @@ public class Service : System.Web.Services.WebService
     }
 
     [WebMethod]
+    public void UpdateEvent(int eventId, string eventDate, string startTime, decimal price, string location)
+    {
+        if (eventId <= 0) throw new Exception("Valid EventId is required.");
+        CreateEventsTable();
+        string sql = @"UPDATE [Events] 
+                       SET [EventDate] = @p1, [StartTime] = @p2, [Price] = @p3, [Location] = @p4 
+                       WHERE [EventId] = @p5";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Date)).Value = DateTime.Parse(eventDate);
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Time)).Value = TimeSpan.Parse(startTime);
+        cmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Decimal)).Value = price;
+        cmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar)).Value = location ?? "";
+        cmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Int)).Value = eventId;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
     public void DeleteEvent(int eventId)
     {
         if (eventId <= 0) throw new Exception("Valid EventId is required.");

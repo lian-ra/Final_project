@@ -2,6 +2,27 @@
 <wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://tempuri.org/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="GetUserSubscriptions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserSubscriptionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserSubscriptionsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetEventsByLocation">
         <s:complexType>
           <s:sequence>
@@ -792,6 +813,20 @@
       <s:element name="UpdateEventStatusResponse">
         <s:complexType />
       </s:element>
+      <s:element name="UpdateEvent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="eventDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="startTime" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="price" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="location" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateEventResponse">
+        <s:complexType />
+      </s:element>
       <s:element name="DeleteEvent">
         <s:complexType>
           <s:sequence>
@@ -860,29 +895,14 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="GetUserSubscriptions">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetUserSubscriptionsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetUserSubscriptionsResult">
-              <s:complexType>
-                <s:sequence>
-                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
-                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
-                </s:sequence>
-              </s:complexType>
-            </s:element>
-          </s:sequence>
-        </s:complexType>
-      </s:element>
     </s:schema>
   </wsdl:types>
+  <wsdl:message name="GetUserSubscriptionsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserSubscriptions" />
+  </wsdl:message>
+  <wsdl:message name="GetUserSubscriptionsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserSubscriptionsResponse" />
+  </wsdl:message>
   <wsdl:message name="GetEventsByLocationSoapIn">
     <wsdl:part name="parameters" element="tns:GetEventsByLocation" />
   </wsdl:message>
@@ -1177,6 +1197,12 @@
   <wsdl:message name="UpdateEventStatusSoapOut">
     <wsdl:part name="parameters" element="tns:UpdateEventStatusResponse" />
   </wsdl:message>
+  <wsdl:message name="UpdateEventSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateEvent" />
+  </wsdl:message>
+  <wsdl:message name="UpdateEventSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateEventResponse" />
+  </wsdl:message>
   <wsdl:message name="DeleteEventSoapIn">
     <wsdl:part name="parameters" element="tns:DeleteEvent" />
   </wsdl:message>
@@ -1207,13 +1233,11 @@
   <wsdl:message name="IsUserSubscribedSoapOut">
     <wsdl:part name="parameters" element="tns:IsUserSubscribedResponse" />
   </wsdl:message>
-  <wsdl:message name="GetUserSubscriptionsSoapIn">
-    <wsdl:part name="parameters" element="tns:GetUserSubscriptions" />
-  </wsdl:message>
-  <wsdl:message name="GetUserSubscriptionsSoapOut">
-    <wsdl:part name="parameters" element="tns:GetUserSubscriptionsResponse" />
-  </wsdl:message>
   <wsdl:portType name="ServiceSoap">
+    <wsdl:operation name="GetUserSubscriptions">
+      <wsdl:input message="tns:GetUserSubscriptionsSoapIn" />
+      <wsdl:output message="tns:GetUserSubscriptionsSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetEventsByLocation">
       <wsdl:input message="tns:GetEventsByLocationSoapIn" />
       <wsdl:output message="tns:GetEventsByLocationSoapOut" />
@@ -1410,6 +1434,10 @@
       <wsdl:input message="tns:UpdateEventStatusSoapIn" />
       <wsdl:output message="tns:UpdateEventStatusSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="UpdateEvent">
+      <wsdl:input message="tns:UpdateEventSoapIn" />
+      <wsdl:output message="tns:UpdateEventSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="DeleteEvent">
       <wsdl:input message="tns:DeleteEventSoapIn" />
       <wsdl:output message="tns:DeleteEventSoapOut" />
@@ -1430,13 +1458,18 @@
       <wsdl:input message="tns:IsUserSubscribedSoapIn" />
       <wsdl:output message="tns:IsUserSubscribedSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetUserSubscriptions">
-      <wsdl:input message="tns:GetUserSubscriptionsSoapIn" />
-      <wsdl:output message="tns:GetUserSubscriptionsSoapOut" />
-    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetUserSubscriptions">
+      <soap:operation soapAction="http://tempuri.org/GetUserSubscriptions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetEventsByLocation">
       <soap:operation soapAction="http://tempuri.org/GetEventsByLocation" style="document" />
       <wsdl:input>
@@ -1878,6 +1911,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UpdateEvent">
+      <soap:operation soapAction="http://tempuri.org/UpdateEvent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="DeleteEvent">
       <soap:operation soapAction="http://tempuri.org/DeleteEvent" style="document" />
       <wsdl:input>
@@ -1923,18 +1965,18 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetUserSubscriptions">
-      <soap:operation soapAction="http://tempuri.org/GetUserSubscriptions" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetUserSubscriptions">
+      <soap12:operation soapAction="http://tempuri.org/GetUserSubscriptions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetEventsByLocation">
       <soap12:operation soapAction="http://tempuri.org/GetEventsByLocation" style="document" />
       <wsdl:input>
@@ -2376,6 +2418,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UpdateEvent">
+      <soap12:operation soapAction="http://tempuri.org/UpdateEvent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="DeleteEvent">
       <soap12:operation soapAction="http://tempuri.org/DeleteEvent" style="document" />
       <wsdl:input>
@@ -2414,15 +2465,6 @@
     </wsdl:operation>
     <wsdl:operation name="IsUserSubscribed">
       <soap12:operation soapAction="http://tempuri.org/IsUserSubscribed" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetUserSubscriptions">
-      <soap12:operation soapAction="http://tempuri.org/GetUserSubscriptions" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

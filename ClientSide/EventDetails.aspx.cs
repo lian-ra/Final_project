@@ -286,4 +286,47 @@ public partial class EventDetails : System.Web.UI.Page
             ClientScript.RegisterStartupScript(this.GetType(), "Error", "alert('Error updating status: " + ex.Message.Replace("'", "\\'") + "');", true);
         }
     }
+
+    protected void btnUpdateEvent_Click(object sender, EventArgs e)
+    {
+        if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0) return;
+
+        DataTable dt = myService.GetEventById(currentEventId);
+        if (dt != null && dt.Rows.Count > 0)
+        {
+            DataRow row = dt.Rows[0];
+            txtUpdateDate.Text = Convert.ToDateTime(row["EventDate"]).ToString("yyyy-MM-dd");
+            txtUpdateTime.Text = row["StartTime"] != DBNull.Value ? Convert.ToDateTime(row["StartTime"].ToString()).ToString("HH:mm") : "";
+            txtUpdatePrice.Text = row["Price"] != DBNull.Value ? row["Price"].ToString() : "0";
+            txtUpdateLocation.Text = row.Table.Columns.Contains("Location") && row["Location"] != DBNull.Value ? row["Location"].ToString() : "";
+            
+            pnlUpdateModal.Visible = true;
+        }
+    }
+
+    protected void btnCloseModal_Click(object sender, EventArgs e)
+    {
+        pnlUpdateModal.Visible = false;
+    }
+
+    protected void btnSaveUpdate_Click(object sender, EventArgs e)
+    {
+        if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0) return;
+
+        string newDate = txtUpdateDate.Text;
+        string newTime = txtUpdateTime.Text;
+        string newLocation = txtUpdateLocation.Text;
+        decimal newPrice = 0;
+        decimal.TryParse(txtUpdatePrice.Text, out newPrice);
+
+        try
+        {
+            myService.UpdateEvent(currentEventId, newDate, newTime, newPrice, newLocation);
+            Response.Redirect("EventDetails.aspx?eventId=" + currentEventId);
+        }
+        catch (Exception ex)
+        {
+            ClientScript.RegisterStartupScript(this.GetType(), "Error", "alert('Error updating event: " + ex.Message.Replace("'", "\\'") + "');", true);
+        }
+    }
 }
