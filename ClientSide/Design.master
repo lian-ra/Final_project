@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Design.master.cs" Inherits="Design" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Design.master.cs" Inherits="Design" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -70,7 +70,7 @@
                         <li><a href="Events.aspx">Events</a></li>
                         <li><a href="News.aspx">News</a></li>
                         <li><a href="ClientArea.aspx">My Profile</a></li>
-                        <li><a href="AdminArea.aspx">Admin Area</a></li>
+                        <li id="liAdminArea" runat="server" visible="false"><a href="AdminArea.aspx">Admin Area</a></li>
                        
                     </ul>
                     <ul class="nav navbar-nav flex-child-menu menu-right">

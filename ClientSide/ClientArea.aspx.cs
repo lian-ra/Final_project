@@ -28,7 +28,7 @@ public partial class ClientArea : System.Web.UI.Page
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     string username = dt.Columns.Contains("User") ? dt.Rows[0]["User"].ToString() : dt.Rows[0][0].ToString();
-                    master.SetUserLoggedIn(username);
+                    master.SetUserLoggedIn(username, status);
                 }
             }
             else

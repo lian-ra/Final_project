@@ -26,7 +26,7 @@ public partial class AdminArea : System.Web.UI.Page
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     string username = dt.Columns.Contains("Usern") ? dt.Rows[0]["Usern"].ToString() : dt.Rows[0][0].ToString();
-                    master.SetUserLoggedIn(username);
+                    master.SetUserLoggedIn(username, status);
                 }
             }
             else

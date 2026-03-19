@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -1052,5 +1052,366 @@ public class Service : System.Web.Services.WebService
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = "%" + location + "%";
         return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    //======================================================
+    // STORE AND ORDERS
+    //======================================================
+
+    [WebMethod]
+    public void CreateStoreTables()
+    {
+        // Products
+        string checkProductsSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Products'";
+        SqlCommand cmd1 = new SqlCommand(checkProductsSql);
+        DataTable dt1 = DbActions.SearchWithParameters(cmd1, GetPath());
+        int prodExists = (dt1 != null && dt1.Rows.Count > 0) ? Convert.ToInt32(dt1.Rows[0][0]) : 0;
+
+        if (prodExists == 0)
+        {
+            string createProductsSql = @"CREATE TABLE [Products] (
+                [ProductId] INT IDENTITY(1,1) PRIMARY KEY,
+                [ProductCode] NVARCHAR(50) NOT NULL UNIQUE,
+                [Name] NVARCHAR(100) NOT NULL,
+                [Price] DECIMAL(10,2) NOT NULL,
+                [Description] NVARCHAR(MAX),
+                [Picture] NVARCHAR(500)
+            )";
+            SqlCommand cmmd1 = new SqlCommand(createProductsSql);
+            DbActions.MyAction(cmmd1, GetPath());
+            
+            // Seed data
+            string[] names = { "Popcorn", "Nachos", "Soda", "Water", "Slushee", "Event Merch T-Shirt" };
+            decimal[] prices = { 15.00m, 20.00m, 10.00m, 5.00m, 12.00m, 50.00m };
+            string[] descs = { "Large butter popcorn", "Crispy nachos with cheese", "Refreshing soda 500ml", "Mineral water 500ml", "Icy fruit slushee", "Exclusive event t-shirt" };
+            string[] pics = { "images/popcorn.jpg", "images/nachos.jpg", "images/soda.jpg", "images/water.jpg", "images/slushee.jpg", "images/shirt.jpg" };
+            
+            for(int i = 0; i < names.Length; i++)
+            {
+                string code = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+                string sqlIns = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES (@p1, @p2, @p3, @p4, @p5)";
+                SqlCommand cmdIns = new SqlCommand(sqlIns);
+                cmdIns.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = code;
+                cmdIns.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = names[i];
+                cmdIns.Parameters.Add(new SqlParameter("@p3", SqlDbType.Decimal)).Value = prices[i];
+                cmdIns.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar)).Value = descs[i];
+                cmdIns.Parameters.Add(new SqlParameter("@p5", SqlDbType.NVarChar)).Value = pics[i];
+                DbActions.MyAction(cmdIns, GetPath());
+            }
+        }
+
+        // Orders
+        string checkOrdersSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Orders'";
+        SqlCommand cmd2 = new SqlCommand(checkOrdersSql);
+        DataTable dt2 = DbActions.SearchWithParameters(cmd2, GetPath());
+        int ordExists = (dt2 != null && dt2.Rows.Count > 0) ? Convert.ToInt32(dt2.Rows[0][0]) : 0;
+
+        if (ordExists == 0)
+        {
+            string createOrdersSql = @"CREATE TABLE [Orders] (
+                [OrderId] INT IDENTITY(1,1) PRIMARY KEY,
+                [OrderCode] NVARCHAR(50) NOT NULL UNIQUE,
+                [Username] NVARCHAR(50) NOT NULL,
+                [EventId] INT NOT NULL,
+                [DatePurchased] DATETIME DEFAULT GETDATE(),
+                [Total] DECIMAL(10,2) NOT NULL
+            )";
+            SqlCommand cmmd2 = new SqlCommand(createOrdersSql);
+            DbActions.MyAction(cmmd2, GetPath());
+        }
+
+        // OrderItems
+        string checkItemsSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'OrderItems'";
+        SqlCommand cmd3 = new SqlCommand(checkItemsSql);
+        DataTable dt3 = DbActions.SearchWithParameters(cmd3, GetPath());
+        int itemsExists = (dt3 != null && dt3.Rows.Count > 0) ? Convert.ToInt32(dt3.Rows[0][0]) : 0;
+
+        if (itemsExists == 0)
+        {
+            string createItemsSql = @"CREATE TABLE [OrderItems] (
+                [OrderItemId] INT IDENTITY(1,1) PRIMARY KEY,
+                [OrderCode] NVARCHAR(50) NOT NULL,
+                [ProductCode] NVARCHAR(50) NOT NULL,
+                [Quantity] INT NOT NULL,
+                FOREIGN KEY ([OrderCode]) REFERENCES [Orders]([OrderCode]) ON DELETE CASCADE,
+                FOREIGN KEY ([ProductCode]) REFERENCES [Products]([ProductCode])
+            )";
+            SqlCommand cmmd3 = new SqlCommand(createItemsSql);
+            DbActions.MyAction(cmmd3, GetPath());
+        }
+
+        // Adjust existing product list if needed
+        try
+        {
+            try {
+                string alterSql = "ALTER TABLE [Products] ADD [IsActive] BIT DEFAULT 1 WITH VALUES";
+                DbActions.MyAction(new SqlCommand(alterSql), GetPath());
+            } catch { }
+
+            // Fix Slushie spelling
+            string updateSql = "UPDATE [Products] SET [Name] = 'Slushie' WHERE [Name] = 'Slushi' OR [Name] = 'Slushee'";
+            DbActions.MyAction(new SqlCommand(updateSql), GetPath());
+
+            // Add S, M, L popcorn if not added yet
+            string checkPopcorn = "SELECT COUNT(*) FROM [Products] WHERE [Name] LIKE 'Popcorn (%)'";
+            DataTable dtPopcorn = DbActions.SearchWithParameters(new SqlCommand(checkPopcorn), GetPath());
+            if (dtPopcorn != null && dtPopcorn.Rows.Count > 0 && Convert.ToInt32(dtPopcorn.Rows[0][0]) == 0)
+            {
+                string codeS = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+                string sql1 = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES ('" + codeS + "', 'Popcorn (S)', 10.00, 'Small size popcorn.', 'images/popcorn.jpg')";
+                DbActions.MyAction(new SqlCommand(sql1), GetPath());
+
+                string codeM = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+                string sql2 = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES ('" + codeM + "', 'Popcorn (M)', 15.00, 'Medium size popcorn.', 'images/popcorn.jpg')";
+                DbActions.MyAction(new SqlCommand(sql2), GetPath());
+
+                string codeL = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+                string sql3 = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES ('" + codeL + "', 'Popcorn (L)', 20.00, 'Large size popcorn.', 'images/popcorn.jpg')";
+                DbActions.MyAction(new SqlCommand(sql3), GetPath());
+            }
+        }
+        catch { }
+    }
+
+    [WebMethod]
+    public DataTable GetProducts()
+    {
+        CreateStoreTables();
+        string sql = "SELECT * FROM [Products] WHERE ISNULL([IsActive], 1) = 1";
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public void DeleteProduct(string productCode)
+    {
+        try {
+            string alterSql = "ALTER TABLE [Products] ADD [IsActive] BIT DEFAULT 1 WITH VALUES";
+            DbActions.MyAction(new SqlCommand(alterSql), GetPath());
+        } catch { }
+
+        string sql = "UPDATE [Products] SET [IsActive] = 0 WHERE [ProductCode]=@p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = productCode;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public void UpdateProduct(string productCode, decimal price, string picture)
+    {
+        if (string.IsNullOrEmpty(picture))
+        {
+            string sql = "UPDATE [Products] SET [Price]=@p1 WHERE [ProductCode]=@p2";
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Decimal)).Value = price;
+            cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = productCode;
+            DbActions.MyAction(cmd, GetPath());
+        }
+        else
+        {
+            string sql = "UPDATE [Products] SET [Price]=@p1, [Picture]=@p2 WHERE [ProductCode]=@p3";
+            SqlCommand cmd = new SqlCommand(sql);
+            cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Decimal)).Value = price;
+            cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = picture;
+            cmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.NVarChar)).Value = productCode;
+            DbActions.MyAction(cmd, GetPath());
+        }
+    }
+
+    [WebMethod]
+    public string PlaceOrder(string username, int eventId, OrderItem[] items)
+    {
+        if (string.IsNullOrWhiteSpace(username) || eventId <= 0 || items == null || items.Length == 0)
+            throw new Exception("Invalid order data.");
+            
+        CreateStoreTables();
+
+        string orderCode = "ORD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+        decimal total = 0;
+        
+        foreach(var item in items)
+        {
+            total += item.Price * item.Quantity; // Based on client side price passed in
+        }
+
+        string sqlOrder = "INSERT INTO [Orders] ([OrderCode], [Username], [EventId], [DatePurchased], [Total]) VALUES (@p1, @p2, @p3, @p4, @p5)";
+        SqlCommand cmdOrd = new SqlCommand(sqlOrder);
+        cmdOrd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = orderCode;
+        cmdOrd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = username;
+        cmdOrd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int)).Value = eventId;
+        cmdOrd.Parameters.Add(new SqlParameter("@p4", SqlDbType.DateTime)).Value = DateTime.Now;
+        cmdOrd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal)).Value = total;
+        DbActions.MyAction(cmdOrd, GetPath());
+
+        foreach(var item in items)
+        {
+            string sqlItem = "INSERT INTO [OrderItems] ([OrderCode], [ProductCode], [Quantity]) VALUES (@p1, @p2, @p3)";
+            SqlCommand cmdItem = new SqlCommand(sqlItem);
+            cmdItem.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = orderCode;
+            cmdItem.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = item.ProductCode;
+            cmdItem.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int)).Value = item.Quantity;
+            DbActions.MyAction(cmdItem, GetPath());
+        }
+
+        return orderCode;
+    }
+
+    [WebMethod]
+    public DataTable GetMyOrders(string username)
+    {
+        CreateStoreTables();
+        string sql = @"
+            SELECT o.[OrderCode], o.[EventId], o.[DatePurchased], o.[Total], e.[EventDate], m.[Title] as MovieTitle
+            FROM [Orders] o
+            INNER JOIN [Events] e ON o.[EventId] = e.[EventId]
+            INNER JOIN [Movies] m ON e.[MovieId] = m.[MovieId]
+            WHERE o.[Username] = @p1
+            ORDER BY o.[DatePurchased] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetOrderItems(string orderCode)
+    {
+        string sql = @"
+            SELECT oi.[Quantity], p.[Name] as ProductName, p.[Price]
+            FROM [OrderItems] oi
+            INNER JOIN [Products] p ON oi.[ProductCode] = p.[ProductCode]
+            WHERE oi.[OrderCode] = @p1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = orderCode;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    //======================================================
+    // EVENT STORE MANAGEMENT & ADMIN CONTROLS
+    //======================================================
+    [WebMethod]
+    public void CreateEventProductsTable()
+    {
+        CreateStoreTables();
+        string checkSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EventProducts'";
+        SqlCommand cmd = new SqlCommand(checkSql);
+        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
+        int exists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+
+        if (exists == 0)
+        {
+            string createSql = @"CREATE TABLE [EventProducts] (
+                [Id] INT IDENTITY(1,1) PRIMARY KEY,
+                [EventId] INT NOT NULL,
+                [ProductCode] NVARCHAR(50) NOT NULL,
+                FOREIGN KEY ([EventId]) REFERENCES [Events]([EventId]) ON DELETE CASCADE,
+                FOREIGN KEY ([ProductCode]) REFERENCES [Products]([ProductCode]) ON DELETE CASCADE,
+                UNIQUE([EventId], [ProductCode])
+            )";
+            SqlCommand cmmd = new SqlCommand(createSql);
+            DbActions.MyAction(cmmd, GetPath());
+        }
+    }
+
+    [WebMethod]
+    public void AddProductToEvent(int eventId, string productCode)
+    {
+        CreateEventProductsTable();
+        // check if already exists
+        string checkSql = "SELECT COUNT(*) FROM [EventProducts] WHERE [EventId]=@p1 AND [ProductCode]=@p2";
+        SqlCommand chkCmd = new SqlCommand(checkSql);
+        chkCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        chkCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = productCode;
+        DataTable dt = DbActions.SearchWithParameters(chkCmd, GetPath());
+        if(dt != null && dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0][0]) > 0) return; // already exists
+
+        string sql = "INSERT INTO [EventProducts] ([EventId], [ProductCode]) VALUES (@p1, @p2)";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = productCode;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public void RemoveProductFromEvent(int eventId, string productCode)
+    {
+        CreateEventProductsTable();
+        string sql = "DELETE FROM [EventProducts] WHERE [EventId]=@p1 AND [ProductCode]=@p2";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = productCode;
+        DbActions.MyAction(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetEventProducts(int eventId)
+    {
+        CreateEventProductsTable();
+        string sql = @"
+            SELECT p.* 
+            FROM [Products] p 
+            INNER JOIN [EventProducts] ep ON p.[ProductCode] = ep.[ProductCode] 
+            WHERE ep.[EventId] = @p1 AND ISNULL(p.[IsActive], 1) = 1";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetProductsNotInEvent(int eventId)
+    {
+        CreateEventProductsTable();
+        string sql = @"
+            SELECT p.* 
+            FROM [Products] p 
+            WHERE ISNULL(p.[IsActive], 1) = 1 AND p.[ProductCode] NOT IN (
+                SELECT [ProductCode] FROM [EventProducts] WHERE [EventId] = @p1
+            )";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetEventOrders(int eventId)
+    {
+        CreateStoreTables();
+        string sql = @"
+            SELECT o.[OrderCode], o.[Username], o.[DatePurchased], o.[Total]
+            FROM [Orders] o
+            WHERE o.[EventId] = @p1
+            ORDER BY o.[DatePurchased] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public DataTable GetAllOrders()
+    {
+        CreateStoreTables();
+        string sql = @"
+            SELECT o.[OrderCode], o.[EventId], o.[Username], o.[DatePurchased], o.[Total], 
+                   e.[EventDate], m.[Title] as MovieTitle, e.[Username] as EventOwner
+            FROM [Orders] o
+            INNER JOIN [Events] e ON o.[EventId] = e.[EventId]
+            INNER JOIN [Movies] m ON e.[MovieId] = m.[MovieId]
+            ORDER BY o.[DatePurchased] DESC";
+        SqlCommand cmd = new SqlCommand(sql);
+        return DbActions.SearchWithParameters(cmd, GetPath());
+    }
+
+    [WebMethod]
+    public void AddProduct(string name, decimal price, string description, string picture)
+    {
+        CreateStoreTables();
+        string code = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+        string sqlIns = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES (@p1, @p2, @p3, @p4, @p5)";
+        SqlCommand cmdIns = new SqlCommand(sqlIns);
+        cmdIns.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = code;
+        cmdIns.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = name;
+        cmdIns.Parameters.Add(new SqlParameter("@p3", SqlDbType.Decimal)).Value = price;
+        cmdIns.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar)).Value = description;
+        cmdIns.Parameters.Add(new SqlParameter("@p5", SqlDbType.NVarChar)).Value = picture;
+        DbActions.MyAction(cmdIns, GetPath());
     }
 }

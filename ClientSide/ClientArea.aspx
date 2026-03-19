@@ -1,4 +1,4 @@
-﻿<%@ Page Title="User Dashboard" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true"
+<%@ Page Title="User Dashboard" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true"
     CodeFile="ClientArea.aspx.cs" Inherits="ClientArea" %>
 
     <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
@@ -179,6 +179,13 @@
                         <i class="fa fa-user dash-icon"></i>
                     </div>
                     <span class="dash-text">View My Profile</span>
+                </a>
+                
+                <a href="MyOrders.aspx" class="dash-card">
+                    <div class="card-image-container">
+                        <i class="fa fa-shopping-bag dash-icon"></i>
+                    </div>
+                    <span class="dash-text">My Orders</span>
                 </a>
             </div>
 

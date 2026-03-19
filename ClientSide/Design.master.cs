@@ -35,7 +35,7 @@ public partial class Design : System.Web.UI.MasterPage
 
                 if (!string.IsNullOrEmpty(username))
                 {
-                    SetUserLoggedIn(username);
+                    SetUserLoggedIn(username, status);
                 }
                 else
                 {
@@ -54,7 +54,7 @@ public partial class Design : System.Web.UI.MasterPage
         }
     }
 
-    public void SetUserLoggedIn(string username)
+    public void SetUserLoggedIn(string username, string status)
     {
         try
         {
@@ -63,6 +63,7 @@ public partial class Design : System.Web.UI.MasterPage
             if (liLoggedIn != null) liLoggedIn.Visible = true;
             if (liLogout != null) liLogout.Visible = true;
             if (lblUsername != null) lblUsername.Text = username;
+            if (liAdminArea != null) liAdminArea.Visible = (status == "2");
         }
         catch { }
     }
@@ -75,6 +76,7 @@ public partial class Design : System.Web.UI.MasterPage
             if (liSignUp != null) liSignUp.Visible = true;
             if (liLoggedIn != null) liLoggedIn.Visible = false;
             if (liLogout != null) liLogout.Visible = false;
+            if (liAdminArea != null) liAdminArea.Visible = false;
         }
         catch { }
     }

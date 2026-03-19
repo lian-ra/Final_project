@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Admin Area" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="AdminArea.aspx.cs" Inherits="AdminArea" %>
+<%@ Page Title="Admin Area" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="AdminArea.aspx.cs" Inherits="AdminArea" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -119,6 +119,16 @@
             <asp:HyperLink ID="lnkManageMovies" runat="server" NavigateUrl="~/ManageMovies.aspx" CssClass="dash-card">
                 <i class="fa fa-film dash-icon"></i>
                 <span class="dash-text">Manage Movies</span>
+            </asp:HyperLink>
+
+            <asp:HyperLink ID="lnkManageStock" runat="server" NavigateUrl="~/ManageStock.aspx" CssClass="dash-card">
+                <i class="fa fa-shopping-bag dash-icon"></i>
+                <span class="dash-text">Manage Stock</span>
+            </asp:HyperLink>
+
+            <asp:HyperLink ID="lnkAdminOrders" runat="server" NavigateUrl="~/AdminOrders.aspx" CssClass="dash-card">
+                <i class="fa fa-list-alt dash-icon"></i>
+                <span class="dash-text">All Orders</span>
             </asp:HyperLink>
         </div>
 

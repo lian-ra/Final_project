@@ -387,6 +387,8 @@
                     <asp:Button ID="btnUpdateEvent" runat="server" Text="Update Details"
                         CssClass="btn-status btn-status-open" style="background: #e67e22;"
                         OnClick="btnUpdateEvent_Click" />
+                    <a href='ManageEventStore.aspx?eventId=<%= Request.QueryString["eventId"] %>' class="btn-status" style="background: #9b59b6; color: white; text-decoration: none; display: inline-flex; align-items: center;"><i class="fa fa-shopping-basket" style="margin-right:5px;"></i>Manage Store</a>
+                    <a href='EventOrders.aspx?eventId=<%= Request.QueryString["eventId"] %>' class="btn-status" style="background: #34495e; color: white; text-decoration: none; display: inline-flex; align-items: center;"><i class="fa fa-list-alt" style="margin-right:5px;"></i>View Orders</a>
                 </div>
             </asp:Panel>
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -71,7 +71,7 @@ public partial class FindUsers : System.Web.UI.Page
                 lblNoResults.Visible = true;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Ideally log error
             lblNoResults.Text = "Error loading users.";

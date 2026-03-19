@@ -145,7 +145,13 @@
             <div class="form-group">
                 <asp:Label ID="label1" runat="server" Text="Username" CssClass="form-label"></asp:Label>
                 <asp:TextBox ID="txtUName" runat="server" CssClass="form-control-custom" placeholder="Choose a username"></asp:TextBox>
+                
+                        
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage=" Username required" ControlToValidate="txtFName"></asp:RequiredFieldValidator>
+
+
             </div>
+          
 
             <div class="form-group">
                 <asp:Label ID="label2" runat="server" Text="Password" CssClass="form-label"></asp:Label>
@@ -170,13 +176,21 @@
             <div class="form-group">
                 <asp:Label ID="label6" runat="server" Text="Email" CssClass="form-label"></asp:Label>
                 <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control-custom" TextMode="Email" placeholder="Enter email address"></asp:TextBox>
+                
+                    <asp:RegularExpressionValidator ID="re_Email" runat="server" ErrorMessage="RegularExpressionValidator" ControlToValidate="txtEmail" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"></asp:RegularExpressionValidator>
             </div>
+            
+                                      
 
             <div class="form-group">
                 <asp:Label ID="label7" runat="server" Text="Phone" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control-custom" placeholder="Enter phone number"></asp:TextBox>
+                <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control-custom" placeholder="Enter phone number" EnableTheming="False" ></asp:TextBox>
+                <%-- <asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="Number between 0-10" MaximumValue="10" MinimumValue="1" SetFocusOnError="True" Type="Integer" ValidationExpression="^\d{10}$" ControlToValidate="txtPhone" TabIndex="10"></asp:RangeValidator>--%>
+                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="10 Numbers required" ControlToValidate="txtPhone" ValidationExpression="\d{10}$"></asp:RegularExpressionValidator>
             </div>
-
+         
+       
+        
             <div class="form-group">
                 <asp:Label ID="txtGender" runat="server" Text="Gender" CssClass="form-label"></asp:Label>
                 <asp:DropDownList ID="dpdphone" runat="server" CssClass="dropdown-custom">

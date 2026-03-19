@@ -44,6 +44,245 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="CreateStoreTables">
+        <s:complexType />
+      </s:element>
+      <s:element name="CreateStoreTablesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetProducts">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetProductsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetProductsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteProduct">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="productCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteProductResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UpdateProduct">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="productCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="price" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="picture" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateProductResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="PlaceOrder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="items" type="tns:ArrayOfOrderItem" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOrderItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OrderItem" nillable="true" type="tns:OrderItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OrderItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="OrderItemId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="OrderCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ProductCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Quantity" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ProductName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PlaceOrderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PlaceOrderResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMyOrders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMyOrdersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMyOrdersResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOrderItems">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="orderCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOrderItemsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetOrderItemsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateEventProductsTable">
+        <s:complexType />
+      </s:element>
+      <s:element name="CreateEventProductsTableResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="AddProductToEvent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="productCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddProductToEventResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="RemoveProductFromEvent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="productCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveProductFromEventResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetEventProducts">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventProductsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventProductsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetProductsNotInEvent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetProductsNotInEventResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetProductsNotInEventResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventOrders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="eventId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventOrdersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventOrdersResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAllOrders">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetAllOrdersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAllOrdersResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddProduct">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="price" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="picture" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddProductResponse">
+        <s:complexType />
+      </s:element>
       <s:element name="Login">
         <s:complexType>
           <s:sequence>
@@ -909,6 +1148,96 @@
   <wsdl:message name="GetEventsByLocationSoapOut">
     <wsdl:part name="parameters" element="tns:GetEventsByLocationResponse" />
   </wsdl:message>
+  <wsdl:message name="CreateStoreTablesSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateStoreTables" />
+  </wsdl:message>
+  <wsdl:message name="CreateStoreTablesSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateStoreTablesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetProductsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetProducts" />
+  </wsdl:message>
+  <wsdl:message name="GetProductsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetProductsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteProductSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteProduct" />
+  </wsdl:message>
+  <wsdl:message name="DeleteProductSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteProductResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateProductSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateProduct" />
+  </wsdl:message>
+  <wsdl:message name="UpdateProductSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateProductResponse" />
+  </wsdl:message>
+  <wsdl:message name="PlaceOrderSoapIn">
+    <wsdl:part name="parameters" element="tns:PlaceOrder" />
+  </wsdl:message>
+  <wsdl:message name="PlaceOrderSoapOut">
+    <wsdl:part name="parameters" element="tns:PlaceOrderResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMyOrdersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMyOrders" />
+  </wsdl:message>
+  <wsdl:message name="GetMyOrdersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMyOrdersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderItemsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetOrderItems" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderItemsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetOrderItemsResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateEventProductsTableSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateEventProductsTable" />
+  </wsdl:message>
+  <wsdl:message name="CreateEventProductsTableSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateEventProductsTableResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddProductToEventSoapIn">
+    <wsdl:part name="parameters" element="tns:AddProductToEvent" />
+  </wsdl:message>
+  <wsdl:message name="AddProductToEventSoapOut">
+    <wsdl:part name="parameters" element="tns:AddProductToEventResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveProductFromEventSoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveProductFromEvent" />
+  </wsdl:message>
+  <wsdl:message name="RemoveProductFromEventSoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveProductFromEventResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEventProductsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventProducts" />
+  </wsdl:message>
+  <wsdl:message name="GetEventProductsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventProductsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetProductsNotInEventSoapIn">
+    <wsdl:part name="parameters" element="tns:GetProductsNotInEvent" />
+  </wsdl:message>
+  <wsdl:message name="GetProductsNotInEventSoapOut">
+    <wsdl:part name="parameters" element="tns:GetProductsNotInEventResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEventOrdersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventOrders" />
+  </wsdl:message>
+  <wsdl:message name="GetEventOrdersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventOrdersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAllOrdersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAllOrders" />
+  </wsdl:message>
+  <wsdl:message name="GetAllOrdersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAllOrdersResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddProductSoapIn">
+    <wsdl:part name="parameters" element="tns:AddProduct" />
+  </wsdl:message>
+  <wsdl:message name="AddProductSoapOut">
+    <wsdl:part name="parameters" element="tns:AddProductResponse" />
+  </wsdl:message>
   <wsdl:message name="LoginSoapIn">
     <wsdl:part name="parameters" element="tns:Login" />
   </wsdl:message>
@@ -1242,6 +1571,66 @@
       <wsdl:input message="tns:GetEventsByLocationSoapIn" />
       <wsdl:output message="tns:GetEventsByLocationSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="CreateStoreTables">
+      <wsdl:input message="tns:CreateStoreTablesSoapIn" />
+      <wsdl:output message="tns:CreateStoreTablesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProducts">
+      <wsdl:input message="tns:GetProductsSoapIn" />
+      <wsdl:output message="tns:GetProductsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProduct">
+      <wsdl:input message="tns:DeleteProductSoapIn" />
+      <wsdl:output message="tns:DeleteProductSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProduct">
+      <wsdl:input message="tns:UpdateProductSoapIn" />
+      <wsdl:output message="tns:UpdateProductSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PlaceOrder">
+      <wsdl:input message="tns:PlaceOrderSoapIn" />
+      <wsdl:output message="tns:PlaceOrderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMyOrders">
+      <wsdl:input message="tns:GetMyOrdersSoapIn" />
+      <wsdl:output message="tns:GetMyOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderItems">
+      <wsdl:input message="tns:GetOrderItemsSoapIn" />
+      <wsdl:output message="tns:GetOrderItemsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateEventProductsTable">
+      <wsdl:input message="tns:CreateEventProductsTableSoapIn" />
+      <wsdl:output message="tns:CreateEventProductsTableSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddProductToEvent">
+      <wsdl:input message="tns:AddProductToEventSoapIn" />
+      <wsdl:output message="tns:AddProductToEventSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveProductFromEvent">
+      <wsdl:input message="tns:RemoveProductFromEventSoapIn" />
+      <wsdl:output message="tns:RemoveProductFromEventSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEventProducts">
+      <wsdl:input message="tns:GetEventProductsSoapIn" />
+      <wsdl:output message="tns:GetEventProductsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProductsNotInEvent">
+      <wsdl:input message="tns:GetProductsNotInEventSoapIn" />
+      <wsdl:output message="tns:GetProductsNotInEventSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEventOrders">
+      <wsdl:input message="tns:GetEventOrdersSoapIn" />
+      <wsdl:output message="tns:GetEventOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllOrders">
+      <wsdl:input message="tns:GetAllOrdersSoapIn" />
+      <wsdl:output message="tns:GetAllOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddProduct">
+      <wsdl:input message="tns:AddProductSoapIn" />
+      <wsdl:output message="tns:AddProductSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="Login">
       <wsdl:input message="tns:LoginSoapIn" />
       <wsdl:output message="tns:LoginSoapOut" />
@@ -1472,6 +1861,141 @@
     </wsdl:operation>
     <wsdl:operation name="GetEventsByLocation">
       <soap:operation soapAction="http://tempuri.org/GetEventsByLocation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateStoreTables">
+      <soap:operation soapAction="http://tempuri.org/CreateStoreTables" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProducts">
+      <soap:operation soapAction="http://tempuri.org/GetProducts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProduct">
+      <soap:operation soapAction="http://tempuri.org/DeleteProduct" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProduct">
+      <soap:operation soapAction="http://tempuri.org/UpdateProduct" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PlaceOrder">
+      <soap:operation soapAction="http://tempuri.org/PlaceOrder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMyOrders">
+      <soap:operation soapAction="http://tempuri.org/GetMyOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderItems">
+      <soap:operation soapAction="http://tempuri.org/GetOrderItems" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateEventProductsTable">
+      <soap:operation soapAction="http://tempuri.org/CreateEventProductsTable" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddProductToEvent">
+      <soap:operation soapAction="http://tempuri.org/AddProductToEvent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveProductFromEvent">
+      <soap:operation soapAction="http://tempuri.org/RemoveProductFromEvent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventProducts">
+      <soap:operation soapAction="http://tempuri.org/GetEventProducts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProductsNotInEvent">
+      <soap:operation soapAction="http://tempuri.org/GetProductsNotInEvent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventOrders">
+      <soap:operation soapAction="http://tempuri.org/GetEventOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllOrders">
+      <soap:operation soapAction="http://tempuri.org/GetAllOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddProduct">
+      <soap:operation soapAction="http://tempuri.org/AddProduct" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1979,6 +2503,141 @@
     </wsdl:operation>
     <wsdl:operation name="GetEventsByLocation">
       <soap12:operation soapAction="http://tempuri.org/GetEventsByLocation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateStoreTables">
+      <soap12:operation soapAction="http://tempuri.org/CreateStoreTables" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProducts">
+      <soap12:operation soapAction="http://tempuri.org/GetProducts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProduct">
+      <soap12:operation soapAction="http://tempuri.org/DeleteProduct" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProduct">
+      <soap12:operation soapAction="http://tempuri.org/UpdateProduct" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PlaceOrder">
+      <soap12:operation soapAction="http://tempuri.org/PlaceOrder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMyOrders">
+      <soap12:operation soapAction="http://tempuri.org/GetMyOrders" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderItems">
+      <soap12:operation soapAction="http://tempuri.org/GetOrderItems" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateEventProductsTable">
+      <soap12:operation soapAction="http://tempuri.org/CreateEventProductsTable" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddProductToEvent">
+      <soap12:operation soapAction="http://tempuri.org/AddProductToEvent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveProductFromEvent">
+      <soap12:operation soapAction="http://tempuri.org/RemoveProductFromEvent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventProducts">
+      <soap12:operation soapAction="http://tempuri.org/GetEventProducts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProductsNotInEvent">
+      <soap12:operation soapAction="http://tempuri.org/GetProductsNotInEvent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventOrders">
+      <soap12:operation soapAction="http://tempuri.org/GetEventOrders" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllOrders">
+      <soap12:operation soapAction="http://tempuri.org/GetAllOrders" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddProduct">
+      <soap12:operation soapAction="http://tempuri.org/AddProduct" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
