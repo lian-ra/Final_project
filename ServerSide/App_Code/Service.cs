@@ -407,23 +407,28 @@ public class Service : System.Web.Services.WebService
     }
 
     //======================================================
-    // WATCHED
+    // USER MOVIE INTERACTIONS (WATCHED & COMMENTS)
     //======================================================
 
-    private void CreateWatchedTable()
+    private void CreateMovieReviewsTable()
     {
-        string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Watched'";
+        string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MovieReviews'";
         SqlCommand cmd = new SqlCommand(checkTableSql);
         DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
         int tableExists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
 
         if (tableExists == 0)
         {
-            string createTableSql = @"CREATE TABLE [Watched] (
-                    [Id] INT IDENTITY(1,1) PRIMARY KEY,
-                    [Username] NVARCHAR(255) NOT NULL,
-                    [MovieId] INT NOT NULL
-                )";
+            string createTableSql = @"CREATE TABLE [MovieReviews] (
+                [InteractionId] INT IDENTITY(1,1) PRIMARY KEY,
+                [Username] NVARCHAR(255) NOT NULL,
+                [MovieId] INT NOT NULL,
+                [IsWatched] BIT DEFAULT 0,
+                [Rating] INT NULL,
+                [CommentText] NVARCHAR(MAX) NULL,
+                [CreatedAt] DATETIME DEFAULT GETDATE(),
+                CONSTRAINT UQ_User_Movie UNIQUE ([Username], [MovieId])
+            )";
             SqlCommand cmmd = new SqlCommand(createTableSql);
             DbActions.MyAction(cmmd, GetPath());
         }
@@ -434,35 +439,30 @@ public class Service : System.Web.Services.WebService
     {
         if (string.IsNullOrWhiteSpace(username) || movieId <= 0) throw new Exception("Data required.");
         CreateMoviesTable();
-        CreateWatchedTable();
+        CreateMovieReviewsTable();
 
-        string checkSql = "SELECT COUNT(*) FROM [Watched] WHERE [Username]=@p1 AND [MovieId]=@p2";
-        SqlCommand checkCmd = new SqlCommand(checkSql);
-        checkCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
-        checkCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
-        DataTable dt = DbActions.SearchWithParameters(checkCmd, GetPath());
-        int exists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
+        string sql = @"
+            IF EXISTS (SELECT 1 FROM [MovieReviews] WHERE [Username]=@p1 AND [MovieId]=@p2)
+                UPDATE [MovieReviews] SET [IsWatched]=1 WHERE [Username]=@p1 AND [MovieId]=@p2
+            ELSE
+                INSERT INTO [MovieReviews] ([Username], [MovieId], [IsWatched]) VALUES (@p1, @p2, 1)";
+        
+        SqlCommand cmd = new SqlCommand(sql);
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
+        DbActions.MyAction(cmd, GetPath());
 
-        if (exists == 0)
-        {
-            string insertSql = "INSERT INTO [Watched] ([Username], [MovieId]) VALUES (@p1, @p2)";
-            SqlCommand insertCmd = new SqlCommand(insertSql);
-            insertCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
-            insertCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
-            DbActions.MyAction(insertCmd, GetPath());
-
-            // Remove from wishlist if it exists there
-            try { RemoveFromWishlist(username, movieId); } catch { }
-        }
+        // Remove from wishlist if it exists there
+        try { RemoveFromWishlist(username, movieId); } catch { }
     }
 
     [WebMethod]
     public void RemoveFromWatched(string username, int movieId)
     {
         if (string.IsNullOrWhiteSpace(username)) throw new Exception("Data required.");
-        CreateWatchedTable();
-        string deleteSql = "DELETE FROM [Watched] WHERE [Username]=@p1 AND [MovieId]=@p2";
-        SqlCommand cmd = new SqlCommand(deleteSql);
+        CreateMovieReviewsTable();
+        string sql = "UPDATE [MovieReviews] SET [IsWatched]=0 WHERE [Username]=@p1 AND [MovieId]=@p2";
+        SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
         cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
         DbActions.MyAction(cmd, GetPath());
@@ -473,8 +473,8 @@ public class Service : System.Web.Services.WebService
     {
         if (string.IsNullOrWhiteSpace(username)) throw new Exception("Username is required.");
         CreateMoviesTable();
-        CreateWatchedTable();
-        string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [Watched] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1";
+        CreateMovieReviewsTable();
+        string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [MovieReviews] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1 AND w.[IsWatched] = 1";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
         return DbActions.SearchWithParameters(cmd, GetPath());
@@ -484,8 +484,8 @@ public class Service : System.Web.Services.WebService
     public bool IsWatched(string username, int movieId)
     {
         if (string.IsNullOrWhiteSpace(username) || movieId <= 0) return false;
-        CreateWatchedTable();
-        string sql = "SELECT COUNT(*) FROM [Watched] WHERE [Username]=@p1 AND [MovieId]=@p2";
+        CreateMovieReviewsTable();
+        string sql = "SELECT COUNT(*) FROM [MovieReviews] WHERE [Username]=@p1 AND [MovieId]=@p2 AND [IsWatched]=1";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
         cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
@@ -497,13 +497,13 @@ public class Service : System.Web.Services.WebService
     [WebMethod]
     public DataTable GetUsersWhoWatchedMovie(int movieId)
     {
-        // Join Watched with Users to get user details (pic)
-        CreateWatchedTable();
+        // Join Interactions with Users to get user details (pic)
+        CreateMovieReviewsTable();
         string sql = @"
             SELECT u.[User] as Username, u.[pic] 
-            FROM [Watched] w 
+            FROM [MovieReviews] w 
             INNER JOIN [Users] u ON w.[Username] = u.[User] 
-            WHERE w.[MovieId] = @p1";
+            WHERE w.[MovieId] = @p1 AND w.[IsWatched] = 1";
         
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = movieId;
@@ -514,39 +514,22 @@ public class Service : System.Web.Services.WebService
     // COMMENTS
     //======================================================
 
-    private void CreateMovieCommentsTable()
-    {
-        string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MovieComments'";
-        SqlCommand cmd = new SqlCommand(checkTableSql);
-        DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
-        int tableExists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
-
-        if (tableExists == 0)
-        {
-            string createTableSql = @"CREATE TABLE [MovieComments] (
-                [CommentId] INT IDENTITY(1,1) PRIMARY KEY,
-                [MovieId] INT NOT NULL,
-                [Username] NVARCHAR(255) NOT NULL,
-                [Rating] INT NOT NULL,
-                [CommentText] NVARCHAR(MAX) NOT NULL,
-                [CreatedAt] DATETIME NOT NULL
-            )";
-            SqlCommand cmmd = new SqlCommand(createTableSql);
-            DbActions.MyAction(cmmd, GetPath());
-        }
-    }
-
     [WebMethod]
     public void AddMovieComment(string username, int movieId, int rating, string commentText)
     {
         if (string.IsNullOrWhiteSpace(username) || movieId <= 0 || string.IsNullOrWhiteSpace(commentText)) throw new Exception("Data required.");
         CreateMoviesTable();
-        CreateMovieCommentsTable();
+        CreateMovieReviewsTable();
 
-        string sql = "INSERT INTO [MovieComments] ([MovieId], [Username], [Rating], [CommentText], [CreatedAt]) VALUES (@p1, @p2, @p3, @p4, @p5)";
+        string sql = @"
+            IF EXISTS (SELECT 1 FROM [MovieReviews] WHERE [Username]=@p1 AND [MovieId]=@p2)
+                UPDATE [MovieReviews] SET [Rating]=@p3, [CommentText]=@p4, [CreatedAt]=@p5 WHERE [Username]=@p1 AND [MovieId]=@p2
+            ELSE
+                INSERT INTO [MovieReviews] ([Username], [MovieId], [Rating], [CommentText], [CreatedAt]) VALUES (@p1, @p2, @p3, @p4, @p5)";
+        
         SqlCommand cmd = new SqlCommand(sql);
-        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = movieId;
-        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = username;
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
         cmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int)).Value = rating;
         cmd.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar)).Value = commentText;
         cmd.Parameters.Add(new SqlParameter("@p5", SqlDbType.DateTime)).Value = DateTime.Now;
@@ -556,8 +539,8 @@ public class Service : System.Web.Services.WebService
     [WebMethod]
     public DataTable GetMovieComments(int movieId)
     {
-        CreateMovieCommentsTable();
-        string sql = "SELECT * FROM [MovieComments] WHERE [MovieId] = @p1 ORDER BY [CreatedAt] DESC";
+        CreateMovieReviewsTable();
+        string sql = "SELECT * FROM [MovieReviews] WHERE [MovieId] = @p1 AND [CommentText] IS NOT NULL ORDER BY [CreatedAt] DESC";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = movieId;
         return DbActions.SearchWithParameters(cmd, GetPath());
