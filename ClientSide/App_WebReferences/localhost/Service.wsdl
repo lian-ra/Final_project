@@ -2,33 +2,6 @@
 <wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://tempuri.org/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
-      <s:element name="GetEventsByLocation">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="location" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetEventsByLocationResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetEventsByLocationResult">
-              <s:complexType>
-                <s:sequence>
-                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
-                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
-                </s:sequence>
-              </s:complexType>
-            </s:element>
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="CreateStoreTables">
-        <s:complexType />
-      </s:element>
-      <s:element name="CreateStoreTablesResponse">
-        <s:complexType />
-      </s:element>
       <s:element name="GetProducts">
         <s:complexType />
       </s:element>
@@ -402,23 +375,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="GetLatestMovies">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetLatestMoviesResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetLatestMoviesResult">
-              <s:complexType>
-                <s:sequence>
-                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
-                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
-                </s:sequence>
-              </s:complexType>
-            </s:element>
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="SearchMovies">
         <s:complexType>
           <s:sequence>
@@ -723,23 +679,6 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetAllCelebsResult">
-              <s:complexType>
-                <s:sequence>
-                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
-                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
-                </s:sequence>
-              </s:complexType>
-            </s:element>
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLatestCelebs">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetLatestCelebsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetLatestCelebsResult">
               <s:complexType>
                 <s:sequence>
                   <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
@@ -1134,20 +1073,35 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetEventsByLocation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="location" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventsByLocationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventsByLocationResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateStoreTables">
+        <s:complexType />
+      </s:element>
+      <s:element name="CreateStoreTablesResponse">
+        <s:complexType />
+      </s:element>
     </s:schema>
   </wsdl:types>
-  <wsdl:message name="GetEventsByLocationSoapIn">
-    <wsdl:part name="parameters" element="tns:GetEventsByLocation" />
-  </wsdl:message>
-  <wsdl:message name="GetEventsByLocationSoapOut">
-    <wsdl:part name="parameters" element="tns:GetEventsByLocationResponse" />
-  </wsdl:message>
-  <wsdl:message name="CreateStoreTablesSoapIn">
-    <wsdl:part name="parameters" element="tns:CreateStoreTables" />
-  </wsdl:message>
-  <wsdl:message name="CreateStoreTablesSoapOut">
-    <wsdl:part name="parameters" element="tns:CreateStoreTablesResponse" />
-  </wsdl:message>
   <wsdl:message name="GetProductsSoapIn">
     <wsdl:part name="parameters" element="tns:GetProducts" />
   </wsdl:message>
@@ -1280,12 +1234,6 @@
   <wsdl:message name="GetMoviesSoapOut">
     <wsdl:part name="parameters" element="tns:GetMoviesResponse" />
   </wsdl:message>
-  <wsdl:message name="GetLatestMoviesSoapIn">
-    <wsdl:part name="parameters" element="tns:GetLatestMovies" />
-  </wsdl:message>
-  <wsdl:message name="GetLatestMoviesSoapOut">
-    <wsdl:part name="parameters" element="tns:GetLatestMoviesResponse" />
-  </wsdl:message>
   <wsdl:message name="SearchMoviesSoapIn">
     <wsdl:part name="parameters" element="tns:SearchMovies" />
   </wsdl:message>
@@ -1405,12 +1353,6 @@
   </wsdl:message>
   <wsdl:message name="GetAllCelebsSoapOut">
     <wsdl:part name="parameters" element="tns:GetAllCelebsResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetLatestCelebsSoapIn">
-    <wsdl:part name="parameters" element="tns:GetLatestCelebs" />
-  </wsdl:message>
-  <wsdl:message name="GetLatestCelebsSoapOut">
-    <wsdl:part name="parameters" element="tns:GetLatestCelebsResponse" />
   </wsdl:message>
   <wsdl:message name="SearchCelebsSoapIn">
     <wsdl:part name="parameters" element="tns:SearchCelebs" />
@@ -1562,15 +1504,19 @@
   <wsdl:message name="GetUserSubscriptionsSoapOut">
     <wsdl:part name="parameters" element="tns:GetUserSubscriptionsResponse" />
   </wsdl:message>
+  <wsdl:message name="GetEventsByLocationSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventsByLocation" />
+  </wsdl:message>
+  <wsdl:message name="GetEventsByLocationSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventsByLocationResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateStoreTablesSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateStoreTables" />
+  </wsdl:message>
+  <wsdl:message name="CreateStoreTablesSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateStoreTablesResponse" />
+  </wsdl:message>
   <wsdl:portType name="ServiceSoap">
-    <wsdl:operation name="GetEventsByLocation">
-      <wsdl:input message="tns:GetEventsByLocationSoapIn" />
-      <wsdl:output message="tns:GetEventsByLocationSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="CreateStoreTables">
-      <wsdl:input message="tns:CreateStoreTablesSoapIn" />
-      <wsdl:output message="tns:CreateStoreTablesSoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetProducts">
       <wsdl:input message="tns:GetProductsSoapIn" />
       <wsdl:output message="tns:GetProductsSoapOut" />
@@ -1659,10 +1605,6 @@
       <wsdl:input message="tns:GetMoviesSoapIn" />
       <wsdl:output message="tns:GetMoviesSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetLatestMovies">
-      <wsdl:input message="tns:GetLatestMoviesSoapIn" />
-      <wsdl:output message="tns:GetLatestMoviesSoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="SearchMovies">
       <wsdl:input message="tns:SearchMoviesSoapIn" />
       <wsdl:output message="tns:SearchMoviesSoapOut" />
@@ -1742,10 +1684,6 @@
     <wsdl:operation name="GetAllCelebs">
       <wsdl:input message="tns:GetAllCelebsSoapIn" />
       <wsdl:output message="tns:GetAllCelebsSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetLatestCelebs">
-      <wsdl:input message="tns:GetLatestCelebsSoapIn" />
-      <wsdl:output message="tns:GetLatestCelebsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SearchCelebs">
       <wsdl:input message="tns:SearchCelebsSoapIn" />
@@ -1847,27 +1785,17 @@
       <wsdl:input message="tns:GetUserSubscriptionsSoapIn" />
       <wsdl:output message="tns:GetUserSubscriptionsSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetEventsByLocation">
+      <wsdl:input message="tns:GetEventsByLocationSoapIn" />
+      <wsdl:output message="tns:GetEventsByLocationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateStoreTables">
+      <wsdl:input message="tns:CreateStoreTablesSoapIn" />
+      <wsdl:output message="tns:CreateStoreTablesSoapOut" />
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetEventsByLocation">
-      <soap:operation soapAction="http://tempuri.org/GetEventsByLocation" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="CreateStoreTables">
-      <soap:operation soapAction="http://tempuri.org/CreateStoreTables" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetProducts">
       <soap:operation soapAction="http://tempuri.org/GetProducts" style="document" />
       <wsdl:input>
@@ -2066,15 +1994,6 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLatestMovies">
-      <soap:operation soapAction="http://tempuri.org/GetLatestMovies" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="SearchMovies">
       <soap:operation soapAction="http://tempuri.org/SearchMovies" style="document" />
       <wsdl:input>
@@ -2248,15 +2167,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetAllCelebs">
       <soap:operation soapAction="http://tempuri.org/GetAllCelebs" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLatestCelebs">
-      <soap:operation soapAction="http://tempuri.org/GetLatestCelebs" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2489,27 +2399,27 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-  </wsdl:binding>
-  <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
-    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="GetEventsByLocation">
-      <soap12:operation soapAction="http://tempuri.org/GetEventsByLocation" style="document" />
+      <soap:operation soapAction="http://tempuri.org/GetEventsByLocation" style="document" />
       <wsdl:input>
-        <soap12:body use="literal" />
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output>
-        <soap12:body use="literal" />
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="CreateStoreTables">
-      <soap12:operation soapAction="http://tempuri.org/CreateStoreTables" style="document" />
+      <soap:operation soapAction="http://tempuri.org/CreateStoreTables" style="document" />
       <wsdl:input>
-        <soap12:body use="literal" />
+        <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output>
-        <soap12:body use="literal" />
+        <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="GetProducts">
       <soap12:operation soapAction="http://tempuri.org/GetProducts" style="document" />
       <wsdl:input>
@@ -2708,15 +2618,6 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLatestMovies">
-      <soap12:operation soapAction="http://tempuri.org/GetLatestMovies" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="SearchMovies">
       <soap12:operation soapAction="http://tempuri.org/SearchMovies" style="document" />
       <wsdl:input>
@@ -2890,15 +2791,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetAllCelebs">
       <soap12:operation soapAction="http://tempuri.org/GetAllCelebs" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLatestCelebs">
-      <soap12:operation soapAction="http://tempuri.org/GetLatestCelebs" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -3124,6 +3016,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetUserSubscriptions">
       <soap12:operation soapAction="http://tempuri.org/GetUserSubscriptions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventsByLocation">
+      <soap12:operation soapAction="http://tempuri.org/GetEventsByLocation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateStoreTables">
+      <soap12:operation soapAction="http://tempuri.org/CreateStoreTables" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

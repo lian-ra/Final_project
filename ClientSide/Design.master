@@ -68,7 +68,6 @@
                         <li><a href="Celebs.aspx">Celebs</a></li>
                         <li><a href="FindUsers.aspx">Find Friends</a></li>
                         <li><a href="Events.aspx">Events</a></li>
-                        <li><a href="News.aspx">News</a></li>
                         <li><a href="ClientArea.aspx">My Profile</a></li>
                         <li id="liAdminArea" runat="server" visible="false"><a href="AdminArea.aspx">Admin Area</a></li>
                        

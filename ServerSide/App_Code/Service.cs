@@ -219,15 +219,7 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
-    [WebMethod]
-    public DataTable GetLatestMovies()
-    {
-        // להחזיר את חמשת הסרטים האחרונים
-        CreateMoviesTable();
-        string sql = "SELECT TOP 5 * FROM [Movies] ORDER BY [MovieId] DESC";
-        SqlCommand cmd = new SqlCommand(sql);
-        return DbActions.SearchWithParameters(cmd, GetPath());
-    }
+
 
     [WebMethod]
     public DataTable SearchMovies(string searchTerm, string genre)
@@ -604,14 +596,7 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
-    [WebMethod]
-    public DataTable GetLatestCelebs()
-    {
-        CreateCelebsTable();
-        string sql = "SELECT TOP 5 * FROM [Celebs] ORDER BY [CelebId] DESC";
-        SqlCommand cmd = new SqlCommand(sql);
-        return DbActions.SearchWithParameters(cmd, GetPath());
-    }
+
 
     [WebMethod]
     public DataTable SearchCelebs(string searchText, string role)
