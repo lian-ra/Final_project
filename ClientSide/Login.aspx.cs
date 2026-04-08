@@ -1,4 +1,4 @@
-ן»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,7 +16,7 @@ public partial class Login : System.Web.UI.Page
       
         if (!IsPostBack)
         {
-            string message = "alert('You are Loged out');"; //
+            string message = "alert('You are Loged out');"; //איפוס
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", message, true); //
             Session["status"] = "-1";
             Session["data"] = null;
@@ -25,18 +25,18 @@ public partial class Login : System.Web.UI.Page
 
     }
 
-    protected void btnsi_Click(object sender, EventArgs e)
+    protected void ValidateUserLogin(object sender, EventArgs e)
     {
         string user = txtuser.Text;
         string pass = txtpass.Text;
         bool choice = true;
 
-        if (drpChoice.Text.Equals("admin"))
+        if (drpChoice.Text.Equals("admin")) //תפריט
             choice = false;
 
-        DataTable dt = my_service.Login(user, pass, choice);
+        DataTable dt = my_service.Login(user, pass, choice); //טבלה
 
-        if (dt.Rows.Count > 0)
+        if (dt.Rows.Count > 0) //יש משתמש
         {
             Session["data"] = dt;
             if (drpChoice.Text.Equals("admin"))
@@ -61,7 +61,7 @@ public partial class Login : System.Web.UI.Page
         }
     }
 
-    protected void btnsu2_Click(object sender, EventArgs e)
+    protected void MoveToRegister_Click(object sender, EventArgs e)
     {
         Response.Redirect("Regi.aspx");
     }

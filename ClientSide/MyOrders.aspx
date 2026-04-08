@@ -132,7 +132,7 @@
             <ItemTemplate>
                 <div class="order-card">
                     <div class="order-header">
-                        <div class="order-code">ORDER #<%# Eval("OrderCode") %></div>
+                        <div class="order-code">ORDER #<%# Eval("OrderId") %></div>
                         <div class="order-date"><%# Convert.ToDateTime(Eval("DatePurchased")).ToString("MMMM dd, yyyy HH:mm") %></div>
                     </div>
                     <div class="order-body">

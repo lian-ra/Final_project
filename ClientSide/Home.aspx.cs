@@ -157,7 +157,8 @@ public partial class Home : System.Web.UI.Page
         else
         {
             // Note: Ensure Wishlist.aspx exists and handles action=add
-            actionHtml = string.Format("<a href='Wishlist.aspx?action=add&movieId={0}' style='display:inline-block;margin-top:8px;padding:6px 14px;border-radius:20px;background:#ff6b6b;color:white;text-decoration:none;font-size:13px;'>Add to wishlist</a>", movieId);
+            actionHtml = string.Format("<a href='Wishlist.aspx?action=add&movieId={0}' style='display:inline-block;" +
+                "margin-top:8px;padding:6px 14px;border-radius:20px;background:#ff6b6b;color:white;text-decoration:none;font-size:13px;'>Add to wishlist</a>", movieId);
         }
 
         return string.Format(@"

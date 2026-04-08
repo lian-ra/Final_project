@@ -57,7 +57,7 @@ public partial class UserProfile : System.Web.UI.Page
             lblFollowersCount.Text = followers.ToString();
             lblFollowingCount.Text = following.ToString();
 
-            if (currentUser == profileUser)
+            if (currentUser == profileUser) //הפרופיל שלנו והפרופיל שמבקרים
             {
                 btnFollow.Visible = false;
                 btnEditProfile.Visible = true;
@@ -70,7 +70,7 @@ public partial class UserProfile : System.Web.UI.Page
                 if (isFollowing)
                 {
                     btnFollow.Text = "Unfollow";
-                    btnFollow.CssClass = "btn-follow btn-unfollow";
+                    btnFollow.CssClass = "btn-follow btn-unfollow"; //עיצוב משתנה
                 }
                 else
                 {
@@ -105,7 +105,7 @@ public partial class UserProfile : System.Web.UI.Page
         DataTable dt = myService.SearchUser(currentUser, "username");
         if (dt != null && dt.Rows.Count > 0)
         {
-            DataRow row = dt.Rows[0];
+            DataRow row = dt.Rows[0];//מכילה את כל המידע על המשתמש הספציפי.
             txtEditFName.Text = row["FName"].ToString();
             txtEditLName.Text = row["LName"].ToString();
             txtEditEmail.Text = row["email"].ToString();
@@ -138,9 +138,9 @@ public partial class UserProfile : System.Web.UI.Page
             if (fuProfilePic.HasFile)
             {
                 string fileName = System.IO.Path.GetFileName(fuProfilePic.FileName);
-                string savePath = Server.MapPath("~/MyPics/") + fileName;
-                fuProfilePic.SaveAs(savePath);
-                picName = fileName;
+                string savePath = Server.MapPath("~/MyPics/") + fileName; //כדי לדעת איפה נמצא הקובץ- תיקייה
+                fuProfilePic.SaveAs(savePath); //שמירה בתיקייה
+                picName = fileName;//שמירה בכתובת של הקובץ
             }
 
             // Create User object
@@ -184,17 +184,19 @@ public partial class UserProfile : System.Web.UI.Page
         DataTable dt = myService.SearchUser(username, "username");
         if (dt != null && dt.Rows.Count > 0)
         {
-            DataRow row = dt.Rows[0];
+            DataRow row = dt.Rows[0];  //מכילה את כל המידע על המשתמש הספציפי.
             lblUsername.Text = row["User"].ToString();
             lblName.Text = row["FName"] + " " + row["LName"];
             lblEmail.Text = row["email"].ToString();
 
             string pic = "Profile.jpg";
             if (dt.Columns.Contains("pic")) pic = row["pic"].ToString();
-            else if (row.ItemArray.Length > 9) pic = row[9].ToString();
+            else if (row.ItemArray.Length > 9) // בדיקת גיבוי
+                                               //מסיקה שהתמונה נמצאת במיקום קבוע מראש.
+                pic = row[9].ToString();
 
             if (string.IsNullOrEmpty(pic)) pic = "Profile.jpg";
-            imgProfile.ImageUrl = "~/MyPics/" + pic;
+            imgProfile.ImageUrl = "~/MyPics/" + pic; //שמירה בכתובת של הקובץ
         }
     }
 
@@ -206,7 +208,7 @@ public partial class UserProfile : System.Web.UI.Page
 
             if (dtWishlist != null && dtWishlist.Rows.Count > 0)
             {
-                // Limit to 5 movies
+                // Limit to 5 movies in the user profile
                 if (dtWishlist.Rows.Count > 5)
                 {
                     DataTable dtTop5 = dtWishlist.Clone();

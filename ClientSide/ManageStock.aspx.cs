@@ -15,8 +15,9 @@ public partial class ManageStock : System.Web.UI.Page
         DataTable dt = Session["data"] as DataTable;
         if (dt != null && dt.Rows.Count > 0)
         {
-            if (dt.Columns.Contains("User")) return dt.Rows[0]["User"].ToString();
-            return dt.Rows[0][0].ToString();
+            if (dt.Columns.Contains("User"))
+                return dt.Rows[0]["User"].ToString();
+            return dt.Rows[0][0].ToString(); //למניעת קריסה
         }
         return null;
     }
@@ -37,13 +38,13 @@ public partial class ManageStock : System.Web.UI.Page
 
     private void LoadStock(string searchQuery = "")
     {
-        DataTable dt = srv.GetProducts(); // We use the existing GetProducts to list all active stock!
+        DataTable dt = srv.GetProducts(); 
         
-        if (!string.IsNullOrWhiteSpace(searchQuery))
+        if (!string.IsNullOrWhiteSpace(searchQuery)) 
         {
-            DataTable filteredDt = dt.Clone();
-            string escaped = searchQuery.Replace("'", "''");
-            DataRow[] results = dt.Select("Name LIKE '%" + escaped + "%' OR ProductCode LIKE '%" + escaped + "%'");
+            DataTable filteredDt = dt.Clone(); //טבלה ריקה משוכפלת
+            string escaped = searchQuery.Replace("'", "''"); 
+            DataRow [] results = dt.Select("Name LIKE '%" + escaped + "%' OR Convert(ProductId, 'System.String') LIKE '%" + escaped + "%'"); //סינון
             foreach (DataRow row in results)
             {
                 filteredDt.ImportRow(row);
@@ -80,9 +81,9 @@ public partial class ManageStock : System.Web.UI.Page
             try
             {
                 string filename = Path.GetFileName(fuPicture.FileName);
-                string serverPath = Server.MapPath("~/MyPics/") + filename;
-                fuPicture.SaveAs(serverPath);
-                picturePath = "~/MyPics/" + filename;
+                string serverPath = Server.MapPath("~/MyPics/") + filename;//כדי לדעת איפה נמצא הקובץ- תיקייה
+                fuPicture.SaveAs(serverPath); //שמירה בתיקייה
+                picturePath = "~/MyPics/" + filename; //שמירה בכתובת של קובץ
             }
             catch { }
         }
@@ -107,13 +108,14 @@ public partial class ManageStock : System.Web.UI.Page
     }
 
     protected void rptStock_ItemCommand(object source, System.Web.UI.WebControls.RepeaterCommandEventArgs e)
+                                                         //מכיל את כל הנתונים על הכפתור שנלחץ בתוך הרשימה
     {
         if (e.CommandName == "Delete")
         {
-            string productCode = e.CommandArgument.ToString();
+            int productId = Convert.ToInt32(e.CommandArgument); //המידע שמגיע מהמזהה של המוצר
             try
             {
-                srv.DeleteProduct(productCode);
+                srv.DeleteProduct(productId);
                 lblSuccess.Text = "Item deleted successfully.";
                 lblSuccess.Visible = true;
                 lblError.Visible = false;
@@ -121,7 +123,8 @@ public partial class ManageStock : System.Web.UI.Page
             }
             catch (Exception)
             {
-                lblError.Text = "Cannot delete this stock item because it has been included in past user orders. To preserve order receipts permanently, products cannot be deleted if already purchased.";
+                lblError.Text = "Cannot delete this stock item because it has been included in past user orders." +
+                    " To preserve order receipts permanently, products cannot be deleted if already purchased.";
                 lblError.Visible = true;
                 lblSuccess.Visible = false;
             }
@@ -131,9 +134,10 @@ public partial class ManageStock : System.Web.UI.Page
             try 
             {
                 string[] args = e.CommandArgument.ToString().Split('|');
+                               //פירוק מחרוזת לרשימה של נתונים נפרדים
                 if (args.Length >= 3)
                 {
-                    hfEditProductCode.Value = args[0];
+                    hfEditProductId.Value = args[0];
                     txtEditName.Text = args[1];
                     txtEditPrice.Text = args[2];
                     
@@ -151,7 +155,7 @@ public partial class ManageStock : System.Web.UI.Page
     {
         try
         {
-            string productCode = hfEditProductCode.Value;
+            int productId = Convert.ToInt32(hfEditProductId.Value);
             decimal price = 0;
             decimal.TryParse(txtEditPrice.Text.Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out price);
             
@@ -160,12 +164,12 @@ public partial class ManageStock : System.Web.UI.Page
             {
                 string filename = Path.GetFileName(fuEditPicture.FileName);
                 string newName = Guid.NewGuid().ToString("N").Substring(0, 8) + "_" + filename;
-                string serverPath = Server.MapPath("~/MyPics/") + newName;
-                fuEditPicture.SaveAs(serverPath);
-                picture = "~/MyPics/" + newName;
+                string serverPath = Server.MapPath("~/MyPics/") + newName; //כדי לדעת איפה נמצא הקובץ- תיקייה
+                fuEditPicture.SaveAs(serverPath); //שמירה בתיקייה
+                picture = "~/MyPics/" + newName; //שמירה בכתובת של קובץ
             }
 
-            srv.UpdateProduct(productCode, price, picture);
+            srv.UpdateProduct(productId, price, picture);
 
             lblSuccess.Text = "Product updated successfully.";
             lblSuccess.Visible = true;

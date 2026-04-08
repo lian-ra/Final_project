@@ -72,9 +72,9 @@ public partial class ManageEventStore : System.Web.UI.Page
     {
         if (e.CommandName == "Add")
         {
-            string productCode = e.CommandArgument.ToString();
+            int productId = Convert.ToInt32(e.CommandArgument);
             int eventId = Convert.ToInt32(Request.QueryString["eventId"]);
-            srv.AddProductToEvent(eventId, productCode);
+            srv.AddProductToEvent(eventId, productId);
             LoadStoreData(eventId);
         }
     }
@@ -83,9 +83,9 @@ public partial class ManageEventStore : System.Web.UI.Page
     {
         if (e.CommandName == "Remove")
         {
-            string productCode = e.CommandArgument.ToString();
+            int productId = Convert.ToInt32(e.CommandArgument);
             int eventId = Convert.ToInt32(Request.QueryString["eventId"]);
-            srv.RemoveProductFromEvent(eventId, productCode);
+            srv.RemoveProductFromEvent(eventId, productId);
             LoadStoreData(eventId);
         }
     }

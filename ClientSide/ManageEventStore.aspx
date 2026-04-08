@@ -178,7 +178,7 @@
                                         <p><%# Eval("Price") %> ILS</p>
                                     </div>
                                 </div>
-                                <asp:Button ID="btnAdd" runat="server" Text="Add to Event" CommandName="Add" CommandArgument='<%# Eval("ProductCode") %>' CssClass="btn-add" />
+                                <asp:Button ID="btnAdd" runat="server" Text="Add to Event" CommandName="Add" CommandArgument='<%# Eval("ProductId") %>' CssClass="btn-add" />
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>
@@ -200,7 +200,7 @@
                                         <p><%# Eval("Price") %> ILS</p>
                                     </div>
                                 </div>
-                                <asp:Button ID="btnRemove" runat="server" Text="Remove" CommandName="Remove" CommandArgument='<%# Eval("ProductCode") %>' CssClass="btn-remove" />
+                                <asp:Button ID="btnRemove" runat="server" Text="Remove" CommandName="Remove" CommandArgument='<%# Eval("ProductId") %>' CssClass="btn-remove" />
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>

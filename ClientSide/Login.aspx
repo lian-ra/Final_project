@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Login" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Login" %>
+<%@ Page Title="Login" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Login" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -152,8 +152,8 @@
             </div>
 
             <div class="button-group">
-                <asp:Button ID="btnsi" runat="server" Text="Sign In" OnClick="btnsi_Click" CssClass="btn-custom btn-signin" />
-                <asp:Button ID="btnsu2" runat="server" Text="Sign Up" OnClick="btnsu2_Click" CssClass="btn-custom btn-signup" />
+                <asp:Button ID="btnsi" runat="server" Text="Sign In" OnClick="ValidateUserLogin" CssClass="btn-custom btn-signin" />
+                <asp:Button ID="btnsu2" runat="server" Text="Sign Up" OnClick="MoveToRegister_Click" CssClass="btn-custom btn-signup" />
             </div>
         </div>
     </div>

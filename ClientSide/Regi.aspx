@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Register" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Regi.aspx.cs" Inherits="Regi" %>
+<%@ Page Title="Register" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Regi.aspx.cs" Inherits="Regi" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -185,8 +185,8 @@
             <div class="form-group">
                 <asp:Label ID="label7" runat="server" Text="Phone" CssClass="form-label"></asp:Label>
                 <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control-custom" placeholder="Enter phone number" EnableTheming="False" ></asp:TextBox>
-                <%-- <asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="Number between 0-10" MaximumValue="10" MinimumValue="1" SetFocusOnError="True" Type="Integer" ValidationExpression="^\d{10}$" ControlToValidate="txtPhone" TabIndex="10"></asp:RangeValidator>--%>
-                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="10 Numbers required" ControlToValidate="txtPhone" ValidationExpression="\d{10}$"></asp:RegularExpressionValidator>
+                <asp:RequiredFieldValidator ID="rfvPhone" runat="server" ErrorMessage="Phone number is required." ControlToValidate="txtPhone" ForeColor="#ff4c3b" Display="Dynamic"></asp:RequiredFieldValidator>
+                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="Must be exactly 10 digits." ControlToValidate="txtPhone" ValidationExpression="^\d{10}$" ForeColor="#ff4c3b" Display="Dynamic"></asp:RegularExpressionValidator>
             </div>
          
        
@@ -204,7 +204,14 @@
                 <div class="calendar-container">
                     <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
+                            <div style="margin-bottom: 10px; display: flex; justify-content: space-between;">
+                                <asp:DropDownList ID="ddlMonth" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DateDropdown_SelectedIndexChanged" CssClass="dropdown-custom" style="width: 48%;"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlYear" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DateDropdown_SelectedIndexChanged" CssClass="dropdown-custom" style="width: 48%;"></asp:DropDownList>
+                            </div>
                             <asp:Calendar ID="Calendar1" runat="server" 
+                                OnDayRender="Calendar1_DayRender"
+                                OnSelectionChanged="Calendar1_SelectionChanged"
+                                OnVisibleMonthChanged="Calendar1_VisibleMonthChanged"
                                 SelectionMode="Day" 
                                 ShowDayHeader="True" 
                                 ShowGridLines="False"
@@ -233,7 +240,7 @@
                 <asp:FileUpload ID="FileUpload1" runat="server" CssClass="file-upload-custom" />
             </div>
 
-            <asp:Button runat="server" ID="btnsave" Text="Sign Up" OnClick="btnsave_Click" CssClass="btn-custom btn-signup" />
+            <asp:Button runat="server" ID="btnsave" Text="Sign Up" OnClick="RegisterNewUser" CssClass="btn-custom btn-signup" />
         </div>
     </div>
 

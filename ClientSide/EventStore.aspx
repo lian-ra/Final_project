@@ -253,10 +253,10 @@
                 <div class="product-card">
                     <img src="<%# ResolveUrl(Eval("Picture").ToString().StartsWith("~/") ? Eval("Picture").ToString() : "~/" + Eval("Picture").ToString()) %>" class="product-image" onerror="this.src='/images/default-product.png';" />
                     <div class="product-name"><%# Eval("Name") %></div>
-                    <div class="product-code">Item: <%# Eval("ProductCode") %></div>
+                    <div class="product-code">Item ID: <%# Eval("ProductId") %></div>
                     <div class="product-desc"><%# Eval("Description") %></div>
                     
-                    <asp:HiddenField ID="hfProductCode" runat="server" Value='<%# Eval("ProductCode") %>' />
+                    <asp:HiddenField ID="hfProductId" runat="server" Value='<%# Eval("ProductId") %>' />
                     <asp:HiddenField ID="hfPrice" runat="server" Value='<%# Eval("Price") %>' />
 
                     <div class="product-bottom">

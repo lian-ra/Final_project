@@ -10,9 +10,9 @@ public partial class EventOrders : System.Web.UI.Page
 {
     localhost.Service srv = new localhost.Service();
 
-    public class SellerOrder
+    public class EventOrderDisplay
     {
-        public string OrderCode { get; set; }
+        public int OrderId { get; set; }
         public string Buyer { get; set; }
         public DateTime DatePurchased { get; set; }
         public decimal Total { get; set; }
@@ -68,24 +68,24 @@ public partial class EventOrders : System.Web.UI.Page
     private void LoadOrders(int eventId)
     {
         DataTable dtOrders = srv.GetEventOrders(eventId);
-        List<SellerOrder> ordersList = new List<SellerOrder>();
+        List<EventOrderDisplay> ordersList = new List<EventOrderDisplay>();
         decimal totalRev = 0;
 
         if (dtOrders != null && dtOrders.Rows.Count > 0)
         {
             foreach (DataRow row in dtOrders.Rows)
             {
-                string orderCode = row["OrderCode"].ToString();
+                int orderId = Convert.ToInt32(row["OrderId"]);
                 
-                SellerOrder order = new SellerOrder();
-                order.OrderCode = orderCode;
+                EventOrderDisplay order = new EventOrderDisplay();
+                order.OrderId = orderId;
                 order.Buyer = row["Username"].ToString();
                 order.DatePurchased = Convert.ToDateTime(row["DatePurchased"]);
                 order.Total = Convert.ToDecimal(row["Total"]);
                 totalRev += order.Total;
                 
                 // Get Items
-                DataTable dtItems = srv.GetOrderItems(orderCode);
+                DataTable dtItems = srv.GetOrderItems(orderId);
                 List<string> itemStrs = new List<string>();
                 if (dtItems != null)
                 {

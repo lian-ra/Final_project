@@ -83,7 +83,7 @@
 
                 <asp:Panel ID="pnlEdit" runat="server" Visible="false">
                     <h3 class="panel-title" style="border-bottom-color: #3498db; color: #3498db;">Edit Product</h3>
-                    <asp:HiddenField ID="hfEditProductCode" runat="server" />
+                    <asp:HiddenField ID="hfEditProductId" runat="server" />
                     <div class="form-group">
                         <label>Product Name</label>
                         <asp:TextBox ID="txtEditName" runat="server" CssClass="form-control" ReadOnly="true" style="background: rgba(0,0,0,0.3); color:#888;"></asp:TextBox>
@@ -118,8 +118,8 @@
                                 <div class="item-title"><%# Eval("Name") %></div>
                                 <div class="item-price"><%# Eval("Price") %> ILS</div>
                                 <div style="margin-top: 10px;">
-                                    <asp:LinkButton ID="btnEdit" runat="server" CommandName="EditProd" CommandArgument='<%# Eval("ProductCode") + "|" + Eval("Name") + "|" + Eval("Price") %>' CssClass="btn-edit" formnovalidate="formnovalidate"><i class="fa fa-pencil"></i> Edit</asp:LinkButton>
-                                    <asp:LinkButton ID="btnDelete" runat="server" CommandName="Delete" CommandArgument='<%# Eval("ProductCode") %>' CssClass="btn-delete" OnClientClick="return confirm('Are you sure you want to delete this item? It will be removed from the store, but permanently preserved in any past order receipts.');" formnovalidate="formnovalidate"><i class="fa fa-trash"></i> Delete</asp:LinkButton>
+                                    <asp:LinkButton ID="btnEdit" runat="server" CommandName="EditProd" CommandArgument='<%# Eval("ProductId") + "|" + Eval("Name") + "|" + Eval("Price") %>' CssClass="btn-edit" formnovalidate="formnovalidate"><i class="fa fa-pencil"></i> Edit</asp:LinkButton>
+                                    <asp:LinkButton ID="btnDelete" runat="server" CommandName="Delete" CommandArgument='<%# Eval("ProductId") %>' CssClass="btn-delete" OnClientClick="return confirm('Are you sure you want to delete this item? It will be removed from the store, but permanently preserved in any past order receipts.');" formnovalidate="formnovalidate"><i class="fa fa-trash"></i> Delete</asp:LinkButton>
                                 </div>
                             </div>
                         </ItemTemplate>

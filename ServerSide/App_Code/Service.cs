@@ -165,27 +165,15 @@ public class Service : System.Web.Services.WebService
             )";
             SqlCommand cmmd = new SqlCommand(createTableSql);
             DbActions.MyAction(cmmd, GetPath());
-            InsertSampleMovies();
         }
-    }
-    //הפעולה יוצרת מערך של אובייקטי סרטים המכילים נתוני דוגמה
-    //(כמו "בין כוכבים" ו"מת לחיות"), ומכניסה אותם בזה אחר זה למסד הנתונים באמצעות קריאה לפעולה AddMovieInternal.
-    private void InsertSampleMovies()
-    {
-        Movies[] sampleMovies = new Movies[] {
-            new Movies { Title = "Interstellar", Description = "Explorers travel through a wormhole...", Year = 2014, Genre = "Sci-Fi", Rating = 8.6m, Poster = "images/uploads/slider1.jpg", Director = "Christopher Nolan", Actors = "Matthew McConaughey", Duration = 169 },
-            new Movies { Title = "The Revenant", Description = "A frontiersman fights for survival...", Year = 2015, Genre = "Drama", Rating = 8.0m, Poster = "images/uploads/slider2.jpg", Director = "Alejandro G. I??rritu", Actors = "Leonardo DiCaprio", Duration = 156 },
-            new Movies { Title = "Die Hard", Description = "NYPD officer saves wife...", Year = 1988, Genre = "Action", Rating = 8.2m, Poster = "images/uploads/slider3.jpg", Director = "John McTiernan", Actors = "Bruce Willis", Duration = 132 },
-            new Movies { Title = "The Walk", Description = "High-wire artist...", Year = 2015, Genre = "Drama", Rating = 7.3m, Poster = "images/uploads/slider4.jpg", Director = "Robert Zemeckis", Actors = "Joseph Gordon-Levitt", Duration = 123 }
-        };
-        foreach (Movies movie in sampleMovies) AddMovieInternal(movie);
     }
 
     //הפעולה מקבלת אובייקט של סרט ומכניסה את כל פרטיו לטבלת מוביס
-    // במסד הנתונים תוך שימוש בפרמטרים מאובטחים ובדיקה האם
+    //  במסד הנתונים תוך שימוש בפרמטרים מאובטחים ובדיקה האם קיימים ערכים ריקים
     private void AddMovieInternal(Movies movie)
     {
-        string sql = "INSERT INTO [Movies] ([Title], [Description], [Year], [Genre], [Rating], [Poster], [Director], [Actors], [Duration]) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
+        string sql = "INSERT INTO [Movies] ([Title], [Description], [Year], [Genre], [Rating]," +
+            " [Poster], [Director], [Actors], [Duration]) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
         SqlCommand cmmd = new SqlCommand(sql);
         cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = movie.Title ?? (object)DBNull.Value; // ?? => if first value exist use it, else use the value after ??
         cmmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = movie.Description ?? (object)DBNull.Value;
@@ -199,20 +187,23 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmmd, GetPath());
     }
 
+    //Movies הפעולה שולפת ומחזירה את כל הסרטים מטבלת
+    //בסידור לפי שנת יציאה (מהחדש לישן) ולפי שם הסרט,תוך וידוא שהטבלה 
+    //קיימת לפני השליפה
     [WebMethod]
     public DataTable GetAllMovies()
     {
-        // מחזיר את כל הסרטים מהטבלה של הסרטים לפי סדר הוצאה של השנה
         CreateMoviesTable();  // תיצור את הטבלה אם לא קיימת כבר
         string sql = "SELECT * FROM [Movies] ORDER BY [Year] DESC, [Title]"; //שאילתא
         SqlCommand cmd = new SqlCommand(sql); // מכין אובייקט של השאילתא לסוג הטבלה - sql
         return DbActions.SearchWithParameters(cmd, GetPath()); // תריץ את השאילתא מול הטבלה
     }
 
+    //Movies הפעולה שולפת ומחזירה את כל הסרטים מטבלת
+    //ללא מיון, תוך וידוא שהטבלה קיימת במסד הנתונים לפני ביצוע השליפה
     [WebMethod]
     public DataTable GetMovies()
     {
-        // להחזיר את כל הסרטים בלי מיון
         CreateMoviesTable();
         string sql = "SELECT * FROM [Movies]";
         SqlCommand cmd = new SqlCommand(sql);
@@ -220,7 +211,8 @@ public class Service : System.Web.Services.WebService
     }
 
 
-
+    //הפעולה מבצעת חיפוש מתקדם בטבלת הסרטים לפי מילת מפתח וז'אנר
+    //ומחזירה את התוצאות כשהן ממוינות לפי דירוג ושנת יציאה, מהגבוה לנמוך.
     [WebMethod]
     public DataTable SearchMovies(string searchTerm, string genre)
     {
@@ -230,7 +222,7 @@ public class Service : System.Web.Services.WebService
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             string escaped = searchTerm.Replace("'", "''");
-            sql += " AND ([Title] LIKE '%" + escaped + "%' OR [Description] LIKE '%" + escaped + "%' OR [Director] LIKE '%" + escaped + "%' OR [Actors] LIKE '%" + escaped + "%')";
+            sql += " AND ([Title] LIKE '%" + escaped + "%')";
         }
         if (!string.IsNullOrWhiteSpace(genre) && genre.ToLower() != "all")
         {
@@ -241,10 +233,11 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //Movies הפעולה שולפת ומחזירה את פרטיו של סרט ספציפי מטבלת
+    //לפי מספר המזהה שלו, תוך שימוש בפרמטר מאובטח ווידוא שהטבלה קיימת.
     [WebMethod]
     public DataTable GetMovieById(int movieId)
     {
-        // קבלת סרט ספציפי לפי המספר המזהה שלו
         CreateMoviesTable();
         string sql = "SELECT * FROM [Movies] WHERE [MovieId] = @p1";
         SqlCommand cmd = new SqlCommand(sql);
@@ -252,16 +245,21 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת ומחזירה את כל הסרטים השייכים לז'אנר מסוים, כשהם ממוינים לפי דירוג
+    //ושנת יציאה (מהגבוה לנמוך), תוך שימוש בפרמטר מאובטח ווידוא שהטבלה קיימת.
     [WebMethod]
     public DataTable GetMoviesByGenre(string genre)
     {
         CreateMoviesTable();
-        string sql = "SELECT * FROM [Movies] WHERE [Genre] = @p1 ORDER BY [Rating] DESC, [Year] DESC";
+        string sql = "SELECT * FROM [Movies] WHERE [Genre] = @p1 ORDER BY" +
+            " [Rating] DESC, [Year] DESC";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = genre;
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה מוסיפה סרט חדש למערכת על ידי קבלת אובייקט עם פרטיו,
+    //ויצירת טבלה אם צריך
     [WebMethod]
     public void AddMovie(Movies movie)
     {
@@ -270,12 +268,15 @@ public class Service : System.Web.Services.WebService
         AddMovieInternal(movie);
     }
 
+    //Movies הפעולה מעדכנת את כל פרטיו של סרט קיים בטבלה
+    //לפי מסדר המזהה שלו
     [WebMethod]
     public void UpdateMovie(Movies movie)
     {
         if (movie == null || movie.MovieId <= 0) throw new Exception("Valid movie data required.");
         CreateMoviesTable();
-        string sql = @"UPDATE [Movies] SET [Title]=@p1, [Description]=@p2, [Year]=@p3, [Genre]=@p4, [Rating]=@p5, [Poster]=@p6, [Director]=@p7, [Actors]=@p8, [Duration]=@p9 WHERE [MovieId]=@p10";
+        string sql = @"UPDATE [Movies] SET [Title]=@p1, [Description]=@p2, [Year]=@p3,
+         [Genre]=@p4, [Rating]=@p5, [Poster]=@p6, [Director]=@p7, [Actors]=@p8, [Duration]=@p9 WHERE [MovieId]=@p10";
         SqlCommand cmmd = new SqlCommand(sql);
         // under explained : @p1 = movie.title 
         cmmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = movie.Title ?? (object)DBNull.Value;
@@ -291,6 +292,8 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmmd, GetPath());
     }
 
+    //Movies הפעולה מוחקת סרט מטבלת
+    //לפי מספר המזהה שלו
     [WebMethod]
     public void DeleteMovie(int movieId)
     {
@@ -306,6 +309,9 @@ public class Service : System.Web.Services.WebService
     // WISHLIST
     //======================================================
 
+    //Wishlist הפעולה בודקת אם טבלת
+    //קיימת במסד הנתונים, ואם לא היא יוצרת אותה עם עמודות עבור מזהה ייחודי, 
+    //שם המשתמש ומזהה הסרט, כדי לאפשר שמירת סרטים מועדפים לכל משתמש.
     private void CreateWishlistTable()
     {
         string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Wishlist'";
@@ -325,6 +331,7 @@ public class Service : System.Web.Services.WebService
         }
     }
 
+    //הפעולה מוסיפה סרט לרשימת המשאלות של משתמש, תוך בדיקה שהסרט אינו קיים כבר ברשימה שלו
     [WebMethod]
     public void AddToWishlist(string username, int movieId)
     {
@@ -349,6 +356,7 @@ public class Service : System.Web.Services.WebService
         }
     }
 
+    //Wishlist הפעולה מסירה סרט מרשימת המשאלות של משתמש ספציפי על ידי מחיקת השורה המתאימה מטבלת
     [WebMethod]
     public void RemoveFromWishlist(string username, int movieId)
     {
@@ -361,6 +369,8 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //Wishlist הפעולה מוחקת את טבלת
+    //ממסד הנתונים אם היא קיימת ויוצרת אותה מחדש 
     [WebMethod]
     public void ResetWishlistTable()
     {
@@ -370,18 +380,21 @@ public class Service : System.Web.Services.WebService
         CreateWishlistTable(); // Re-create it immediately
     }
 
+    //הפעולה שולפת ומחזירה את רשימת הסרטים שמשתמש ספציפי הוסיף למועדפים שלו
     [WebMethod]
     public DataTable GetWishlistMovies(string username)
     {
         if (string.IsNullOrWhiteSpace(username)) throw new Exception("Username is required.");
         CreateMoviesTable();
         CreateWishlistTable();
-        string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [Wishlist] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1";
+        string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [Wishlist]
+         w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת ומחזירה רשימה של כל המשתמשים שהוסיפו סרט ספציפי לרשימת המשאלות שלהם
     [WebMethod]
     public DataTable GetUsersWhoWishlistedMovie(int movieId)
     {
@@ -402,6 +415,8 @@ public class Service : System.Web.Services.WebService
     // USER MOVIE INTERACTIONS (WATCHED & COMMENTS)
     //======================================================
 
+    //MovieReviews הפעולה בודקת אם טבלת
+    //קיימת במסד הנתונים, ואם לא היא יוצרת אותה עם מבנה הכולל דירוג, תוכן הביקורת, סימון צפייה ותאריך יצירה
     private void CreateMovieReviewsTable()
     {
         string checkTableSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MovieReviews'";
@@ -426,6 +441,7 @@ public class Service : System.Web.Services.WebService
         }
     }
 
+    //הפעולה מסמנת סרט כ"נצפה" עבור משתמש
     [WebMethod]
     public void AddToWatched(string username, int movieId)
     {
@@ -444,10 +460,11 @@ public class Service : System.Web.Services.WebService
         cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = movieId;
         DbActions.MyAction(cmd, GetPath());
 
-        // Remove from wishlist if it exists there
+        //תוריד מהרשימת משאלות אם זה קיים שם
         try { RemoveFromWishlist(username, movieId); } catch { }
     }
 
+    //הפעולה מעדכנת את סטטוס הצפייה של סרט עבור משתמש מסוים ללא נצפה
     [WebMethod]
     public void RemoveFromWatched(string username, int movieId)
     {
@@ -460,18 +477,21 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //פעולה שולפת ומחזירה את כל הסרטים שמשתמש ספציפי סימן כנצפים
     [WebMethod]
     public DataTable GetWatchedMovies(string username)
     {
         if (string.IsNullOrWhiteSpace(username)) throw new Exception("Username is required.");
         CreateMoviesTable();
         CreateMovieReviewsTable();
-        string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [MovieReviews] w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1 AND w.[IsWatched] = 1";
+        string sql = @"SELECT m.* FROM [Movies] m INNER JOIN [MovieReviews] 
+                 w ON m.[MovieId] = w.[MovieId] WHERE w.[Username] = @p1 AND w.[IsWatched] = 1";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //MovieReviews הפעולה בודקת האם משתמש ספציפי כבר צפה בסרט מסוים על ידי ספירת הרשומות בטבלת
     [WebMethod]
     public bool IsWatched(string username, int movieId)
     {
@@ -486,10 +506,10 @@ public class Service : System.Web.Services.WebService
         return count > 0;
     }
 
+    //הפעולה שולפת ומחזירה רשימה של כל המשתמשים שסימנו סרט ספציפי כנצפה
     [WebMethod]
     public DataTable GetUsersWhoWatchedMovie(int movieId)
     {
-        // Join Interactions with Users to get user details (pic)
         CreateMovieReviewsTable();
         string sql = @"
             SELECT u.[User] as Username, u.[pic] 
@@ -506,18 +526,22 @@ public class Service : System.Web.Services.WebService
     // COMMENTS
     //======================================================
 
+    //(הפעולה מוסיפה או מעדכנת ביקורת על סרט (דירוג וטקסט
     [WebMethod]
     public void AddMovieComment(string username, int movieId, int rating, string commentText)
     {
-        if (string.IsNullOrWhiteSpace(username) || movieId <= 0 || string.IsNullOrWhiteSpace(commentText)) throw new Exception("Data required.");
+        if (string.IsNullOrWhiteSpace(username) || movieId <= 0 || string.IsNullOrWhiteSpace(commentText))
+            throw new Exception("Data required.");
         CreateMoviesTable();
         CreateMovieReviewsTable();
 
         string sql = @"
             IF EXISTS (SELECT 1 FROM [MovieReviews] WHERE [Username]=@p1 AND [MovieId]=@p2)
-                UPDATE [MovieReviews] SET [Rating]=@p3, [CommentText]=@p4, [CreatedAt]=@p5 WHERE [Username]=@p1 AND [MovieId]=@p2
+                UPDATE [MovieReviews] SET [Rating]=@p3, [CommentText]=@p4, 
+                  [CreatedAt]=@p5 WHERE [Username]=@p1 AND [MovieId]=@p2
             ELSE
-                INSERT INTO [MovieReviews] ([Username], [MovieId], [Rating], [CommentText], [CreatedAt]) VALUES (@p1, @p2, @p3, @p4, @p5)";
+                INSERT INTO [MovieReviews] ([Username], [MovieId], [Rating],
+                 [CommentText], [CreatedAt]) VALUES (@p1, @p2, @p3, @p4, @p5)";
         
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
@@ -528,11 +552,14 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //הפעולה שולפת את כל הביקורות עבור סרט ספציפי שכוללות טקסט
+    //ומחזירה אותן כשהן ממוינות לפי תאריך היצירה מהחדש לישן
     [WebMethod]
     public DataTable GetMovieComments(int movieId)
     {
         CreateMovieReviewsTable();
-        string sql = "SELECT * FROM [MovieReviews] WHERE [MovieId] = @p1 AND [CommentText] IS NOT NULL ORDER BY [CreatedAt] DESC";
+        string sql = "SELECT * FROM [MovieReviews] WHERE [MovieId] = @p1 " +
+            "AND [CommentText] IS NOT NULL ORDER BY [CreatedAt] DESC";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = movieId;
         return DbActions.SearchWithParameters(cmd, GetPath());
@@ -542,6 +569,9 @@ public class Service : System.Web.Services.WebService
     // CELEBS
     //======================================================
 
+    //Celebs הפעולה בודקת אם טבלת
+    //קיימת במסד הנתונים, ואם לא היא יוצרת אותה עם מבנה הכולל מזהה ייחודי, שם, תפקיד,
+    //קישור לתמונה וביוגרפיה
     [WebMethod]
     public void CreateCelebsTable()
     {
@@ -561,21 +591,11 @@ public class Service : System.Web.Services.WebService
             )";
             SqlCommand cmmd = new SqlCommand(createTableSql);
             DbActions.MyAction(cmmd, GetPath());
-            InsertSampleCelebs();
         }
     }
 
-    private void InsertSampleCelebs()
-    {
-        Celeb[] sampleCelebs = new Celeb[] {
-            new Celeb { Name = "Leonardo DiCaprio", Role = "Actor", Photo = "images/uploads/ava1.jpg", Bio = "Academy Award-winning actor..." },
-            new Celeb { Name = "Anne Hathaway", Role = "Actress", Photo = "images/uploads/ava2.jpg", Bio = "American actress..." },
-            new Celeb { Name = "Christopher Nolan", Role = "Director", Photo = "images/uploads/ava3.jpg", Bio = "British-American film director..." },
-            new Celeb { Name = "Tom Hardy", Role = "Actor", Photo = "images/uploads/ava4.jpg", Bio = "English actor..." }
-        };
-        foreach (Celeb celeb in sampleCelebs) AddCelebInternal(celeb);
-    }
-
+    //Celebs הפעולה מוסיפה רשומה חדשה לטבלת 
+    //הכוללת שם, תפקיד, תמונה וביוגרפיה
     private void AddCelebInternal(Celeb celeb)
     {
         string sql = "INSERT INTO [Celebs] ([Name], [Role], [Photo], [Bio]) VALUES (@p1, @p2, @p3, @p4)";
@@ -587,6 +607,8 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmmd, GetPath());
     }
 
+    //Celebs הפעולה שולפת ומחזירה את כל הרשומות מטבלת
+    //כשהן ממוינות לפי שם בסדר עולה
     [WebMethod]
     public DataTable GetAllCelebs()
     {
@@ -597,7 +619,9 @@ public class Service : System.Web.Services.WebService
     }
 
 
-
+    //Celebs הפעולה מבצעת חיפוש דינמי בטבלת
+    //היא מאפשרת לסנן לפי טקסט חופשי (בשם או בביוגרפיה) ולפי תפקיד ספציפי,
+    //ומחזירה את התוצאות כשהן ממוינות לפי שם בסדר עולה
     [WebMethod]
     public DataTable SearchCelebs(string searchText, string role)
     {
@@ -619,7 +643,8 @@ public class Service : System.Web.Services.WebService
         cmd.CommandText = sql;
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
-
+    
+    //הפעולה מוסיפה שחקן למסד הנתונים
     [WebMethod]
     public void AddCeleb(Celeb celeb)
     {
@@ -628,6 +653,8 @@ public class Service : System.Web.Services.WebService
         AddCelebInternal(celeb);
     }
 
+    //Celebs הפעולה מעדכנת את פרטיו של ידוען קיים בטבלת
+    //לפי מזהה הייחודי שלו
     [WebMethod]
     public void UpdateCeleb(Celeb celeb)
     {
@@ -643,6 +670,8 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmmd, GetPath());
     }
 
+    //Celebs הפעולה מוחקת לצמיתות רשומה של ידוען מטבלת
+    //לפי מזהה הייחודי שלו
     [WebMethod]
     public void DeleteCeleb(int celebId)
     {
@@ -658,6 +687,8 @@ public class Service : System.Web.Services.WebService
     // FOLLOWERS
     //======================================================
 
+    //הפעולה בודקת האם משתמש אחד עוקב אחרי משתמש אחר על ידי ספירת הרשומות בטבלת העוקבים
+    //שבהן מזהה העוקב ומזהה הנעקב תואמים
     [WebMethod]
     public bool IsFollowing(string follower, string following)
     {
@@ -672,6 +703,8 @@ public class Service : System.Web.Services.WebService
         return count > 0;
     }
 
+    //Followers פעולה מבצעת רישום מעקב בין משתמשים בטבלת
+    //לאחר שהיא מוודאת שהמשתמש אינו עוקב אחרי עצמו ושלא קיים מעקב כזה כבר.
     [WebMethod]
     public void FollowUser(string follower, string following)
     {
@@ -688,6 +721,7 @@ public class Service : System.Web.Services.WebService
         }
     }
 
+    //הפעולה מבטלת מעקב של משתמש אחרי משתמש אחר על ידי מחיקת השורה המתאימה מטבלת העוקבים
     [WebMethod]
     public void UnfollowUser(string follower, string following)
     {
@@ -698,6 +732,8 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //הפעולה מחזירה את מספר העוקבים של משתמש מסוים על ידי ספירת השורות בטבלת עוקבים
+    //שבהן הוא מופיע כנעקב
     [WebMethod]
     public int GetFollowersCount(string username)
     {
@@ -710,6 +746,8 @@ public class Service : System.Web.Services.WebService
         return (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
     }
 
+    //פעולה מחזירה את מספר המשתמשים שמשתמש מסוים עוקב אחריהם, על ידי ספירת השורות בטבלת עוקבים
+    //שבהן הוא מופיע כעוקב
     [WebMethod]
     public int GetFollowingCount(string username)
     {
@@ -722,16 +760,19 @@ public class Service : System.Web.Services.WebService
         return (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
     }
 
+    //הפעולה מחזירה טבלה המכילה את כל רשימת המשתמשים שעוקבים אחרי משתמש מסוים, על ידי שליפת כל השורות מטבלת
+    //עוקבים שבהן הוא מופיע כנעקב
     [WebMethod]
     public DataTable GetFollowersList(string username)
     {
-        // Gets list of people following 'username'
         string sql = "SELECT * FROM [Followers] WHERE [FollowingUser] = @p1";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה מחזירה טבלה המכילה את כל רשימת המשתמשים שמשתמש מסוים בחר לעקוב אחריהם,
+    //על ידי שליפת כל השורות מטבלת עוקבים שבהן הוא מופיע כעוקב
     [WebMethod]
     public DataTable GetFollowingList(string username)
     {
@@ -747,6 +788,8 @@ public class Service : System.Web.Services.WebService
     // EVENTS - ADD THESE METHODS TO Service.cs BEFORE THE CLOSING }
     //======================================================
 
+    //הפעולה בונה את התשתית של האירועים באתר: היא בודקת אם הטבלאות של האירועים וההרשמות כבר קיימות במסד הנתונים
+    //ואם לא  היא יוצרת אותן ומוסיפה עמודות שחסרות
     [WebMethod]
     public void CreateEventsTable()
     {
@@ -808,14 +851,18 @@ public class Service : System.Web.Services.WebService
         }
     }
 
+    //הפעולה יוצרת אירוע חדש בטבלת האירועים ומחזירה את מספר המזהה של האירוע שנוצר
     [WebMethod]
-    public int CreateEvent(string username, int movieId, string eventDate, string startTime, decimal price, string location, string status)
+    public int CreateEvent(string username, int movieId, string eventDate, string startTime, 
+        decimal price, string location, string status)
     {
-        if (string.IsNullOrWhiteSpace(username) || movieId <= 0) throw new Exception("Username and MovieId are required.");
+        if (string.IsNullOrWhiteSpace(username) || movieId <= 0) 
+            throw new Exception("Username and MovieId are required.");
         CreateMoviesTable();
         CreateEventsTable();
 
-        string sql = @"INSERT INTO [Events] ([Username], [MovieId], [EventDate], [StartTime], [Price], [Location], [Status], [CreatedAt]) 
+        string sql = @"INSERT INTO [Events] ([Username], [MovieId], [EventDate], 
+            [StartTime], [Price], [Location], [Status], [CreatedAt]) 
                        VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8); SELECT SCOPE_IDENTITY();";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
@@ -835,6 +882,7 @@ public class Service : System.Web.Services.WebService
         return 0;
     }
 
+    //הפעולה שולפת את כל הפרטים על אירוע ספציפי לפי המספר מזהה שלו
     [WebMethod]
     public DataTable GetEventById(int eventId)
     {
@@ -848,6 +896,8 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת את כל האירועים הקיימים במערכת ומציגה אותם יחד עם פרטי הסרטים שלהם.
+    //היא מסדרת את הרשימה לפי התאריך והשעה, מהחדש ביותר לישן ביותר
     [WebMethod]
     public DataTable GetAllEvents()
     {
@@ -860,6 +910,8 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת את כל האירועים שמשתמש ספציפי יצר.
+    //היא מסדרת אותם לפי התאריך והשעה מהחדש ביותר לישן.
     [WebMethod]
     public DataTable GetEventsByUser(string username)
     {
@@ -875,6 +927,8 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת את כל האירועים העתידיים שעדיין פתוחים להרשמה.
+    //היא מסננת אירועים שעברו , ומציגה אותם יחד עם פרטי הסרטים כשהם מסודרים מהקרוב ביותר לרחוק ביותר.
     [WebMethod]
     public DataTable GetUpcomingEvents()
     {
@@ -888,10 +942,14 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה מעדכנת את הסטטוס של אירוע ספציפי
+    //היא מקבלת את מספר המזהה של האירוע ואת הסטטוס החדש,
+    //ומעדכנת רק את השורה המתאימה בטבלת האירועים.
     [WebMethod]
     public void UpdateEventStatus(int eventId, string status)
     {
-        if (eventId <= 0 || string.IsNullOrWhiteSpace(status)) throw new Exception("EventId and Status are required.");
+        if (eventId <= 0 || string.IsNullOrWhiteSpace(status)) 
+            throw new Exception("EventId and Status are required.");
         CreateEventsTable();
         string sql = "UPDATE [Events] SET [Status] = @p1 WHERE [EventId] = @p2";
         SqlCommand cmd = new SqlCommand(sql);
@@ -900,6 +958,8 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //הפעולה מאפשרת לערוך ולעדכן את הפרטים של אירוע קיים
+    //היא מקבלת את מספר המזהה של האירוע ואת הפרטים החדשים, ומעדכנת אותם בשורה המתאימה בטבלת האירועים.
     [WebMethod]
     public void UpdateEvent(int eventId, string eventDate, string startTime, decimal price, string location)
     {
@@ -917,6 +977,8 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //הפעולה מוחקת אירוע מהמערכת. היא מקבלת את מספר המזהה של האירוע
+    //ומסירה את השורה המתאימה מטבלת האירועים .
     [WebMethod]
     public void DeleteEvent(int eventId)
     {
@@ -928,13 +990,17 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //הפעולה רושמת משתמש לאירוע.היא בודקת אם המשתמש כבר רשום לאותו אירוע,
+    //ואם הוא לא רשום היא מוסיפה שורה חדשה לטבלת ההרשמות עם פרטי המשתמש והאירוע.
     [WebMethod]
     public void SubscribeToEvent(int eventId, string username)
     {
-        if (eventId <= 0 || string.IsNullOrWhiteSpace(username)) throw new Exception("EventId and Username are required.");
+        if (eventId <= 0 || string.IsNullOrWhiteSpace(username)) 
+            throw new Exception("EventId and Username are required.");
         CreateEventsTable();
 
-        string checkSql = "SELECT COUNT(*) FROM [EventSubscriptions] WHERE [EventId]=@p1 AND [Username]=@p2";
+        string checkSql = "SELECT COUNT(*) FROM [EventSubscriptions]" +
+            " WHERE [EventId]=@p1 AND [Username]=@p2";
         SqlCommand checkCmd = new SqlCommand(checkSql);
         checkCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
         checkCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = username;
@@ -943,7 +1009,8 @@ public class Service : System.Web.Services.WebService
 
         if (exists == 0)
         {
-            string insertSql = "INSERT INTO [EventSubscriptions] ([EventId], [Username], [SubscribedAt]) VALUES (@p1, @p2, @p3)";
+            string insertSql = "INSERT INTO [EventSubscriptions] ([EventId], " +
+                "[Username], [SubscribedAt]) VALUES (@p1, @p2, @p3)";
             SqlCommand insertCmd = new SqlCommand(insertSql);
             insertCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
             insertCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = username;
@@ -952,10 +1019,13 @@ public class Service : System.Web.Services.WebService
         }
     }
 
+    //הפעולה מבטלת הרשמה של משתמש לאירוע. היא מקבלת את מספר המזהה של האירוע ואת שם המשתמש,
+    //ומוחקת את השורה שמתאימה לשניהם מטבלת ההרשמות
     [WebMethod]
     public void UnsubscribeFromEvent(int eventId, string username)
     {
-        if (eventId <= 0 || string.IsNullOrWhiteSpace(username)) throw new Exception("EventId and Username are required.");
+        if (eventId <= 0 || string.IsNullOrWhiteSpace(username))
+            throw new Exception("EventId and Username are required.");
         CreateEventsTable();
         string sql = "DELETE FROM [EventSubscriptions] WHERE [EventId]=@p1 AND [Username]=@p2";
         SqlCommand cmd = new SqlCommand(sql);
@@ -964,6 +1034,8 @@ public class Service : System.Web.Services.WebService
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //הפעולה שולפת את רשימת כל המשתמשים שנרשמו לאירוע ספציפי.
+    //ומסדרת אותם לפי זמן ההרשמה, מהראשון שנרשם ועד האחרון.
     [WebMethod]
     public DataTable GetEventSubscribers(int eventId)
     {
@@ -978,6 +1050,8 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה בודקת אם משתמש מסוים כבר רשום לאירוע ספציפי בכך שהיא
+    //סופרת כמה פעמים השילוב של המשתמש והאירוע מופיע בטבלת ההרשמות
     [WebMethod]
     public bool IsUserSubscribed(int eventId, string username)
     {
@@ -992,10 +1066,12 @@ public class Service : System.Web.Services.WebService
         return count > 0;
     }
 
+    //הפעולה שולפת את כל האירועים שמשתמש ספציפי נרשם אליהם.
     [WebMethod]
     public DataTable GetUserSubscriptions(string username)
     {
-        if (string.IsNullOrWhiteSpace(username)) throw new Exception("Username is required.");
+        if (string.IsNullOrWhiteSpace(username))
+            throw new Exception("Username is required.");
         CreateEventsTable();
         string sql = @"SELECT e.*, m.Title, m.Poster, m.Genre, m.Rating, es.[SubscribedAt]
                        FROM [EventSubscriptions] es
@@ -1008,6 +1084,7 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת אירועים לפי חיפוש חופשי של מיקום
     [WebMethod]
     public DataTable GetEventsByLocation(string location)
     {
@@ -1026,6 +1103,8 @@ public class Service : System.Web.Services.WebService
     // STORE AND ORDERS
     //======================================================
 
+    //הקוד מקים את תשתית החנות: יוצר טבלאות למוצרים, הזמנות ופירוט פריטים, וממלא אותן בנתונים ראשוניים.
+    //בנוסף, הוא מעדכן מוצרים קיימים (הוספת סטטוס "פעיל"), מתקן שגיאות כתיב ומוסיף גדלים שונים לפופקורן.
     [WebMethod]
     public void CreateStoreTables()
     {
@@ -1039,7 +1118,6 @@ public class Service : System.Web.Services.WebService
         {
             string createProductsSql = @"CREATE TABLE [Products] (
                 [ProductId] INT IDENTITY(1,1) PRIMARY KEY,
-                [ProductCode] NVARCHAR(50) NOT NULL UNIQUE,
                 [Name] NVARCHAR(100) NOT NULL,
                 [Price] DECIMAL(10,2) NOT NULL,
                 [Description] NVARCHAR(MAX),
@@ -1051,19 +1129,20 @@ public class Service : System.Web.Services.WebService
             // Seed data
             string[] names = { "Popcorn", "Nachos", "Soda", "Water", "Slushee", "Event Merch T-Shirt" };
             decimal[] prices = { 15.00m, 20.00m, 10.00m, 5.00m, 12.00m, 50.00m };
-            string[] descs = { "Large butter popcorn", "Crispy nachos with cheese", "Refreshing soda 500ml", "Mineral water 500ml", "Icy fruit slushee", "Exclusive event t-shirt" };
-            string[] pics = { "images/popcorn.jpg", "images/nachos.jpg", "images/soda.jpg", "images/water.jpg", "images/slushee.jpg", "images/shirt.jpg" };
+            string[] descs = { "Large butter popcorn", "Crispy nachos with cheese", 
+                "Refreshing soda 500ml", "Mineral water 500ml", "Icy fruit slushee", "Exclusive event t-shirt" };
+            string[] pics = { "images/popcorn.jpg", "images/nachos.jpg", 
+                "images/soda.jpg", "images/water.jpg", "images/slushee.jpg", "images/shirt.jpg" };
             
             for(int i = 0; i < names.Length; i++)
             {
-                string code = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
-                string sqlIns = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES (@p1, @p2, @p3, @p4, @p5)";
+                string sqlIns = "INSERT INTO [Products] ([Name], [Price], " +
+                    "[Description], [Picture]) VALUES (@p1, @p2, @p3, @p4)";
                 SqlCommand cmdIns = new SqlCommand(sqlIns);
-                cmdIns.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = code;
-                cmdIns.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = names[i];
-                cmdIns.Parameters.Add(new SqlParameter("@p3", SqlDbType.Decimal)).Value = prices[i];
-                cmdIns.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar)).Value = descs[i];
-                cmdIns.Parameters.Add(new SqlParameter("@p5", SqlDbType.NVarChar)).Value = pics[i];
+                cmdIns.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = names[i];
+                cmdIns.Parameters.Add(new SqlParameter("@p2", SqlDbType.Decimal)).Value = prices[i];
+                cmdIns.Parameters.Add(new SqlParameter("@p3", SqlDbType.NVarChar)).Value = descs[i];
+                cmdIns.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar)).Value = pics[i];
                 DbActions.MyAction(cmdIns, GetPath());
             }
         }
@@ -1078,7 +1157,6 @@ public class Service : System.Web.Services.WebService
         {
             string createOrdersSql = @"CREATE TABLE [Orders] (
                 [OrderId] INT IDENTITY(1,1) PRIMARY KEY,
-                [OrderCode] NVARCHAR(50) NOT NULL UNIQUE,
                 [Username] NVARCHAR(50) NOT NULL,
                 [EventId] INT NOT NULL,
                 [DatePurchased] DATETIME DEFAULT GETDATE(),
@@ -1098,11 +1176,11 @@ public class Service : System.Web.Services.WebService
         {
             string createItemsSql = @"CREATE TABLE [OrderItems] (
                 [OrderItemId] INT IDENTITY(1,1) PRIMARY KEY,
-                [OrderCode] NVARCHAR(50) NOT NULL,
-                [ProductCode] NVARCHAR(50) NOT NULL,
+                [OrderId] INT NOT NULL,
+                [ProductId] INT NOT NULL,
                 [Quantity] INT NOT NULL,
-                FOREIGN KEY ([OrderCode]) REFERENCES [Orders]([OrderCode]) ON DELETE CASCADE,
-                FOREIGN KEY ([ProductCode]) REFERENCES [Products]([ProductCode])
+                FOREIGN KEY ([OrderId]) REFERENCES [Orders]([OrderId]) ON DELETE CASCADE,
+                FOREIGN KEY ([ProductId]) REFERENCES [Products]([ProductId])
             )";
             SqlCommand cmmd3 = new SqlCommand(createItemsSql);
             DbActions.MyAction(cmmd3, GetPath());
@@ -1125,22 +1203,23 @@ public class Service : System.Web.Services.WebService
             DataTable dtPopcorn = DbActions.SearchWithParameters(new SqlCommand(checkPopcorn), GetPath());
             if (dtPopcorn != null && dtPopcorn.Rows.Count > 0 && Convert.ToInt32(dtPopcorn.Rows[0][0]) == 0)
             {
-                string codeS = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
-                string sql1 = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES ('" + codeS + "', 'Popcorn (S)', 10.00, 'Small size popcorn.', 'images/popcorn.jpg')";
+                string sql1 = "INSERT INTO [Products] ([Name], [Price], [Description], " +
+                    "[Picture]) VALUES ('Popcorn (S)', 10.00, 'Small size popcorn.', 'images/popcorn.jpg')";
                 DbActions.MyAction(new SqlCommand(sql1), GetPath());
 
-                string codeM = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
-                string sql2 = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES ('" + codeM + "', 'Popcorn (M)', 15.00, 'Medium size popcorn.', 'images/popcorn.jpg')";
+                string sql2 = "INSERT INTO [Products] ([Name], [Price], [Description]," +
+                    " [Picture]) VALUES ('Popcorn (M)', 15.00, 'Medium size popcorn.', 'images/popcorn.jpg')";
                 DbActions.MyAction(new SqlCommand(sql2), GetPath());
 
-                string codeL = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
-                string sql3 = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES ('" + codeL + "', 'Popcorn (L)', 20.00, 'Large size popcorn.', 'images/popcorn.jpg')";
+                string sql3 = "INSERT INTO [Products] ([Name], [Price], [Description]," +
+                    " [Picture]) VALUES ('Popcorn (L)', 20.00, 'Large size popcorn.', 'images/popcorn.jpg')";
                 DbActions.MyAction(new SqlCommand(sql3), GetPath());
             }
         }
         catch { }
     }
 
+    //הפעולה שולפת את כל המוצרים מהטבלה שהם פעילים כדי להציג אותם בחנות.
     [WebMethod]
     public DataTable GetProducts()
     {
@@ -1150,86 +1229,94 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //IsActive הפעולה מעדכנת את עמודת ה
+    //ל-0 (לא פעיל). כך שהמוצר לא יופיע בחנות, אבל המידע עליו יישמר במסד הנתונים.
     [WebMethod]
-    public void DeleteProduct(string productCode)
+    public void DeleteProduct(int productId)
     {
         try {
             string alterSql = "ALTER TABLE [Products] ADD [IsActive] BIT DEFAULT 1 WITH VALUES";
             DbActions.MyAction(new SqlCommand(alterSql), GetPath());
         } catch { }
 
-        string sql = "UPDATE [Products] SET [IsActive] = 0 WHERE [ProductCode]=@p1";
+        string sql = "UPDATE [Products] SET [IsActive] = 0 WHERE [ProductId]=@p1";
         SqlCommand cmd = new SqlCommand(sql);
-        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = productCode;
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = productId;
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //הפעולה מעדכנת פרטי מוצר קיים. היא תמיד מעדכנת את המחיר, ובודקת אם נשלחה תמונה חדשה:
+    //אם כן היא מעדכנת גם את התמונה, ואם לא היא משאירה את התמונה הישנה כפי שהיא.
     [WebMethod]
-    public void UpdateProduct(string productCode, decimal price, string picture)
+    public void UpdateProduct(int productId, decimal price, string picture)
     {
         if (string.IsNullOrEmpty(picture))
         {
-            string sql = "UPDATE [Products] SET [Price]=@p1 WHERE [ProductCode]=@p2";
+            string sql = "UPDATE [Products] SET [Price]=@p1 WHERE [ProductId]=@p2";
             SqlCommand cmd = new SqlCommand(sql);
             cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Decimal)).Value = price;
-            cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = productCode;
+            cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = productId;
             DbActions.MyAction(cmd, GetPath());
         }
         else
         {
-            string sql = "UPDATE [Products] SET [Price]=@p1, [Picture]=@p2 WHERE [ProductCode]=@p3";
+            string sql = "UPDATE [Products] SET [Price]=@p1, [Picture]=@p2 WHERE [ProductId]=@p3";
             SqlCommand cmd = new SqlCommand(sql);
             cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Decimal)).Value = price;
             cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = picture;
-            cmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.NVarChar)).Value = productCode;
+            cmd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int)).Value = productId;
             DbActions.MyAction(cmd, GetPath());
         }
     }
 
+    //הפעולה מבצעת רכישה בחנות: היא מחשבת את הסכום הכולל, פותחת הזמנה חדשה בטבלת
+    //הזמנות ומפרטת את כל הפריטים שנקנו בטבלת הזמנות פריטים ומחזירה את מספר ההזמנה שנוצרה.
     [WebMethod]
-    public string PlaceOrder(string username, int eventId, OrderItem[] items)
+    public int PlaceOrder(string username, int eventId, OrderItem[] items)
     {
         if (string.IsNullOrWhiteSpace(username) || eventId <= 0 || items == null || items.Length == 0)
             throw new Exception("Invalid order data.");
             
         CreateStoreTables();
 
-        string orderCode = "ORD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
         decimal total = 0;
         
         foreach(var item in items)
         {
-            total += item.Price * item.Quantity; // Based on client side price passed in
+            total += item.Price * item.Quantity; 
         }
 
-        string sqlOrder = "INSERT INTO [Orders] ([OrderCode], [Username], [EventId], [DatePurchased], [Total]) VALUES (@p1, @p2, @p3, @p4, @p5)";
+        string sqlOrder = "INSERT INTO [Orders] ([Username], [EventId], [DatePurchased]," +
+            " [Total]) OUTPUT INSERTED.OrderId VALUES (@p1, @p2, GETDATE(), @p3)";
         SqlCommand cmdOrd = new SqlCommand(sqlOrder);
-        cmdOrd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = orderCode;
-        cmdOrd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = username;
-        cmdOrd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int)).Value = eventId;
-        cmdOrd.Parameters.Add(new SqlParameter("@p4", SqlDbType.DateTime)).Value = DateTime.Now;
-        cmdOrd.Parameters.Add(new SqlParameter("@p5", SqlDbType.Decimal)).Value = total;
-        DbActions.MyAction(cmdOrd, GetPath());
+        cmdOrd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = username;
+        cmdOrd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = eventId;
+        cmdOrd.Parameters.Add(new SqlParameter("@p3", SqlDbType.Decimal)).Value = total;
+        
+        DataTable dt = DbActions.SearchWithParameters(cmdOrd, GetPath());
+        int orderId = Convert.ToInt32(dt.Rows[0][0]);
 
         foreach(var item in items)
         {
-            string sqlItem = "INSERT INTO [OrderItems] ([OrderCode], [ProductCode], [Quantity]) VALUES (@p1, @p2, @p3)";
+            string sqlItem = "INSERT INTO [OrderItems] ([OrderId], [ProductId], [Quantity]) VALUES (@p1, @p2, @p3)";
             SqlCommand cmdItem = new SqlCommand(sqlItem);
-            cmdItem.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = orderCode;
-            cmdItem.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = item.ProductCode;
+            cmdItem.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = orderId;
+            cmdItem.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = item.ProductId;
             cmdItem.Parameters.Add(new SqlParameter("@p3", SqlDbType.Int)).Value = item.Quantity;
             DbActions.MyAction(cmdItem, GetPath());
         }
 
-        return orderCode;
+        return orderId;
     }
 
+    //הפעולה שולפת את היסטוריית ההזמנות של משתמש ספציפי
+    //כדי להציג את פרטי הרכישה יחד עם שם הסרט ותאריך האירוע, ומחזירה אותם מסודרים מהחדש ביותר לישן.
     [WebMethod]
     public DataTable GetMyOrders(string username)
     {
         CreateStoreTables();
         string sql = @"
-            SELECT o.[OrderCode], o.[EventId], o.[DatePurchased], o.[Total], e.[EventDate], m.[Title] as MovieTitle
+            SELECT o.[OrderId], o.[EventId], o.[DatePurchased], o.[Total], e.[EventDate], m.[Title] as MovieTitle
             FROM [Orders] o
             INNER JOIN [Events] e ON o.[EventId] = e.[EventId]
             INNER JOIN [Movies] m ON e.[MovieId] = m.[MovieId]
@@ -1240,22 +1327,27 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת את רשימת המוצרים שנרכשו בהזמנה ספציפית. היא מחברת בין טבלת פריטי ההזמנה
+    //לטבלת המוצרים כדי להציג את השם והמחיר של כל פריט לצד הכמות שנקנתה.
     [WebMethod]
-    public DataTable GetOrderItems(string orderCode)
+    public DataTable GetOrderItems(int orderId)
     {
         string sql = @"
             SELECT oi.[Quantity], p.[Name] as ProductName, p.[Price]
             FROM [OrderItems] oi
-            INNER JOIN [Products] p ON oi.[ProductCode] = p.[ProductCode]
-            WHERE oi.[OrderCode] = @p1";
+            INNER JOIN [Products] p ON oi.[ProductId] = p.[ProductId]
+            WHERE oi.[OrderId] = @p1";
         SqlCommand cmd = new SqlCommand(sql);
-        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = orderCode;
+        cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = orderId;
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
     //======================================================
     // EVENT STORE MANAGEMENT & ADMIN CONTROLS
     //======================================================
+
+    //הפעולה יוצרת טבלת קישור המאפשרת לשייך מוצרים ספציפיים לכל אירוע.
+    //היא בנוסף מוחקת את הקישור אם האירוע או המוצר הוסרו מהמערכת
     [WebMethod]
     public void CreateEventProductsTable()
     {
@@ -1270,46 +1362,51 @@ public class Service : System.Web.Services.WebService
             string createSql = @"CREATE TABLE [EventProducts] (
                 [Id] INT IDENTITY(1,1) PRIMARY KEY,
                 [EventId] INT NOT NULL,
-                [ProductCode] NVARCHAR(50) NOT NULL,
+                [ProductId] INT NOT NULL,
                 FOREIGN KEY ([EventId]) REFERENCES [Events]([EventId]) ON DELETE CASCADE,
-                FOREIGN KEY ([ProductCode]) REFERENCES [Products]([ProductCode]) ON DELETE CASCADE,
-                UNIQUE([EventId], [ProductCode])
+                FOREIGN KEY ([ProductId]) REFERENCES [Products]([ProductId]) ON DELETE CASCADE,
+                UNIQUE([EventId], [ProductId])
             )";
             SqlCommand cmmd = new SqlCommand(createSql);
             DbActions.MyAction(cmmd, GetPath());
         }
     }
 
+    //הפעולה מוסיפה מוצר לאירוע ספציפי
+    // אם הקישור לא קיים היא יוצרת שיוך חדש בין המזהה של האירוע למזהה של המוצר
     [WebMethod]
-    public void AddProductToEvent(int eventId, string productCode)
+    public void AddProductToEvent(int eventId, int productId)
     {
         CreateEventProductsTable();
         // check if already exists
-        string checkSql = "SELECT COUNT(*) FROM [EventProducts] WHERE [EventId]=@p1 AND [ProductCode]=@p2";
+        string checkSql = "SELECT COUNT(*) FROM [EventProducts] WHERE [EventId]=@p1 AND [ProductId]=@p2";
         SqlCommand chkCmd = new SqlCommand(checkSql);
         chkCmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
-        chkCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = productCode;
+        chkCmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = productId;
         DataTable dt = DbActions.SearchWithParameters(chkCmd, GetPath());
         if(dt != null && dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0][0]) > 0) return; // already exists
 
-        string sql = "INSERT INTO [EventProducts] ([EventId], [ProductCode]) VALUES (@p1, @p2)";
+        string sql = "INSERT INTO [EventProducts] ([EventId], [ProductId]) VALUES (@p1, @p2)";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
-        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = productCode;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = productId;
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //הפעולה מסירה מוצר מאירוע ספציפי
     [WebMethod]
-    public void RemoveProductFromEvent(int eventId, string productCode)
+    public void RemoveProductFromEvent(int eventId, int productId)
     {
         CreateEventProductsTable();
-        string sql = "DELETE FROM [EventProducts] WHERE [EventId]=@p1 AND [ProductCode]=@p2";
+        string sql = "DELETE FROM [EventProducts] WHERE [EventId]=@p1 AND [ProductId]=@p2";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
-        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = productCode;
+        cmd.Parameters.Add(new SqlParameter("@p2", SqlDbType.Int)).Value = productId;
         DbActions.MyAction(cmd, GetPath());
     }
 
+    //הפעולה שולפת את כל המוצרים הפעילים שמשויכים לאירוע ספציפי
+    //כדי להחזיר רק את הפריטים שרלוונטיים למזהה של האירוע שנבחר
     [WebMethod]
     public DataTable GetEventProducts(int eventId)
     {
@@ -1317,13 +1414,14 @@ public class Service : System.Web.Services.WebService
         string sql = @"
             SELECT p.* 
             FROM [Products] p 
-            INNER JOIN [EventProducts] ep ON p.[ProductCode] = ep.[ProductCode] 
+            INNER JOIN [EventProducts] ep ON p.[ProductId] = ep.[ProductId] 
             WHERE ep.[EventId] = @p1 AND ISNULL(p.[IsActive], 1) = 1";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת את כל המוצרים הפעילים שעדיין לא משויכים לאירוע הספציפי.
     [WebMethod]
     public DataTable GetProductsNotInEvent(int eventId)
     {
@@ -1331,20 +1429,23 @@ public class Service : System.Web.Services.WebService
         string sql = @"
             SELECT p.* 
             FROM [Products] p 
-            WHERE ISNULL(p.[IsActive], 1) = 1 AND p.[ProductCode] NOT IN (
-                SELECT [ProductCode] FROM [EventProducts] WHERE [EventId] = @p1
+            WHERE ISNULL(p.[IsActive], 1) = 1 AND p.[ProductId] NOT IN (
+                SELECT [ProductId] FROM [EventProducts] WHERE [EventId] = @p1
             )";
         SqlCommand cmd = new SqlCommand(sql);
         cmd.Parameters.Add(new SqlParameter("@p1", SqlDbType.Int)).Value = eventId;
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת את כל ההזמנות שבוצעו עבור אירוע ספציפי.
+    //היא מחזירה את פרטי המזהה, המשתמש, תאריך הרכישה והסכום הכולל,
+    //ומציגה אותם בסדר יורד מההזמנה האחרונה ועד הראשונה.
     [WebMethod]
     public DataTable GetEventOrders(int eventId)
     {
         CreateStoreTables();
         string sql = @"
-            SELECT o.[OrderCode], o.[Username], o.[DatePurchased], o.[Total]
+            SELECT o.[OrderId], o.[Username], o.[DatePurchased], o.[Total]
             FROM [Orders] o
             WHERE o.[EventId] = @p1
             ORDER BY o.[DatePurchased] DESC";
@@ -1353,12 +1454,15 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה שולפת את כל ההזמנות הקיימות במערכת. היא מחברת בין טבלאות ההזמנות, האירועים והסרטים
+    //כדי להציג דו"ח מפורט הכולל את פרטי הרוכש, סכום הקנייה,
+    //שם הסרט ובעל האירוע, ומסדרת אותן לפי תאריך הרכישה.
     [WebMethod]
     public DataTable GetAllOrders()
     {
         CreateStoreTables();
         string sql = @"
-            SELECT o.[OrderCode], o.[EventId], o.[Username], o.[DatePurchased], o.[Total], 
+            SELECT o.[OrderId], o.[EventId], o.[Username], o.[DatePurchased], o.[Total], 
                    e.[EventDate], m.[Title] as MovieTitle, e.[Username] as EventOwner
             FROM [Orders] o
             INNER JOIN [Events] e ON o.[EventId] = e.[EventId]
@@ -1368,18 +1472,19 @@ public class Service : System.Web.Services.WebService
         return DbActions.SearchWithParameters(cmd, GetPath());
     }
 
+    //הפעולה מוסיפה מוצר חדש לטבלת המוצרים
+    //היא מקבלת את שם המוצר, המחיר, התיאור ונתיב התמונה, ומכניסה אותם לשורה חדשה במסד הנתונים
     [WebMethod]
     public void AddProduct(string name, decimal price, string description, string picture)
     {
         CreateStoreTables();
-        string code = "PRD-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
-        string sqlIns = "INSERT INTO [Products] ([ProductCode], [Name], [Price], [Description], [Picture]) VALUES (@p1, @p2, @p3, @p4, @p5)";
+        string sqlIns = "INSERT INTO [Products] ([Name], [Price], [Description]," +
+            " [Picture]) VALUES (@p1, @p2, @p3, @p4)";
         SqlCommand cmdIns = new SqlCommand(sqlIns);
-        cmdIns.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = code;
-        cmdIns.Parameters.Add(new SqlParameter("@p2", SqlDbType.NVarChar)).Value = name;
-        cmdIns.Parameters.Add(new SqlParameter("@p3", SqlDbType.Decimal)).Value = price;
-        cmdIns.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar)).Value = description;
-        cmdIns.Parameters.Add(new SqlParameter("@p5", SqlDbType.NVarChar)).Value = picture;
+        cmdIns.Parameters.Add(new SqlParameter("@p1", SqlDbType.NVarChar)).Value = name;
+        cmdIns.Parameters.Add(new SqlParameter("@p2", SqlDbType.Decimal)).Value = price;
+        cmdIns.Parameters.Add(new SqlParameter("@p3", SqlDbType.NVarChar)).Value = description;
+        cmdIns.Parameters.Add(new SqlParameter("@p4", SqlDbType.NVarChar)).Value = picture;
         DbActions.MyAction(cmdIns, GetPath());
     }
 }

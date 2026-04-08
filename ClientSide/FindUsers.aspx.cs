@@ -12,8 +12,6 @@ public partial class FindUsers : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        // Optional: Check if user is logged in (Status 1 or 2)
-        // If you want this page to be public, remove this check.
         if (Session["status"] == null || (Session["status"].ToString() != "1" && Session["status"].ToString() != "2"))
         {
             Response.Redirect("Login.aspx");
@@ -44,17 +42,11 @@ public partial class FindUsers : System.Web.UI.Page
             }
             else
             {
-                // Search by name (you can assume 'name' matches First or Last name logic in your service)
-                // Or you can create a specific generic search in your service.
-                // Here we try searching by 'username' first, if your service supports it.
-                // Assuming SearchUser(value, column) format based on your previous code.
-
                 dt = myService.SearchUser(searchTerm, "username");
 
-                // Optional: If no results by username, try by name (if your logic allows multiple calls)
                 if (dt == null || dt.Rows.Count == 0)
                 {
-                    dt = myService.SearchUser(searchTerm, "name");
+                    dt = myService.SearchUser(searchTerm, "name"); //חיפוש לפי שם פרטי
                 }
             }
 

@@ -8,12 +8,6 @@ using System.Web;
 /// </summary>
 public class Users
 {
-    public Users()
-    {
-        //
-        // TODO: Add constructor logic here
-        //
-    }
 
     private string usern;
     public string UserN

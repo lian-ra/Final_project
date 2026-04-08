@@ -101,7 +101,9 @@ public partial class EventDetails : System.Web.UI.Page
                 if (isSubscribed)
                 {
                     subscriptionButton = string.Format("<a href='EventDetails.aspx?eventId={0}&action=unsubscribe' class='btn-action btn-unsubscribe'>Unsubscribe</a>", currentEventId);
-                    subscriptionButton += string.Format(" <a href='EventStore.aspx?eventId={0}' class='btn-action btn-subscribe' style='background: linear-gradient(135deg, #ff4c3b 0%, #d82b1f 100%); margin-left:10px;'><i class='fa fa-shopping-cart'></i> Event Store</a>", currentEventId);
+                    subscriptionButton += string.Format(" <a href='EventStore.aspx?eventId={0}' class='btn-action btn-subscribe' " +
+                        "style='background: linear-gradient(135deg, #ff4c3b 0%, #d82b1f 100%); margin-left:10px;'><i class='fa fa-shopping-cart'></i> Event Store</a>"
+                        , currentEventId);
                 }
                 else if (eventStatus.Equals("Open", StringComparison.OrdinalIgnoreCase))
                 {

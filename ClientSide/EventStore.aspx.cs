@@ -98,7 +98,7 @@ public partial class EventStore : System.Web.UI.Page
             // Loop through repeater items to build the cart
             foreach (RepeaterItem item in rptProducts.Items)
             {
-                HiddenField hfProductCode = (HiddenField)item.FindControl("hfProductCode");
+                HiddenField hfProductId = (HiddenField)item.FindControl("hfProductId");
                 HiddenField hfPrice = (HiddenField)item.FindControl("hfPrice");
                 TextBox txtQty = (TextBox)item.FindControl("txtQty");
                 
@@ -108,10 +108,11 @@ public partial class EventStore : System.Web.UI.Page
                 if (qty > 0)
                 {
                     decimal price = 0;
-                    decimal.TryParse(hfPrice.Value.Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out price);
+                    decimal.TryParse(hfPrice.Value.Replace(",", "."), System.Globalization.NumberStyles.Any, 
+                        System.Globalization.CultureInfo.InvariantCulture, out price);
                     cart.Add(new localhost.OrderItem
                     {
-                        ProductCode = hfProductCode.Value,
+                        ProductId = Convert.ToInt32(hfProductId.Value),
                         Quantity = qty,
                         Price = price
                     });
@@ -126,11 +127,11 @@ public partial class EventStore : System.Web.UI.Page
             }
 
             // Call PlaceOrder expecting an array
-            string orderCode = srv.PlaceOrder(username, eventId, cart.ToArray());
+            int orderId = srv.PlaceOrder(username, eventId, cart.ToArray());
             
-            if (!string.IsNullOrEmpty(orderCode))
+            if (orderId > 0)
             {
-                Response.Redirect("MyOrders.aspx?success=" + orderCode);
+                Response.Redirect("MyOrders.aspx?success=" + orderId);
             }
             else
             {

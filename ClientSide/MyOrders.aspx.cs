@@ -13,13 +13,13 @@ public partial class MyOrders : System.Web.UI.Page
     // Helper class for data binding
     public class StoreOrder
     {
-        public string OrderCode { get; set; } //δχεγ ωμ δδζξπδ
-        public DateTime DatePurchased { get; set; } //δϊΰψικ ωαδ αεφςδ δδζξπδ
-        public decimal Total { get; set; } //δξηιψ δλεμμ ωμ δδζξπδ
-        public string ItemsSummary { get; set; } //ϊιΰεψ δτψιθιν 
+        public int OrderId { get; set; } //Χ”Χ§Χ•Χ“ Χ©Χ Χ”Χ”Χ–ΧΧ Χ”
+        public DateTime DatePurchased { get; set; } //Χ”ΧªΧΧ¨Χ™Χ Χ©Χ‘Χ” Χ‘Χ•Χ¦ΧΆΧ” Χ”Χ”Χ–ΧΧ Χ”
+        public decimal Total { get; set; } //Χ”ΧΧ—Χ™Χ¨ Χ”Χ›Χ•ΧΧ Χ©Χ Χ”Χ”Χ–ΧΧ Χ”
+        public string ItemsSummary { get; set; } //ΧªΧ™ΧΧ•Χ¨ Χ”Χ¤Χ¨Χ™ΧΧ™Χ 
     }
 
-    //δτςεμδ ξεφΰϊ εξηζιψδ ΰϊ ων δξωϊξω δξηεαψ ξϊεκ ζιλψεο ΰν δεΰ ςαψ ΰιξεϊ  
+    //Χ”Χ¤ΧΆΧ•ΧΧ” ΧΧ•Χ¦ΧΧª Χ•ΧΧ—Χ–Χ™Χ¨Χ” ΧΧª Χ©Χ Χ”ΧΧ©ΧªΧΧ© Χ”ΧΧ—Χ•Χ‘Χ¨ ΧΧªΧ•Χ Χ–Χ™Χ›Χ¨Χ•Χ ΧΧ Χ”Χ•Χ ΧΆΧ‘Χ¨ ΧΧ™ΧΧ•Χª  
     private string GetLoggedInUsername()
     {
         string status = Session["status"] as string;
@@ -37,7 +37,7 @@ public partial class MyOrders : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (GetLoggedInUsername() == null) //ξωϊξω μΰ ξηεαψ
+        if (GetLoggedInUsername() == null) 
         {
             Response.Redirect("Login.aspx");
             return;
@@ -54,14 +54,14 @@ public partial class MyOrders : System.Web.UI.Page
         }
     }
 
-    //δτςεμδ
-    //ξεωλϊ ΰϊ λμ δδζξπεϊ ωμ δξωϊξω ξδξργ εδετλϊ λμ ωεψδ αθαμδ μΰεαιιχθ ξρεγψ αψωιξδ 
+    //Χ”Χ¤ΧΆΧ•ΧΧ”
+    //ΧΧ•Χ©Χ›Χª ΧΧª Χ›Χ Χ”Χ”Χ–ΧΧ Χ•Χª Χ©Χ Χ”ΧΧ©ΧªΧΧ© ΧΧ”ΧΧ΅Χ“ Χ•Χ”Χ•Χ¤Χ›Χª Χ›Χ Χ©Χ•Χ¨Χ” Χ‘ΧΧ‘ΧΧ” ΧΧΧ•Χ‘Χ™Χ™Χ§Χ ΧΧ΅Χ•Χ“Χ¨ Χ‘Χ¨Χ©Χ™ΧΧ” 
     private void LoadOrders(string searchQuery = "")
     {
         string username = GetLoggedInUsername();
         if (username == null) return;
 
-        DataTable dtOrders = srv.GetMyOrders(username); //θαμϊ μδζξπεϊ
+        DataTable dtOrders = srv.GetMyOrders(username); 
         
         List<StoreOrder> ordersList = new List<StoreOrder>();
         searchQuery = searchQuery.ToLower();
@@ -70,18 +70,18 @@ public partial class MyOrders : System.Web.UI.Page
         {
             foreach (DataRow row in dtOrders.Rows)
             {
-                string orderCode = row["OrderCode"].ToString();
+                int orderId = Convert.ToInt32(row["OrderId"]);
                 
-                StoreOrder order = new StoreOrder(); // ΰεαιιχθ 
-                order.OrderCode = orderCode;
+                StoreOrder order = new StoreOrder(); 
+                order.OrderId = orderId;
                 order.DatePurchased = Convert.ToDateTime(row["DatePurchased"]);
                 order.Total = Convert.ToDecimal(row["Total"]);
                 
                 string movieTitle = row["MovieTitle"].ToString();
                 DateTime eventDate = Convert.ToDateTime(row["EventDate"]);
                 
-                DataTable dtItems = srv.GetOrderItems(orderCode); //ψωιξϊ δτψθιν ωπαηψε αδζξπδ ρτφιτιϊ αθαμδ
-                List<string> itemStrs = new List<string>(); // ψωιξϊ τψθιν ρτφιτιϊ
+                DataTable dtItems = srv.GetOrderItems(orderId); //Χ¨Χ©Χ™ΧΧª Χ”Χ¤Χ¨ΧΧ™Χ Χ©Χ Χ‘Χ—Χ¨Χ• Χ‘Χ”Χ–ΧΧ Χ” Χ΅Χ¤Χ¦Χ™Χ¤Χ™Χª Χ‘ΧΧ‘ΧΧ”
+                List<string> itemStrs = new List<string>(); 
                 if (dtItems != null)
                 {
                     foreach(DataRow iRow in dtItems.Rows)
@@ -90,43 +90,43 @@ public partial class MyOrders : System.Web.UI.Page
                     }
                 }
                 
-                string itemsText = string.Join(", ", itemStrs); //ωπχπε
+                string itemsText = string.Join(", ", itemStrs); //ΧΧ¨Χ©Χ™ΧΧ” Χ©Χ ΧΧ™ΧΧ™Χ ΧΧΧ—Χ¨Χ•Χ–Χª ΧΧ¨Χ•Χ›Χ”
                 order.ItemsSummary = "<b>Event:</b> " + movieTitle + " (" + eventDate.ToShortDateString() + ") " +
                     "<br/> <b>Items:</b> " + itemsText;
                 
-                if (!string.IsNullOrWhiteSpace(searchQuery)) //ηιτεω
+                if (!string.IsNullOrWhiteSpace(searchQuery)) //Χ—Χ™Χ¤Χ•Χ©
                 {
-                    bool match = orderCode.ToLower().Contains(searchQuery) ||
+                    bool match = orderId.ToString().Contains(searchQuery) ||
                                  movieTitle.ToLower().Contains(searchQuery) ||
                                  itemsText.ToLower().Contains(searchQuery);
-                    //ςεαγ βν αξχψδ εδηιτεω αΰεϊιεϊ βγεμεϊ ΰε αΰεϊιεϊ χθπεϊ
+                    //ΧΆΧ•Χ‘Χ“ Χ’Χ Χ‘ΧΧ§Χ¨Χ” Χ•Χ”Χ—Χ™Χ¤Χ•Χ© Χ‘ΧΧ•ΧªΧ™Χ•Χª Χ’Χ“Χ•ΧΧ•Χª ΧΧ• Χ‘ΧΧ•ΧªΧ™Χ•Χª Χ§ΧΧ Χ•Χª
                     if (!match) continue;
                 }
                 ordersList.Add(order);
             }
         }
         
-        if (ordersList.Count == 0) //ψωιξϊ δδζξπεϊ
+        if (ordersList.Count == 0) //Χ¨Χ©Χ™ΧΧª Χ”Χ”Χ–ΧΧ Χ•Χª
         {
             lblEmpty.Text = string.IsNullOrWhiteSpace(searchQuery)
                 ? "You haven't placed any orders yet." : "No orders found matching your search.";
             lblEmpty.Visible = true;
-            rptOrders.Visible = false; //δφβϊ θαμϊ δδζξπεϊ
+            rptOrders.Visible = false; //Χ”Χ¦Χ’Χª ΧΧ‘ΧΧª Χ”Χ”Χ–ΧΧ Χ•Χª
         }
         else
         {
             lblEmpty.Visible = false;
             rptOrders.DataSource = ordersList;
-            rptOrders.DataBind(); //ξςαιψδ ΰϊ δπϊεπιν ωμ δc# 
-                                  //ΰμ δϊφεβδ ωμ δhtml 
+            rptOrders.DataBind(); //ΧΧΆΧ‘Χ™Χ¨Χ” ΧΧª Χ”Χ ΧªΧ•Χ Χ™Χ Χ©Χ Χ”c# 
+                                  //ΧΧ Χ”ΧªΧ¦Χ•Χ’Χ” Χ©Χ Χ”html 
             rptOrders.Visible = true;
         }
     }
-    protected void btnSearchOrders_Click(object sender, EventArgs e)//ηιτεω
+    protected void btnSearchOrders_Click(object sender, EventArgs e)//Χ—Χ™Χ¤Χ•Χ©
     {
         LoadOrders(txtSearchOrders.Text.Trim());
     }
-    protected void btnClearSearch_Click(object sender, EventArgs e)//ξεηχ
+    protected void btnClearSearch_Click(object sender, EventArgs e)//ΧΧ•Χ—Χ§
     {
         txtSearchOrders.Text = "";
         LoadOrders();

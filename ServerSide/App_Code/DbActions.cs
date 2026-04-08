@@ -10,12 +10,19 @@ namespace MDb.App_Code
 {
     public class DbActions
     {
+
+        // הפעולה מחזירה ויוצרת אובייקט התחברות שהוא ה"מפתח" המאפשר לקוד
+        //לגשת למסד הנתונים
         private static SqlConnection GetConnection(string path)
         {
-            string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=" + path + "; Integrated Security=True";
+            string connectionString = "Data Source=(LocalDB)\\" +
+                "MSSQLLocalDB;AttachDbFilename=" + path + "; Integrated Security=True";
             return new SqlConnection(connectionString);
         }
 
+
+        //הפעולה מחזירה טבלת נתונים- DataTable
+        //מלאה במידע שנשלף ממסד הנתונים לפי השאילתה ששלחנו
         public static DataTable Search(string sql, string path)
         {
             using (SqlConnection connect = GetConnection(path))
@@ -36,6 +43,9 @@ namespace MDb.App_Code
             }
         }
 
+        //הפעולה מחזירה טבלת נתונים- DataTable
+        //מלאה במידע שנשלף ממסד הנתונים לפי השאילתה ששלחנו
+        //השימוש בפרמטרים הופך את החיפוש להרבה יותר מאובטח נגד פריצות
         public static DataTable SearchWithParameters(SqlCommand cmmd, string path)
         {
             using (SqlConnection connect = GetConnection(path))
@@ -54,6 +64,9 @@ namespace MDb.App_Code
             }
         }
 
+        //הפעולה מבצעת שינויים במסד נתונים על ידי הרצת פקודת 
+        //SQL
+        //ללא החזרת טבלה, וסוגרת את הקישור בסיום
         public static void MyAction(SqlCommand cmmd, string path)
         {
             using (SqlConnection connect = GetConnection(path))

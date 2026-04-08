@@ -12,7 +12,7 @@ public partial class AdminOrders : System.Web.UI.Page
 
     public class AdminOrder
     {
-        public string OrderCode { get; set; }
+        public int OrderId { get; set; }
         public string Buyer { get; set; }
         public string EventOwner { get; set; }
         public string MovieTitle { get; set; }
@@ -51,7 +51,18 @@ public partial class AdminOrders : System.Web.UI.Page
         }
     }
 
-    private void LoadAllOrders()
+    protected void btnSearchOrders_Click(object sender, EventArgs e)
+    {
+        LoadAllOrders(txtSearch.Text.Trim());
+    }
+
+    protected void btnClear_Click(object sender, EventArgs e)
+    {
+        txtSearch.Text = "";
+        LoadAllOrders("");
+    }
+
+    private void LoadAllOrders(string searchTerm = "")
     {
         DataTable dtOrders = srv.GetAllOrders();
         List<AdminOrder> ordersList = new List<AdminOrder>();
@@ -61,20 +72,35 @@ public partial class AdminOrders : System.Web.UI.Page
         {
             foreach (DataRow row in dtOrders.Rows)
             {
-                string orderCode = row["OrderCode"].ToString();
+                int orderId = Convert.ToInt32(row["OrderId"]);
+                string buyer = row["Username"].ToString();
+                string eventOwner = row["EventOwner"].ToString();
+                string movieTitle = row["MovieTitle"].ToString();
+                
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    string s = searchTerm.ToLower();
+                    if (!orderId.ToString().Contains(s) && 
+                        !buyer.ToLower().Contains(s) && 
+                        !eventOwner.ToLower().Contains(s) && 
+                        !movieTitle.ToLower().Contains(s))
+                    {
+                        continue;
+                    }
+                }
                 
                 AdminOrder order = new AdminOrder();
-                order.OrderCode = orderCode;
-                order.Buyer = row["Username"].ToString();
-                order.EventOwner = row["EventOwner"].ToString();
-                order.MovieTitle = row["MovieTitle"].ToString();
+                order.OrderId = orderId;
+                order.Buyer = buyer;
+                order.EventOwner = eventOwner;
+                order.MovieTitle = movieTitle;
                 order.EventDate = Convert.ToDateTime(row["EventDate"]);
                 order.DatePurchased = Convert.ToDateTime(row["DatePurchased"]);
                 order.Total = Convert.ToDecimal(row["Total"]);
                 totalRev += order.Total;
                 
                 // Get Items
-                DataTable dtItems = srv.GetOrderItems(orderCode);
+                DataTable dtItems = srv.GetOrderItems(orderId);
                 List<string> itemStrs = new List<string>();
                 if (dtItems != null)
                 {

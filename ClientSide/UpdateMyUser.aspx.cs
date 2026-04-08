@@ -9,8 +9,8 @@ using System.Web.UI.WebControls;
 public partial class UpdateMyUser : System.Web.UI.Page
 {
     private DataTable dtUser;
-    private localhost.Users user = new localhost.Users();
-    private localhost.Service my_service = new localhost.Service();
+    private localhost.Users user = new localhost.Users(); //אובייקט חדש
+    private localhost.Service my_service = new localhost.Service();//קריאה לפעולות הקיימות בשרת
     private string pic;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -63,7 +63,7 @@ public partial class UpdateMyUser : System.Web.UI.Page
                 pic = dtUser.Rows[0][9].ToString();
             }
 
-            // Set image preview
+            //הגדרה מאיזה כתובת להביא את התמונה
             img.ImageUrl = "~/MyPics/" + (string.IsNullOrEmpty(pic) ? "Profile.jpg" : pic);
         }
     }

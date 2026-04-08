@@ -26,7 +26,7 @@ public partial class AdminArea : System.Web.UI.Page
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     string username = dt.Columns.Contains("Usern") ? dt.Rows[0]["Usern"].ToString() : dt.Rows[0][0].ToString();
-                    master.SetUserLoggedIn(username, status);
+                    master.SetUserLoggedIn(username, status); //למעלה
                 }
             }
             else
@@ -38,12 +38,5 @@ public partial class AdminArea : System.Web.UI.Page
         {
             Response.Redirect("Home.aspx");
         }
-
-        //if(Session["Status"].ToString().Equals("2"))
-        //{
-        //string message1= "Alert('you are not wwlcome!!!');";
-        //ClientScript.RegisteredStartUpScript(this.GetType(), "MessageBo
-        //Response.Redirect(Login.aspx);
-        //}
     }
 }

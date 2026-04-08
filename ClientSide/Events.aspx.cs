@@ -19,6 +19,8 @@ public partial class Events : System.Web.UI.Page
 
         if (!IsPostBack)
         {
+            txtEventDate.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
+            txtPrice.Attributes["min"] = "0";
             LoadMoviesDropdown();
             LoadEvents();
         }
@@ -239,6 +241,16 @@ public partial class Events : System.Web.UI.Page
                 lblModalMessage.Visible = true;
                 return;
             }
+            DateTime selectedEventDate;
+            if (DateTime.TryParse(txtEventDate.Text, out selectedEventDate))
+            {
+                if (selectedEventDate.Date < DateTime.Today)
+                {
+                    lblModalMessage.Text = "Event date cannot be in the past.";
+                    lblModalMessage.Visible = true;
+                    return;
+                }
+            }
 
             if (string.IsNullOrEmpty(txtStartTime.Text))
             {
@@ -271,7 +283,7 @@ public partial class Events : System.Web.UI.Page
 
             int eventId = myService.CreateEvent(username, movieId, txtEventDate.Text, txtStartTime.Text, price, location, status);
 
-            if (eventId > 0)
+            if (eventId > 0) //אם יש אירועים
             {
                 Response.Redirect("EventDetails.aspx?eventId=" + eventId);
             }

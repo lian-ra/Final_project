@@ -167,7 +167,7 @@
             <ItemTemplate>
                 <div class="order-card">
                     <div class="order-header">
-                        <div class="order-code">ORDER #<%# Eval("OrderCode") %></div>
+                        <div class="order-code">ORDER #<%# Eval("OrderId") %></div>
                         <div class="order-buyer">Buyer: @<a href="UserProfile.aspx?username=<%# Eval("Buyer") %>" style="color:inherit;"><%# Eval("Buyer") %></a></div>
                         <div class="order-date"><%# Convert.ToDateTime(Eval("DatePurchased")).ToString("MMMM dd, yyyy HH:mm") %></div>
                     </div>

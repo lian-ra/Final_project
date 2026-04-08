@@ -10,9 +10,7 @@ public class Movies
 {
     public Movies()
     {
-        //
-        // TODO: Add constructor logic here
-        //
+   
     }
 
     private int movieId;

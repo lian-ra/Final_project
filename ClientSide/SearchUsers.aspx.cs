@@ -76,12 +76,9 @@ public partial class SearchUsers : System.Web.UI.Page
     {
         if (GrdUsers.SelectedRow != null)
         {
-            // Get Username from DataKey
             string username = GrdUsers.DataKeys[GrdUsers.SelectedRow.RowIndex].Value.ToString();
             HiddenUsername.Value = username;
 
-            // To populate all fields (Phone, Email, Address), it is safer to fetch the record again
-            // because columns might be hidden or formatted in the GridView.
             try
             {
                 DataTable dt = myService.SearchUser(username, "username");
@@ -138,9 +135,9 @@ public partial class SearchUsers : System.Web.UI.Page
                     try
                     {
                         string fileName = System.IO.Path.GetFileName(fileUploadPic.FileName);
-                        string savePath = Server.MapPath("~/MyPics/") + fileName;
-                        fileUploadPic.SaveAs(savePath);
-                        user.Pic = fileName;
+                        string savePath = Server.MapPath("~/MyPics/") + fileName; //כדי לדעת איפה נמצא הקובץ- תיקייה
+                        fileUploadPic.SaveAs(savePath); //שמירה בתיקייה
+                        user.Pic = fileName; //שמירה בכתובת של הקובץ
                     }
                     catch { user.Pic = "Profile.jpg"; }
                 }
