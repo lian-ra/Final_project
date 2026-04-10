@@ -11,6 +11,7 @@ public partial class AddMovie : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה מבצעת אבטחת גישה לדף מנהל.
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!Session["status"].ToString().Equals("2"))
@@ -21,7 +22,7 @@ public partial class AddMovie : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            string status = Session["status"] as string; //הסטטוס של המנהל כמשתנה
+            string status = Session["status"] as string; 
             if (status != "2")
             {
                 Response.Redirect("Home.aspx");
@@ -29,6 +30,7 @@ public partial class AddMovie : System.Web.UI.Page
         }
     }
 
+    //הפעולה מבצעת הוספת סרט חדש למערכת
     protected void btnSubmit_Click(object sender, EventArgs e)
     {
         if (Page.IsValid)
@@ -134,11 +136,13 @@ public partial class AddMovie : System.Web.UI.Page
         }
     }
 
+    //הפעולה מבצעת ניקוי של הטופס כאשר המשתמש לוחץ על כפתור האתחל
     protected void btnReset_Click(object sender, EventArgs e)
     {
         ClearForm();
     }
 
+    //הפעולה מבצעת איפוס של כל שדות הטופס
     private void ClearForm()
     {
         txtTitle.Text = "";
@@ -154,6 +158,7 @@ public partial class AddMovie : System.Web.UI.Page
         lblMessage.Visible = false;
     }
 
+    //הפעולה מבצעת הודעת משוב למשתמש- סטטוס
     private void ShowMessage(string message, bool isSuccess)
     {
         lblMessage.Text = message;

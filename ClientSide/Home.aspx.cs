@@ -10,10 +10,12 @@ public partial class Home : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
     private HashSet<int> wishlistMovieIds = new HashSet<int>();
+    private HashSet<int> watchedMovieIds = new HashSet<int>();
 
     protected void Page_Load(object sender, EventArgs e)
     {
         LoadWishlistForCurrentUser();
+        LoadWatchedForCurrentUser();
         if (!IsPostBack)
         {
             LoadFilms();
@@ -46,6 +48,41 @@ public partial class Home : System.Web.UI.Page
                         int id;
                         if (int.TryParse(row["MovieId"].ToString(), out id))
                             wishlistMovieIds.Add(id);
+                    }
+                }
+            }
+        }
+        catch { /* ignore errors */ }
+    }
+
+    private void LoadWatchedForCurrentUser()
+    {
+        try
+        {
+            if (Session["status"] == null) return;
+            string status = Session["status"].ToString();
+            if (status != "1" && status != "2") return;
+
+            DataTable dtUser = Session["data"] as DataTable;
+            if (dtUser == null || dtUser.Rows.Count == 0) return;
+
+            string username;
+            if (dtUser.Columns.Contains("User"))
+                username = dtUser.Rows[0]["User"].ToString();
+            else
+                username = dtUser.Rows[0][0].ToString();
+
+            DataTable dtWatched = backendService.GetWatchedMovies(username);
+            watchedMovieIds.Clear();
+            if (dtWatched != null)
+            {
+                foreach (DataRow row in dtWatched.Rows)
+                {
+                    if (row["MovieId"] != DBNull.Value)
+                    {
+                        int id;
+                        if (int.TryParse(row["MovieId"].ToString(), out id))
+                            watchedMovieIds.Add(id);
                     }
                 }
             }
@@ -149,17 +186,30 @@ public partial class Home : System.Web.UI.Page
             poster = "~/" + poster;
         }
 
-        string actionHtml;
+        // Wishlist button
+        string wishlistHtml;
         if (wishlistMovieIds.Contains(movieId))
         {
-            actionHtml = "<span style='display:inline-block;margin-top:8px;padding:6px 14px;border-radius:20px;background:#555;color:#ddd;font-size:13px;'>In wishlist</span>";
+            wishlistHtml = "<span class='card-btn card-btn-wishlisted'>&#10003; In Wishlist</span>";
         }
         else
         {
-            // Note: Ensure Wishlist.aspx exists and handles action=add
-            actionHtml = string.Format("<a href='Wishlist.aspx?action=add&movieId={0}' style='display:inline-block;" +
-                "margin-top:8px;padding:6px 14px;border-radius:20px;background:#ff6b6b;color:white;text-decoration:none;font-size:13px;'>Add to wishlist</a>", movieId);
+            wishlistHtml = string.Format("<a href='Wishlist.aspx?action=add&movieId={0}' class='card-btn card-btn-wishlist'>&#9825; Wishlist</a>", movieId);
         }
+
+        // Watched button
+        string watchedHtml;
+        if (watchedMovieIds.Contains(movieId))
+        {
+            watchedHtml = string.Format("<a href='MovieDetails.aspx?action=removeFromWatched&movieId={0}&ret=home' class='card-btn card-btn-watched-done'>&#10003; Watched</a>", movieId);
+        }
+        else
+        {
+            watchedHtml = string.Format("<a href='MovieDetails.aspx?action=addToWatched&movieId={0}&ret=home' class='card-btn card-btn-watch'>&#9654; Watched</a>", movieId);
+        }
+
+        // View details button
+        string detailsHtml = string.Format("<a href='MovieDetails.aspx?movieId={0}' class='card-btn card-btn-details'>View Details &#8594;</a>", movieId);
 
         return string.Format(@"
             <div class='film-card'>
@@ -167,16 +217,22 @@ public partial class Home : System.Web.UI.Page
                     <img src='{0}' alt='{1}' class='film-poster' />
                     <div class='film-title'>{1}</div>
                 </a>
-                <div class='film-rating'>? {2}</div>
+                <div class='film-rating'>&#11088; {2}</div>
                 <div class='film-year'>{3}</div>
-                {4}
+                <div class='card-actions'>
+                    {4}
+                    {6}
+                    {7}
+                </div>
             </div>",
             ResolveUrl(poster),
             HttpUtility.HtmlEncode(title),
             rating,
             year,
-            actionHtml,
-            movieId
+            wishlistHtml,
+            movieId,
+            watchedHtml,
+            detailsHtml
         );
     }
 }

@@ -139,6 +139,88 @@
                 background: #ff6b6b;
                 border-color: #ff6b6b;
             }
+
+            /* Card action buttons row */
+            .card-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-top: 10px;
+                justify-content: center;
+            }
+
+            .card-btn {
+                display: inline-block;
+                padding: 5px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 600;
+                text-decoration: none;
+                cursor: pointer;
+                transition: all 0.25s ease;
+                border: none;
+                white-space: nowrap;
+            }
+
+            /* Wishlist - not yet added */
+            .card-btn-wishlist {
+                background: rgba(255, 107, 107, 0.15);
+                color: #ff6b6b;
+                border: 1px solid #ff6b6b;
+            }
+            .card-btn-wishlist:hover {
+                background: #ff6b6b;
+                color: white;
+                text-decoration: none;
+                transform: translateY(-1px);
+            }
+
+            /* Wishlist - already added */
+            .card-btn-wishlisted {
+                background: #555;
+                color: #bbb;
+                border: 1px solid #555;
+                cursor: default;
+            }
+
+            /* Watched - not yet watched */
+            .card-btn-watch {
+                background: rgba(78, 205, 196, 0.15);
+                color: #4ecdc4;
+                border: 1px solid #4ecdc4;
+            }
+            .card-btn-watch:hover {
+                background: #4ecdc4;
+                color: #111;
+                text-decoration: none;
+                transform: translateY(-1px);
+            }
+
+            /* Watched - already watched (click to undo) */
+            .card-btn-watched-done {
+                background: rgba(78, 205, 196, 0.3);
+                color: #4ecdc4;
+                border: 1px solid #4ecdc4;
+            }
+            .card-btn-watched-done:hover {
+                background: #333;
+                color: #aaa;
+                border-color: #555;
+                text-decoration: none;
+            }
+
+            /* View Details arrow button */
+            .card-btn-details {
+                background: rgba(51, 51, 153, 0.3);
+                color: #aaaaff;
+                border: 1px solid #333399;
+            }
+            .card-btn-details:hover {
+                background: #333399;
+                color: white;
+                text-decoration: none;
+                transform: translateY(-1px);
+            }
         </style>
     </asp:Content>
 

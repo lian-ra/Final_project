@@ -66,19 +66,22 @@ public partial class MovieDetails : System.Web.UI.Page
         string username = GetLoggedInUsername();
         string action = Request.QueryString["action"];
         string movieIdStr = Request.QueryString["movieId"];
+        string ret = Request.QueryString["ret"];
         int movieId;
 
         if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(action) && int.TryParse(movieIdStr, out movieId) && movieId > 0)
         {
+            string redirectUrl = ret == "home" ? "Home.aspx" : "MovieDetails.aspx?movieId=" + movieId;
+
              if (action == "addToWatched")
              {
                  backendService.AddToWatched(username, movieId);
-                 Response.Redirect("MovieDetails.aspx?movieId=" + movieId);
+                 Response.Redirect(redirectUrl);
              }
              else if (action == "removeFromWatched")
              {
                  backendService.RemoveFromWatched(username, movieId);
-                 Response.Redirect("MovieDetails.aspx?movieId=" + movieId);
+                 Response.Redirect(redirectUrl);
              }
         }
     }
@@ -157,6 +160,32 @@ public partial class MovieDetails : System.Web.UI.Page
         }
 
         return movieId;
+    }
+
+    private string GenerateStarsHtml(string ratingStr)
+    {
+        double rating = 0;
+        double.TryParse(ratingStr, out rating);
+
+        // Rating is out of 10 — map to 5 stars
+        double stars = rating / 2.0;
+        int fullStars = (int)Math.Floor(stars);
+        bool halfStar = (stars - fullStars) >= 0.25 && (stars - fullStars) < 0.75;
+        // If remainder >= 0.75 round up to a full star
+        if ((stars - fullStars) >= 0.75) fullStars++;
+        int emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.Append("<div class='star-rating'>");
+        for (int i = 0; i < fullStars; i++)
+            sb.Append("<span class='star star-full'>&#9733;</span>");
+        if (halfStar)
+            sb.Append("<span class='star star-half'>&#9733;</span>");
+        for (int i = 0; i < emptyStars; i++)
+            sb.Append("<span class='star star-empty'>&#9733;</span>");
+        sb.AppendFormat("<span class='star-score'>{0}<span style='opacity:0.5;font-size:13px;'>/10</span></span>", ratingStr);
+        sb.Append("</div>");
+        return sb.ToString();
     }
 
     private void LoadMovie()
@@ -247,7 +276,7 @@ public partial class MovieDetails : System.Web.UI.Page
                     <div class='details-main'>
                         <div class='details-title'>{1}</div>
                         <div class='details-meta'>Year: {2}{3}</div>
-                        <div class='details-rating'>Rating: {4}/10</div>
+                        {10}
                         <div class='details-section-title'>Synopsis</div>
                         <div class='details-description'>{5}</div>
                         <div class='details-section-title'>Director</div>
@@ -270,7 +299,8 @@ public partial class MovieDetails : System.Web.UI.Page
                 HttpUtility.HtmlEncode(director),
                 actorsHtml,
                 actionHtml,
-                watchedHtml
+                watchedHtml,
+                GenerateStarsHtml(rating)
             );
 
             phDetails.Controls.Add(new LiteralControl(html));
@@ -282,6 +312,22 @@ public partial class MovieDetails : System.Web.UI.Page
             phDetails.Controls.Clear();
             phDetails.Controls.Add(new LiteralControl("<div class='details-error'>Error loading movie details.</div>"));
         }
+    }
+
+    private string GenerateReviewStarsHtml(int rating)
+    {
+        // Review rating is 1-5
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.Append("<span class='review-stars'>");
+        for (int i = 1; i <= 5; i++)
+        {
+            if (i <= rating)
+                sb.Append("<span class='rs rs-full'>&#9733;</span>");
+            else
+                sb.Append("<span class='rs rs-empty'>&#9733;</span>");
+        }
+        sb.Append("</span>");
+        return sb.ToString();
     }
 
     private void LoadComments()
@@ -314,12 +360,12 @@ public partial class MovieDetails : System.Web.UI.Page
                 }
                 string created = row["CreatedAt"] != DBNull.Value ? Convert.ToDateTime(row["CreatedAt"]).ToString("yyyy-MM-dd HH:mm") : "";
 
-                string ratingText = rating > 0 ? " | Rating: " + rating + "/5" : string.Empty;
+                string ratingStars = rating > 0 ? GenerateReviewStarsHtml(rating) : "";
 
                 string html = string.Format(
-                    "<div class='comment-item'><div class='comment-meta'>{0}{1} - {2}</div><div class='comment-text'>{3}</div></div>",
+                    "<div class='comment-item'><div class='comment-meta'><strong>{0}</strong>{1} &mdash; <span style='opacity:0.6'>{2}</span></div><div class='comment-text'>{3}</div></div>",
                     HttpUtility.HtmlEncode(username),
-                    ratingText,
+                    ratingStars,
                     HttpUtility.HtmlEncode(created),
                     HttpUtility.HtmlEncode(text)
                 );
