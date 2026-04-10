@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 
 public partial class MovieDetails : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -28,7 +28,7 @@ public partial class MovieDetails : System.Web.UI.Page
             int movieId = GetCurrentMovieId();
             if (movieId > 0)
             {
-               DataTable dtWatched = myService.GetUsersWhoWatchedMovie(movieId);
+               DataTable dtWatched = backendService.GetUsersWhoWatchedMovie(movieId);
                if (dtWatched != null && dtWatched.Rows.Count > 0)
                {
                    rptWatchedUsers.DataSource = dtWatched;
@@ -40,7 +40,7 @@ public partial class MovieDetails : System.Web.UI.Page
                }
 
                // Load Wishlisted By Users
-               DataTable dtWishlist = myService.GetUsersWhoWishlistedMovie(movieId);
+               DataTable dtWishlist = backendService.GetUsersWhoWishlistedMovie(movieId);
                if (dtWishlist != null && dtWishlist.Rows.Count > 0)
                {
                    rptWishlistUsers.DataSource = dtWishlist;
@@ -72,12 +72,12 @@ public partial class MovieDetails : System.Web.UI.Page
         {
              if (action == "addToWatched")
              {
-                 myService.AddToWatched(username, movieId);
+                 backendService.AddToWatched(username, movieId);
                  Response.Redirect("MovieDetails.aspx?movieId=" + movieId);
              }
              else if (action == "removeFromWatched")
              {
-                 myService.RemoveFromWatched(username, movieId);
+                 backendService.RemoveFromWatched(username, movieId);
                  Response.Redirect("MovieDetails.aspx?movieId=" + movieId);
              }
         }
@@ -118,7 +118,7 @@ public partial class MovieDetails : System.Web.UI.Page
                 return false;
             }
 
-            DataTable dt = myService.GetWishlistMovies(username);
+            DataTable dt = backendService.GetWishlistMovies(username);
             if (dt != null)
             {
                 foreach (DataRow row in dt.Rows)
@@ -143,7 +143,7 @@ public partial class MovieDetails : System.Web.UI.Page
         {
             string username = GetLoggedInUsername();
             if (string.IsNullOrEmpty(username) || movieId <= 0) return false;
-            return myService.IsWatched(username, movieId);
+            return backendService.IsWatched(username, movieId);
         }
         catch { return false; }
     }
@@ -171,7 +171,7 @@ public partial class MovieDetails : System.Web.UI.Page
 
         try
         {
-            DataTable dt = myService.GetMovieById(movieId);
+            DataTable dt = backendService.GetMovieById(movieId);
             phDetails.Controls.Clear();
 
             if (dt == null || dt.Rows.Count == 0)
@@ -296,7 +296,7 @@ public partial class MovieDetails : System.Web.UI.Page
                 return;
             }
 
-            DataTable dt = myService.GetMovieComments(movieId);
+            DataTable dt = backendService.GetMovieComments(movieId);
             if (dt == null || dt.Rows.Count == 0)
             {
                 phComments.Controls.Add(new LiteralControl("<div class='comment-item'>No comments yet. Be the first to comment!</div>"));
@@ -378,7 +378,7 @@ public partial class MovieDetails : System.Web.UI.Page
             int rating = 0;
             int.TryParse(ddlRating.SelectedValue, out rating);
 
-            myService.AddMovieComment(username, movieId, rating, text);
+            backendService.AddMovieComment(username, movieId, rating, text);
 
             txtComment.Text = string.Empty;
             lblCommentMessage.Text = "Comment added.";

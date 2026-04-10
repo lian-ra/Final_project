@@ -8,7 +8,7 @@ using System.Data;
 
 public partial class FindUsers : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -38,15 +38,15 @@ public partial class FindUsers : System.Web.UI.Page
             if (string.IsNullOrEmpty(searchTerm))
             {
                 // Load all users (using SearchUser with empty strings usually returns all)
-                dt = myService.SearchUser("", "");
+                dt = backendService.SearchUser("", "");
             }
             else
             {
-                dt = myService.SearchUser(searchTerm, "username");
+                dt = backendService.SearchUser(searchTerm, "username");
 
                 if (dt == null || dt.Rows.Count == 0)
                 {
-                    dt = myService.SearchUser(searchTerm, "name"); //חיפוש לפי שם פרטי
+                    dt = backendService.SearchUser(searchTerm, "name"); //חיפוש לפי שם פרטי
                 }
             }
 

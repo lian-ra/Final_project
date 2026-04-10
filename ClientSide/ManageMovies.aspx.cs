@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 
 public partial class ManageMovies : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -76,7 +76,7 @@ public partial class ManageMovies : System.Web.UI.Page
             movie.Duration = duration;
             movie.Description = description;
 
-            myService.AddMovie(movie);
+            backendService.AddMovie(movie);
 
             ShowMessage("Movie added successfully.", true);
             ClearForm();
@@ -128,11 +128,11 @@ public partial class ManageMovies : System.Web.UI.Page
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                dt = myService.SearchMovies(searchTerm, "all");
+                dt = backendService.SearchMovies(searchTerm, "all");
             }
             else
             {
-                dt = myService.GetAllMovies();
+                dt = backendService.GetAllMovies();
             }
 
             grdMovies.DataSource = dt;
@@ -220,7 +220,7 @@ public partial class ManageMovies : System.Web.UI.Page
 
 
 
-            myService.UpdateMovie(movie);
+            backendService.UpdateMovie(movie);
 
             grdMovies.EditIndex = -1;
             BindMoviesGrid();
@@ -237,7 +237,7 @@ public partial class ManageMovies : System.Web.UI.Page
         try
         {
             int movieId = (int)grdMovies.DataKeys[e.RowIndex].Value;
-            myService.DeleteMovie(movieId);
+            backendService.DeleteMovie(movieId);
             BindMoviesGrid();
             ShowMessage("Movie deleted successfully.", true);
         }

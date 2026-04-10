@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,7 +8,7 @@ using System.Data;
 
 public partial class Home : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
     private HashSet<int> wishlistMovieIds = new HashSet<int>();
 
     protected void Page_Load(object sender, EventArgs e)
@@ -35,7 +35,7 @@ public partial class Home : System.Web.UI.Page
             else
                 username = dtUser.Rows[0][0].ToString();
 
-            DataTable dtWishlist = myService.GetWishlistMovies(username);
+            DataTable dtWishlist = backendService.GetWishlistMovies(username);
             wishlistMovieIds.Clear();
             if (dtWishlist != null)
             {
@@ -98,7 +98,7 @@ public partial class Home : System.Web.UI.Page
             else if (genre == "drama") genre = "Drama";
             else if (genre == "horror") genre = "Horror";
 
-            DataTable dt = myService.SearchMovies(searchTerm, genre);
+            DataTable dt = backendService.SearchMovies(searchTerm, genre);
             string sortOption = ViewState["SelectedSort"] as string ?? "default";
 
             if (dt != null && dt.Rows.Count > 0)
@@ -167,7 +167,7 @@ public partial class Home : System.Web.UI.Page
                     <img src='{0}' alt='{1}' class='film-poster' />
                     <div class='film-title'>{1}</div>
                 </a>
-                <div class='film-rating'>★ {2}</div>
+                <div class='film-rating'>? {2}</div>
                 <div class='film-year'>{3}</div>
                 {4}
             </div>",

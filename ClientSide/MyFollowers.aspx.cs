@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Web.UI;
 
 public partial class MyNetwork : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -48,7 +48,7 @@ public partial class MyNetwork : System.Web.UI.Page
             if (string.IsNullOrEmpty(currentUser)) return;
 
             // Load Following
-            DataTable dtFollowing = myService.GetFollowingList(currentUser);
+            DataTable dtFollowing = backendService.GetFollowingList(currentUser);
             if (dtFollowing != null && dtFollowing.Rows.Count > 0)
             {
                 rptFollowing.DataSource = dtFollowing;
@@ -60,7 +60,7 @@ public partial class MyNetwork : System.Web.UI.Page
             }
 
             // Load Followers
-            DataTable dtFollowers = myService.GetFollowersList(currentUser);
+            DataTable dtFollowers = backendService.GetFollowersList(currentUser);
             if (dtFollowers != null && dtFollowers.Rows.Count > 0)
             {
                 rptFollowers.DataSource = dtFollowers;

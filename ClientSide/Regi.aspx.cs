@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 
 public partial class Regi : System.Web.UI.Page
 {
-    private localhost.Service my_service= new localhost.Service();
+    private localhost.Service backendService= new localhost.Service();
     private localhost.Users user = new localhost.Users();
     
     protected void Page_Load(object sender, EventArgs e)
@@ -82,13 +82,13 @@ public partial class Regi : System.Web.UI.Page
 
             newUser.UserN = txtUName.Text;
             newUser.Pass = txtPass.Text;
-            newUser.NameF = txtFName.Text;
-            newUser.LastN = txtLName.Text;
-            newUser.Fulladdres = txtAdd.Text;
-            newUser.Email = txtEmail.Text;
+            newUser.NameF = txtFirstNameName.Text;
+            newUser.LastN = txtLastNameName.Text;
+            newUser.Fulladdres = txtAddress.Text;
+            newUser.Email = txtEmailail.Text;
             newUser.Gender = dpdphone.SelectedValue;
             newUser.Birthday = Calendar1.SelectedDate.ToString("yyyy-MM-dd");
-            newUser.PhoneN = txtPhone.Text;
+            newUser.PhoneN = txtPhoneone.Text;
 
             string Pic_Name = "Profile.jpg";
             if (FileUpload1.HasFile)
@@ -98,7 +98,7 @@ public partial class Regi : System.Web.UI.Page
             }
             newUser.Pic = Pic_Name;
 
-            my_service.Regi(newUser);
+            backendService.Regi(newUser);
 
             string script1 = @"
                 alert('You are registered !!!!!!!!!!');

@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 
 public partial class EventDetails : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
     private int currentEventId = 0;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -55,7 +55,7 @@ public partial class EventDetails : System.Web.UI.Page
 
         try
         {
-            DataTable dt = myService.GetEventById(currentEventId);
+            DataTable dt = backendService.GetEventById(currentEventId);
             if (dt == null || dt.Rows.Count == 0)
             {
                 phEventDetails.Controls.Add(new LiteralControl("<div class='empty-subscribers'>Event not found.</div>"));
@@ -85,7 +85,7 @@ public partial class EventDetails : System.Web.UI.Page
             string statusClass = "status-" + eventStatus.ToLower();
 
             // Check if user is subscribed
-            bool isSubscribed = !string.IsNullOrEmpty(username) && myService.IsUserSubscribed(currentEventId, username);
+            bool isSubscribed = !string.IsNullOrEmpty(username) && backendService.IsUserSubscribed(currentEventId, username);
             bool isOwner = !string.IsNullOrEmpty(username) && username.Equals(eventOwner, StringComparison.OrdinalIgnoreCase);
 
             // Show owner controls if user is the event owner
@@ -180,12 +180,12 @@ public partial class EventDetails : System.Web.UI.Page
             {
                 if (action == "subscribe" && !isOwner)
                 {
-                    myService.SubscribeToEvent(currentEventId, username);
+                    backendService.SubscribeToEvent(currentEventId, username);
                     Response.Redirect("EventDetails.aspx?eventId=" + currentEventId);
                 }
                 else if (action == "unsubscribe")
                 {
-                    myService.UnsubscribeFromEvent(currentEventId, username);
+                    backendService.UnsubscribeFromEvent(currentEventId, username);
                     Response.Redirect("EventDetails.aspx?eventId=" + currentEventId);
                 }
             }
@@ -205,7 +205,7 @@ public partial class EventDetails : System.Web.UI.Page
 
         try
         {
-            DataTable dt = myService.GetEventSubscribers(currentEventId);
+            DataTable dt = backendService.GetEventSubscribers(currentEventId);
             lblSubscriberCount.Text = dt != null ? dt.Rows.Count.ToString() : "0";
 
             phSubscribers.Controls.Clear();
@@ -280,7 +280,7 @@ public partial class EventDetails : System.Web.UI.Page
 
         try
         {
-            myService.UpdateEventStatus(currentEventId, status);
+            backendService.UpdateEventStatus(currentEventId, status);
             Response.Redirect("EventDetails.aspx?eventId=" + currentEventId);
         }
         catch (Exception ex)
@@ -294,7 +294,7 @@ public partial class EventDetails : System.Web.UI.Page
     {
         if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0) return;
 
-        DataTable dt = myService.GetEventById(currentEventId);
+        DataTable dt = backendService.GetEventById(currentEventId);
         if (dt != null && dt.Rows.Count > 0)
         {
             DataRow row = dt.Rows[0];
@@ -324,7 +324,7 @@ public partial class EventDetails : System.Web.UI.Page
 
         try
         {
-            myService.UpdateEvent(currentEventId, newDate, newTime, newPrice, newLocation);
+            backendService.UpdateEvent(currentEventId, newDate, newTime, newPrice, newLocation);
             Response.Redirect("EventDetails.aspx?eventId=" + currentEventId);
         }
         catch (Exception ex)

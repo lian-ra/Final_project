@@ -8,7 +8,7 @@ using System.Data;
 
 public partial class Celebs : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -31,7 +31,7 @@ public partial class Celebs : System.Web.UI.Page
             string searchText = txtSearchCelebs.Text.Trim();
             string role = ddlRole.SelectedValue;
 
-            DataTable dt = myService.SearchCelebs(searchText, role);
+            DataTable dt = backendService.SearchCelebs(searchText, role);
 
             celebsGrid.Controls.Clear();
 

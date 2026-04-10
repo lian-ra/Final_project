@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,7 +8,7 @@ using System.Data;
 
 public partial class SearchUsers : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -38,7 +38,7 @@ public partial class SearchUsers : System.Web.UI.Page
 
         try
         {
-            DataTable dt = myService.SearchUser(searchText, searchOption);
+            DataTable dt = backendService.SearchUser(searchText, searchOption);
             GrdUsers.DataSource = dt;
             GrdUsers.DataBind();
             pnlModal.Visible = false;
@@ -62,7 +62,7 @@ public partial class SearchUsers : System.Web.UI.Page
     {
         try
         {
-            DataTable dt = myService.SearchUser("", "");
+            DataTable dt = backendService.SearchUser("", "");
             GrdUsers.DataSource = dt;
             GrdUsers.DataBind();
         }
@@ -81,12 +81,12 @@ public partial class SearchUsers : System.Web.UI.Page
 
             try
             {
-                DataTable dt = myService.SearchUser(username, "username");
+                DataTable dt = backendService.SearchUser(username, "username");
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     DataRow row = dt.Rows[0];
-                    TxtName.Text = row["FName"].ToString();
-                    TxtLast.Text = row["LName"].ToString();
+                    TxtFirstName.Text = row["FName"].ToString();
+                    TxtLastName.Text = row["LName"].ToString();
                     TxtEmail.Text = row["email"].ToString();
                     TxtAddress.Text = row["address"].ToString();
 
@@ -112,7 +112,7 @@ public partial class SearchUsers : System.Web.UI.Page
             if (string.IsNullOrEmpty(username)) return;
 
             // 1. Fetch current user data to preserve other fields (like password, picture)
-            DataTable dt = myService.SearchUser(username, "username");
+            DataTable dt = backendService.SearchUser(username, "username");
             if (dt != null && dt.Rows.Count > 0)
             {
                 DataRow row = dt.Rows[0];
@@ -121,8 +121,8 @@ public partial class SearchUsers : System.Web.UI.Page
                 user.UserN = username;
 
                 // Update modified fields from TextBoxes
-                user.NameF = TxtName.Text.Trim();
-                user.LastN = TxtLast.Text.Trim();
+                user.NameF = TxtFirstName.Text.Trim();
+                user.LastN = TxtLastName.Text.Trim();
                 user.Email = TxtEmail.Text.Trim();
                 user.Fulladdres = TxtAddress.Text.Trim();
                 user.PhoneN = TxtPhone.Text.Trim();
@@ -135,9 +135,9 @@ public partial class SearchUsers : System.Web.UI.Page
                     try
                     {
                         string fileName = System.IO.Path.GetFileName(fileUploadPic.FileName);
-                        string savePath = Server.MapPath("~/MyPics/") + fileName; //×›×“×™ ×œ×“×¢×ª ××™×¤×” × ××¦× ×”×§×•×‘×¥- ×ª×™×§×™×™×”
-                        fileUploadPic.SaveAs(savePath); //×©××™×¨×” ×‘×ª×™×§×™×™×”
-                        user.Pic = fileName; //×©××™×¨×” ×‘×›×ª×•×‘×ª ×©×œ ×”×§×•×‘×¥
+                        string savePath = Server.MapPath("~/MyPics/") + fileName; //ëãé ìãòú àéôä ğîöà ä÷åáõ- úé÷ééä
+                        fileUploadPic.SaveAs(savePath); //ùîéøä áúé÷ééä
+                        user.Pic = fileName; //ùîéøä áëúåáú ùì ä÷åáõ
                     }
                     catch { user.Pic = "Profile.jpg"; }
                 }
@@ -152,7 +152,7 @@ public partial class SearchUsers : System.Web.UI.Page
                 }
 
                 // 2. Send update
-                myService.UpdateUser(user);
+                backendService.UpdateUser(user);
 
                 // 3. Refresh Grid and Close Modal
                 LoadAllUsers();
@@ -175,7 +175,7 @@ public partial class SearchUsers : System.Web.UI.Page
         {
             try
             {
-                myService.DeleteUser(username);
+                backendService.DeleteUser(username);
                 LoadAllUsers();
                 pnlModal.Visible = false;
                 ClientScript.RegisterStartupScript(this.GetType(), "Deleted", "alert('User deleted successfully.');", true);

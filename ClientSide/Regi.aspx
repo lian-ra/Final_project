@@ -147,7 +147,7 @@
                 <asp:TextBox ID="txtUName" runat="server" CssClass="form-control-custom" placeholder="Choose a username"></asp:TextBox>
                 
                         
-    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage=" Username required" ControlToValidate="txtFName"></asp:RequiredFieldValidator>
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage=" Username required" ControlToValidate="txtUName"></asp:RequiredFieldValidator>
 
 
             </div>
@@ -160,33 +160,33 @@
 
             <div class="form-group">
                 <asp:Label ID="label3" runat="server" Text="First Name" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtFName" runat="server" CssClass="form-control-custom" placeholder="Enter first name"></asp:TextBox>
+                <asp:TextBox ID="txtFirstNameName" runat="server" CssClass="form-control-custom" placeholder="Enter first name"></asp:TextBox>
             </div>
 
             <div class="form-group">
                 <asp:Label ID="label4" runat="server" Text="Last Name" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtLName" runat="server" CssClass="form-control-custom" placeholder="Enter last name"></asp:TextBox>
+                <asp:TextBox ID="txtLastNameName" runat="server" CssClass="form-control-custom" placeholder="Enter last name"></asp:TextBox>
             </div>
 
             <div class="form-group">
                 <asp:Label ID="label5" runat="server" Text="Address" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtAdd" runat="server" CssClass="form-control-custom" placeholder="Enter address"></asp:TextBox>
+                <asp:TextBox ID="txtAddress" runat="server" CssClass="form-control-custom" placeholder="Enter address"></asp:TextBox>
             </div>
 
             <div class="form-group">
                 <asp:Label ID="label6" runat="server" Text="Email" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control-custom" TextMode="Email" placeholder="Enter email address"></asp:TextBox>
+                <asp:TextBox ID="txtEmailail" runat="server" CssClass="form-control-custom" TextMode="Email" placeholder="Enter email address"></asp:TextBox>
                 
-                    <asp:RegularExpressionValidator ID="re_Email" runat="server" ErrorMessage="RegularExpressionValidator" ControlToValidate="txtEmail" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"></asp:RegularExpressionValidator>
+                    <asp:RegularExpressionValidator ID="re_Email" runat="server" ErrorMessage="RegularExpressionValidator" ControlToValidate="txtEmailail" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"></asp:RegularExpressionValidator>
             </div>
             
                                       
 
             <div class="form-group">
                 <asp:Label ID="label7" runat="server" Text="Phone" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control-custom" placeholder="Enter phone number" EnableTheming="False" ></asp:TextBox>
-                <asp:RequiredFieldValidator ID="rfvPhone" runat="server" ErrorMessage="Phone number is required." ControlToValidate="txtPhone" ForeColor="#ff4c3b" Display="Dynamic"></asp:RequiredFieldValidator>
-                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="Must be exactly 10 digits." ControlToValidate="txtPhone" ValidationExpression="^\d{10}$" ForeColor="#ff4c3b" Display="Dynamic"></asp:RegularExpressionValidator>
+                <asp:TextBox ID="txtPhoneone" runat="server" CssClass="form-control-custom" placeholder="Enter phone number" EnableTheming="False" ></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvPhone" runat="server" ErrorMessage="Phone number is required." ControlToValidate="txtPhoneone" ForeColor="#ff4c3b" Display="Dynamic"></asp:RequiredFieldValidator>
+                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="Must be exactly 10 digits." ControlToValidate="txtPhoneone" ValidationExpression="^\d{10}$" ForeColor="#ff4c3b" Display="Dynamic"></asp:RegularExpressionValidator>
             </div>
          
        

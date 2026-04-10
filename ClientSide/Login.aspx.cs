@@ -8,7 +8,7 @@ using System.Data;
 
 public partial class Login : System.Web.UI.Page
 {
-    private localhost.Service my_service = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
 
     protected void Page_Load(object sender, EventArgs e)
@@ -16,7 +16,7 @@ public partial class Login : System.Web.UI.Page
       
         if (!IsPostBack)
         {
-            string message = "alert('You are Loged out');"; //àéôåñ
+            string message = "alert('You are Loged out');"; //ï¿½ï¿½ï¿½ï¿½ï¿½
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", message, true); //
             Session["status"] = "-1";
             Session["data"] = null;
@@ -25,18 +25,18 @@ public partial class Login : System.Web.UI.Page
 
     }
 
-    protected void ValidateUserLogin(object sender, EventArgs e)
+    protected void AttemptLogin(object sender, EventArgs e)
     {
-        string user = txtuser.Text;
-        string pass = txtpass.Text;
+        string user = txtUsername.Text;
+        string pass = txtPassword.Text;
         bool choice = true;
 
-        if (drpChoice.Text.Equals("admin")) //úôøéè
+        if (drpChoice.Text.Equals("admin")) //ï¿½ï¿½ï¿½ï¿½ï¿½
             choice = false;
 
-        DataTable dt = my_service.Login(user, pass, choice); //èáìä
+        DataTable dt = backendService.Login(user, pass, choice); //ï¿½ï¿½ï¿½ï¿½
 
-        if (dt.Rows.Count > 0) //éù îùúîù
+        if (dt.Rows.Count > 0) //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
         {
             Session["data"] = dt;
             if (drpChoice.Text.Equals("admin"))
@@ -55,9 +55,9 @@ public partial class Login : System.Web.UI.Page
         {
             string message = "alert('You are not welcome');";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", message, true);
-            txtpass.Text = String.Empty;
-            txtuser.Text = String.Empty;
-            txtuser.Focus();
+            txtPassword.Text = String.Empty;
+            txtUsername.Text = String.Empty;
+            txtUsername.Focus();
         }
     }
 

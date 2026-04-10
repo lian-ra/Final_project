@@ -251,7 +251,7 @@
             </HeaderTemplate>
             <ItemTemplate>
                 <div class="product-card">
-                    <img src="<%# ResolveUrl(Eval("Picture").ToString().StartsWith("~/") ? Eval("Picture").ToString() : "~/" + Eval("Picture").ToString()) %>" class="product-image" onerror="this.src='/images/default-product.png';" />
+                    <img src='<%# ResolveUrl(Eval("Picture").ToString().StartsWith("~/") ? Eval("Picture").ToString() : "~/" + Eval("Picture").ToString()) %>' alt='<%# Eval("Name") %>' class="product-image" onerror="this.src='/images/default-product.png';" />
                     <div class="product-name"><%# Eval("Name") %></div>
                     <div class="product-code">Item ID: <%# Eval("ProductId") %></div>
                     <div class="product-desc"><%# Eval("Description") %></div>

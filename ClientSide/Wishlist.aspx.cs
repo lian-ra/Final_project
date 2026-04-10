@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 
 public partial class Wishlist : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -82,11 +82,11 @@ public partial class Wishlist : System.Web.UI.Page
             {
                 if (action == "add")
                 {
-                    myService.AddToWishlist(username, movieId);
+                    backendService.AddToWishlist(username, movieId);
                 }
                 else if (action == "remove")
                 {
-                    myService.RemoveFromWishlist(username, movieId);
+                    backendService.RemoveFromWishlist(username, movieId);
                 }
             }
             catch (Exception ex)
@@ -109,7 +109,7 @@ public partial class Wishlist : System.Web.UI.Page
 
         try
         {
-            DataTable dt = myService.GetWishlistMovies(username);
+            DataTable dt = backendService.GetWishlistMovies(username);
             phWishlist.Controls.Clear();
 
             if (dt != null && dt.Rows.Count > 0)

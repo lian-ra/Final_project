@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Update Profile" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="UpdateMyUser.aspx.cs" Inherits="UpdateMyUser" %>
+<%@ Page Title="Update Profile" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="UpdateMyUser.aspx.cs" Inherits="UpdateMyUser" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -111,28 +111,28 @@
 
             <div class="form-group">
                 <asp:Label ID="Label1" runat="server" Text="Username (ReadOnly)" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtUName" runat="server" CssClass="form-control" ReadOnly="true" style="background:#333; cursor:not-allowed;"></asp:TextBox>
+                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" ReadOnly="true" style="background:#333; cursor:not-allowed;"></asp:TextBox>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <asp:Label ID="Label3" runat="server" Text="First Name" CssClass="form-label"></asp:Label>
-                    <asp:TextBox ID="txtFName" runat="server" CssClass="form-control"></asp:TextBox>
+                    <asp:TextBox ID="txtFirstName" runat="server" CssClass="form-control"></asp:TextBox>
                 </div>
                 <div class="form-group">
                     <asp:Label ID="Label4" runat="server" Text="Last Name" CssClass="form-label"></asp:Label>
-                    <asp:TextBox ID="txtLName" runat="server" CssClass="form-control"></asp:TextBox>
+                    <asp:TextBox ID="txtLastName" runat="server" CssClass="form-control"></asp:TextBox>
                 </div>
             </div>
 
             <div class="form-group">
                 <asp:Label ID="Label2" runat="server" Text="Password" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtPass" runat="server" CssClass="form-control"></asp:TextBox>
+                <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control"></asp:TextBox>
             </div>
 
             <div class="form-group">
                 <asp:Label ID="Label5" runat="server" Text="Address" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtAdd" runat="server" CssClass="form-control"></asp:TextBox>
+                <asp:TextBox ID="txtAddress" runat="server" CssClass="form-control"></asp:TextBox>
             </div>
 
             <div class="form-row">

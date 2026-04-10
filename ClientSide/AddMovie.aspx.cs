@@ -9,7 +9,7 @@ using System.Data;
 
 public partial class AddMovie : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -122,7 +122,7 @@ public partial class AddMovie : System.Web.UI.Page
                     newMovie.Poster = "images/uploads/slider1.jpg";
                 }
 
-                myService.AddMovie(newMovie);
+                backendService.AddMovie(newMovie);
 
                 ShowMessage("Movie added successfully!", true);
                 ClearForm();

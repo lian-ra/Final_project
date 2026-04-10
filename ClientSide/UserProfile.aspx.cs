@@ -1,10 +1,10 @@
-ï»¿using System;
+using System;
 using System.Data;
 using System.Web.UI;
 
 public partial class UserProfile : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
     private string currentUser; // The person logged in
     private string profileUser; // The person being viewed
 
@@ -51,13 +51,13 @@ public partial class UserProfile : System.Web.UI.Page
     {
         try
         {
-            int followers = myService.GetFollowersCount(profileUser);
-            int following = myService.GetFollowingCount(profileUser);
+            int followers = backendService.GetFollowersCount(profileUser);
+            int following = backendService.GetFollowingCount(profileUser);
 
             lblFollowersCount.Text = followers.ToString();
             lblFollowingCount.Text = following.ToString();
 
-            if (currentUser == profileUser) //×”×¤×¨×•×¤×™×œ ×©×œ× ×• ×•×”×¤×¨×•×¤×™×œ ×©×ž×‘×§×¨×™×
+            if (currentUser == profileUser) //äôøåôéì ùìðå åäôøåôéì ùîá÷øéí
             {
                 btnFollow.Visible = false;
                 btnEditProfile.Visible = true;
@@ -66,11 +66,11 @@ public partial class UserProfile : System.Web.UI.Page
             {
                 btnEditProfile.Visible = false;
                 btnFollow.Visible = true;
-                bool isFollowing = myService.IsFollowing(currentUser, profileUser);
+                bool isFollowing = backendService.IsFollowing(currentUser, profileUser);
                 if (isFollowing)
                 {
                     btnFollow.Text = "Unfollow";
-                    btnFollow.CssClass = "btn-follow btn-unfollow"; //×¢×™×¦×•×‘ ×ž×©×ª× ×”
+                    btnFollow.CssClass = "btn-follow btn-unfollow"; //òéöåá îùúðä
                 }
                 else
                 {
@@ -88,11 +88,11 @@ public partial class UserProfile : System.Web.UI.Page
         {
             if (btnFollow.Text == "Follow")
             {
-                myService.FollowUser(currentUser, profileUser);
+                backendService.FollowUser(currentUser, profileUser);
             }
             else
             {
-                myService.UnfollowUser(currentUser, profileUser);
+                backendService.UnfollowUser(currentUser, profileUser);
             }
             LoadFollowData();
         }
@@ -102,12 +102,12 @@ public partial class UserProfile : System.Web.UI.Page
     protected void btnEditProfile_Click(object sender, EventArgs e)
     {
         // Populate fields
-        DataTable dt = myService.SearchUser(currentUser, "username");
+        DataTable dt = backendService.SearchUser(currentUser, "username");
         if (dt != null && dt.Rows.Count > 0)
         {
-            DataRow row = dt.Rows[0];//×ž×›×™×œ×” ××ª ×›×œ ×”×ž×™×“×¢ ×¢×œ ×”×ž×©×ª×ž×© ×”×¡×¤×¦×™×¤×™.
-            txtEditFName.Text = row["FName"].ToString();
-            txtEditLName.Text = row["LName"].ToString();
+            DataRow row = dt.Rows[0];//îëéìä àú ëì äîéãò òì äîùúîù äñôöéôé.
+            txtEditFirstName.Text = row["FName"].ToString();
+            txtEditLastName.Text = row["LName"].ToString();
             txtEditEmail.Text = row["email"].ToString();
             txtEditPass.Text = row["pass"].ToString();
             
@@ -129,7 +129,7 @@ public partial class UserProfile : System.Web.UI.Page
             
             // Handle Pic
             string picName = "Profile.jpg"; // default
-            DataTable dt = myService.SearchUser(currentUser, "username");
+            DataTable dt = backendService.SearchUser(currentUser, "username");
             if (dt != null && dt.Rows.Count > 0)
             {
                 if (dt.Columns.Contains("pic")) picName = dt.Rows[0]["pic"].ToString();
@@ -138,16 +138,16 @@ public partial class UserProfile : System.Web.UI.Page
             if (fuProfilePic.HasFile)
             {
                 string fileName = System.IO.Path.GetFileName(fuProfilePic.FileName);
-                string savePath = Server.MapPath("~/MyPics/") + fileName; //×›×“×™ ×œ×“×¢×ª ××™×¤×” × ×ž×¦× ×”×§×•×‘×¥- ×ª×™×§×™×™×”
-                fuProfilePic.SaveAs(savePath); //×©×ž×™×¨×” ×‘×ª×™×§×™×™×”
-                picName = fileName;//×©×ž×™×¨×” ×‘×›×ª×•×‘×ª ×©×œ ×”×§×•×‘×¥
+                string savePath = Server.MapPath("~/MyPics/") + fileName; //ëãé ìãòú àéôä ðîöà ä÷åáõ- úé÷ééä
+                fuProfilePic.SaveAs(savePath); //ùîéøä áúé÷ééä
+                picName = fileName;//ùîéøä áëúåáú ùì ä÷åáõ
             }
 
             // Create User object
             localhost.Users user = new localhost.Users();
             user.UserN = currentUser;
-            user.NameF = txtEditFName.Text;
-            user.LastN = txtEditLName.Text;
+            user.NameF = txtEditFirstName.Text;
+            user.LastN = txtEditLastName.Text;
             user.Email = txtEditEmail.Text;
             user.Pass = txtEditPass.Text;
             user.Pic = picName;
@@ -164,7 +164,7 @@ public partial class UserProfile : System.Web.UI.Page
             }
 
             // Update
-            DataTable dtNew = myService.UpdateUser(user);
+            DataTable dtNew = backendService.UpdateUser(user);
             
             // Update Session
             Session["data"] = dtNew;
@@ -181,22 +181,22 @@ public partial class UserProfile : System.Web.UI.Page
 
     private void LoadUserProfile(string username)
     {
-        DataTable dt = myService.SearchUser(username, "username");
+        DataTable dt = backendService.SearchUser(username, "username");
         if (dt != null && dt.Rows.Count > 0)
         {
-            DataRow row = dt.Rows[0];  //×ž×›×™×œ×” ××ª ×›×œ ×”×ž×™×“×¢ ×¢×œ ×”×ž×©×ª×ž×© ×”×¡×¤×¦×™×¤×™.
+            DataRow row = dt.Rows[0];  //îëéìä àú ëì äîéãò òì äîùúîù äñôöéôé.
             lblUsername.Text = row["User"].ToString();
             lblName.Text = row["FName"] + " " + row["LName"];
             lblEmail.Text = row["email"].ToString();
 
             string pic = "Profile.jpg";
             if (dt.Columns.Contains("pic")) pic = row["pic"].ToString();
-            else if (row.ItemArray.Length > 9) // ×‘×“×™×§×ª ×’×™×‘×•×™
-                                               //×ž×¡×™×§×” ×©×”×ª×ž×•× ×” × ×ž×¦××ª ×‘×ž×™×§×•× ×§×‘×•×¢ ×ž×¨××©.
+            else if (row.ItemArray.Length > 9) // áãé÷ú âéáåé
+                                               //îñé÷ä ùäúîåðä ðîöàú áîé÷åí ÷áåò îøàù.
                 pic = row[9].ToString();
 
             if (string.IsNullOrEmpty(pic)) pic = "Profile.jpg";
-            imgProfile.ImageUrl = "~/MyPics/" + pic; //×©×ž×™×¨×” ×‘×›×ª×•×‘×ª ×©×œ ×”×§×•×‘×¥
+            imgProfile.ImageUrl = "~/MyPics/" + pic; //ùîéøä áëúåáú ùì ä÷åáõ
         }
     }
 
@@ -204,7 +204,7 @@ public partial class UserProfile : System.Web.UI.Page
     {
         try
         {
-            DataTable dtWishlist = myService.GetWishlistMovies(username);
+            DataTable dtWishlist = backendService.GetWishlistMovies(username);
 
             if (dtWishlist != null && dtWishlist.Rows.Count > 0)
             {
@@ -241,7 +241,7 @@ public partial class UserProfile : System.Web.UI.Page
     {
         try
         {
-            DataTable dtWatched = myService.GetWatchedMovies(username);
+            DataTable dtWatched = backendService.GetWatchedMovies(username);
 
             if (dtWatched != null && dtWatched.Rows.Count > 0)
             {

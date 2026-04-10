@@ -1,4 +1,4 @@
-﻿<%@ Page Title="User Profile" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true"
+<%@ Page Title="User Profile" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true"
     CodeFile="UserProfile.aspx.cs" Inherits="UserProfile" %>
 
     <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -419,11 +419,11 @@
 
                 <div class="form-group">
                     <label>First Name</label>
-                    <asp:TextBox ID="txtEditFName" runat="server" CssClass="form-control"></asp:TextBox>
+                    <asp:TextBox ID="txtEditFirstName" runat="server" CssClass="form-control"></asp:TextBox>
                 </div>
                 <div class="form-group">
                     <label>Last Name</label>
-                    <asp:TextBox ID="txtEditLName" runat="server" CssClass="form-control"></asp:TextBox>
+                    <asp:TextBox ID="txtEditLastName" runat="server" CssClass="form-control"></asp:TextBox>
                 </div>
                 <div class="form-group">
                     <label>Email</label>

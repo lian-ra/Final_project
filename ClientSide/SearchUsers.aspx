@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Search Users" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true"
+<%@ Page Title="Search Users" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true"
     CodeFile="SearchUsers.aspx.cs" Inherits="SearchUsers" %>
 
     <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
@@ -300,11 +300,11 @@
 
                         <div class="input-group">
                             <label>First Name</label>
-                            <asp:TextBox ID="TxtName" runat="server" CssClass="modal-control"></asp:TextBox>
+                            <asp:TextBox ID="TxtFirstName" runat="server" CssClass="modal-control"></asp:TextBox>
                         </div>
                         <div class="input-group">
                             <label>Last Name</label>
-                            <asp:TextBox ID="TxtLast" runat="server" CssClass="modal-control"></asp:TextBox>
+                            <asp:TextBox ID="TxtLastName" runat="server" CssClass="modal-control"></asp:TextBox>
                         </div>
                         <div class="input-group">
                             <label>Email</label>

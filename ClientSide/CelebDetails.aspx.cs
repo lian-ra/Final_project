@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 
 public partial class CelebDetails : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -37,7 +37,7 @@ public partial class CelebDetails : System.Web.UI.Page
         try
         {
             // We can reuse SearchCelebs by name
-            DataTable dt = myService.SearchCelebs(name, "all");
+            DataTable dt = backendService.SearchCelebs(name, "all");
             phCeleb.Controls.Clear();
 
             if (dt == null || dt.Rows.Count == 0)
@@ -59,7 +59,7 @@ public partial class CelebDetails : System.Web.UI.Page
             }
 
             // Find movies where this celeb appears in the Actors column
-            DataTable moviesDt = myService.SearchMovies(celebName, "");
+            DataTable moviesDt = backendService.SearchMovies(celebName, "");
             string moviesHtml = "";
             if (moviesDt != null && moviesDt.Rows.Count > 0)
             {

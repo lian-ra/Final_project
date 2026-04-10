@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -9,8 +9,8 @@ using System.Web.UI.WebControls;
 public partial class UpdateMyUser : System.Web.UI.Page
 {
     private DataTable dtUser;
-    private localhost.Users user = new localhost.Users(); //××•×‘×™×™×§×˜ ×—×“×©
-    private localhost.Service my_service = new localhost.Service();//×§×¨×™××” ×œ×¤×¢×•×œ×•×ª ×”×§×™×™×ž×•×ª ×‘×©×¨×ª
+    private localhost.Users user = new localhost.Users(); //àåáéé÷è çãù
+    private localhost.Service backendService = new localhost.Service();//÷øéàä ìôòåìåú ä÷ééîåú áùøú
     private string pic;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -43,11 +43,11 @@ public partial class UpdateMyUser : System.Web.UI.Page
             }
 
             // Load data into fields
-            txtUName.Text = dtUser.Rows[0]["User"].ToString();
-            txtPass.Text = dtUser.Rows[0]["pass"].ToString();
-            txtFName.Text = dtUser.Rows[0]["FName"].ToString();
-            txtLName.Text = dtUser.Rows[0]["LName"].ToString();
-            txtAdd.Text = dtUser.Rows[0]["address"].ToString();
+            txtUsername.Text = dtUser.Rows[0]["User"].ToString();
+            txtPassword.Text = dtUser.Rows[0]["pass"].ToString();
+            txtFirstName.Text = dtUser.Rows[0]["FName"].ToString();
+            txtLastName.Text = dtUser.Rows[0]["LName"].ToString();
+            txtAddress.Text = dtUser.Rows[0]["address"].ToString();
             txtEmail.Text = dtUser.Rows[0]["email"].ToString();
 
             string phoneValue = dtUser.Rows[0]["phone"].ToString();
@@ -63,7 +63,7 @@ public partial class UpdateMyUser : System.Web.UI.Page
                 pic = dtUser.Rows[0][9].ToString();
             }
 
-            //×”×’×“×¨×” ×ž××™×–×” ×›×ª×•×‘×ª ×œ×”×‘×™× ××ª ×”×ª×ž×•× ×”
+            //äâãøä îàéæä ëúåáú ìäáéà àú äúîåðä
             img.ImageUrl = "~/MyPics/" + (string.IsNullOrEmpty(pic) ? "Profile.jpg" : pic);
         }
     }
@@ -75,13 +75,13 @@ public partial class UpdateMyUser : System.Web.UI.Page
             dtUser = (DataTable)Session["data"];
         }
 
-        user.UserN = txtUName.Text;
-        user.Pass = txtPass.Text;
-        user.Fulladdres = txtAdd.Text;
+        user.UserN = txtUsername.Text;
+        user.Pass = txtPassword.Text;
+        user.Fulladdres = txtAddress.Text;
         user.Email = txtEmail.Text;
         user.PhoneN = txtPhone.Text;
-        user.NameF = txtFName.Text;
-        user.LastN = txtLName.Text;
+        user.NameF = txtFirstName.Text;
+        user.LastN = txtLastName.Text;
 
         // Retrieve existing pic if not changing
         if (dtUser != null && dtUser.Rows.Count > 0)
@@ -102,7 +102,7 @@ public partial class UpdateMyUser : System.Web.UI.Page
         user.Pic = pic;
 
         // Perform Update
-        dtUser = my_service.UpdateUser(user);
+        dtUser = backendService.UpdateUser(user);
         Session["data"] = dtUser;
 
         // Show success and redirect

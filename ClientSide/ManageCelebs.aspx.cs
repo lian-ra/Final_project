@@ -8,7 +8,7 @@ using System.Data;
 
 public partial class ManageCelebs : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -47,7 +47,7 @@ public partial class ManageCelebs : System.Web.UI.Page
             celeb.Photo = string.IsNullOrEmpty(photo) ? "images/uploads/ava1.jpg" : photo;
             celeb.Bio = bio;
 
-            myService.AddCeleb(celeb);
+            backendService.AddCeleb(celeb);
 
             ShowMessage("Celebrity added successfully.", true);
             ClearForm();
@@ -94,11 +94,11 @@ public partial class ManageCelebs : System.Web.UI.Page
             DataTable dt;
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                dt = myService.SearchCelebs(searchTerm, "all");
+                dt = backendService.SearchCelebs(searchTerm, "all");
             }
             else
             {
-                dt = myService.GetAllCelebs();
+                dt = backendService.GetAllCelebs();
             }
 
             grdCelebs.DataSource = dt;
@@ -164,7 +164,7 @@ public partial class ManageCelebs : System.Web.UI.Page
             celeb.Photo = photo;
             celeb.Bio = bio;
 
-            myService.UpdateCeleb(celeb);
+            backendService.UpdateCeleb(celeb);
 
             grdCelebs.EditIndex = -1;
             BindCelebsGrid();
@@ -181,7 +181,7 @@ public partial class ManageCelebs : System.Web.UI.Page
         try
         {
             int celebId = (int)grdCelebs.DataKeys[e.RowIndex].Value;
-            myService.DeleteCeleb(celebId);
+            backendService.DeleteCeleb(celebId);
             BindCelebsGrid();
             ShowMessage("Celebrity deleted successfully.", true);
         }

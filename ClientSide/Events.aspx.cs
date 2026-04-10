@@ -5,7 +5,7 @@ using System.Web.UI.WebControls;
 
 public partial class Events : System.Web.UI.Page
 {
-    private localhost.Service myService = new localhost.Service();
+    private localhost.Service backendService = new localhost.Service();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -49,7 +49,7 @@ public partial class Events : System.Web.UI.Page
     {
         try
         {
-            DataTable dt = myService.GetAllMovies();
+            DataTable dt = backendService.GetAllMovies();
             ddlMovie.Items.Clear();
             ddlMovie.Items.Add(new ListItem("-- Select a Movie --", "0"));
 
@@ -76,32 +76,32 @@ public partial class Events : System.Web.UI.Page
     {
         try
         {
-            myService.CreateEventsTable();
+            backendService.CreateEventsTable();
             string filter = Request.QueryString["filter"];
             string username = GetLoggedInUsername();
             DataTable dt = null;
 
             if (filter == "upcoming")
             {
-                dt = myService.GetUpcomingEvents();
+                dt = backendService.GetUpcomingEvents();
             }
             else if (filter == "myevents" && !string.IsNullOrEmpty(username))
             {
-                dt = myService.GetEventsByUser(username);
+                dt = backendService.GetEventsByUser(username);
             }
             else if (filter == "subscribed" && !string.IsNullOrEmpty(username))
             {
-                dt = myService.GetUserSubscriptions(username);
+                dt = backendService.GetUserSubscriptions(username);
             }
             else if (!string.IsNullOrEmpty(Request.QueryString["search"]))
             {
                 string location = Request.QueryString["search"];
-                dt = myService.GetEventsByLocation(location);
+                dt = backendService.GetEventsByLocation(location);
                 txtSearchLocation.Text = location;
             }
             else
             {
-                dt = myService.GetAllEvents();
+                dt = backendService.GetAllEvents();
             }
 
             phEvents.Controls.Clear();
@@ -134,7 +134,7 @@ public partial class Events : System.Web.UI.Page
                 }
 
                 // Get subscriber count
-                DataTable subscribers = myService.GetEventSubscribers(eventId);
+                DataTable subscribers = backendService.GetEventSubscribers(eventId);
                 int subscriberCount = subscribers != null ? subscribers.Rows.Count : 0;
 
                 string statusClass = "status-" + eventStatus.ToLower();
@@ -281,7 +281,7 @@ public partial class Events : System.Web.UI.Page
             string status = ddlStatus.SelectedValue;
             string location = txtLocation.Text;
 
-            int eventId = myService.CreateEvent(username, movieId, txtEventDate.Text, txtStartTime.Text, price, location, status);
+            int eventId = backendService.CreateEvent(username, movieId, txtEventDate.Text, txtStartTime.Text, price, location, status);
 
             if (eventId > 0) //אם יש אירועים
             {
