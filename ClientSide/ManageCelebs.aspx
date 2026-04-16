@@ -1,4 +1,5 @@
-<%@ Page Title="Manage Celebs" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="ManageCelebs.aspx.cs" Inherits="ManageCelebs" %>
+<%@ Page Title="Manage Celebs" Language="C#" MasterPageFile="~/Design.master" 
+    AutoEventWireup="true" CodeFile="ManageCelebs.aspx.cs" Inherits="ManageCelebs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">
@@ -19,7 +20,6 @@
             letter-spacing: 1px;
         }
 
-        /* Form Card Styling */
         .manage-form {
             background: rgba(30, 30, 30, 0.9);
             border-radius: 12px;
@@ -40,7 +40,6 @@
             font-weight: 500;
         }
 
-        /* Input Fields */
         .form-control {
             width: 100%;
             padding: 12px 15px;
@@ -59,7 +58,6 @@
             box-shadow: 0 0 8px rgba(255, 76, 59, 0.2);
         }
 
-        /* Layout for form rows */
         .form-row {
             display: flex;
             gap: 20px;
@@ -70,7 +68,6 @@
             flex: 1;
         }
 
-        /* Buttons */
         .manage-buttons {
             display: flex;
             justify-content: flex-end;
@@ -107,7 +104,6 @@
             background-color: #555;
         }
 
-        /* Search Bar */
         .search-container {
             margin-bottom: 20px;
             display: flex;
@@ -124,7 +120,6 @@
             color: white;
         }
 
-        /* GridView Styling */
         .grid-container {
             overflow-x: auto;
         }
@@ -177,7 +172,6 @@
             text-decoration: underline;
         }
 
-        /* Messages */
         .message-label {
             display: block;
             margin-top: 15px;
@@ -200,7 +194,8 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="txtCelebName">Name</label>
-                    <asp:TextBox ID="txtCelebName" runat="server" CssClass="form-control" placeholder="Enter celebrity name" />
+                    <asp:TextBox ID="txtCelebName" runat="server" CssClass="form-control" 
+                        placeholder="Enter celebrity name" />
                 </div>
                 <div class="form-group">
                     <label for="ddlCelebRole">Role</label>
@@ -214,29 +209,38 @@
 
             <div class="form-group" style="margin-bottom: 20px;">
                 <label for="txtPhotoUrl">Photo URL</label>
-                <asp:TextBox ID="txtPhotoUrl" runat="server" CssClass="form-control" placeholder="images/uploads/ava1.jpg" />
+                <asp:TextBox ID="txtPhotoUrl" runat="server" CssClass="form-control" 
+                    placeholder="images/uploads/ava1.jpg" />
             </div>
 
             <div class="form-group" style="margin-bottom: 20px;">
                 <label for="txtBio">Bio</label>
-                <asp:TextBox ID="txtBio" runat="server" TextMode="MultiLine" Rows="4" CssClass="form-control" placeholder="Enter short bio..." />
+                <asp:TextBox ID="txtBio" runat="server" TextMode="MultiLine" Rows="4"
+                    CssClass="form-control" placeholder="Enter short bio..." />
             </div>
 
             <div class="manage-buttons">
-                <asp:Button ID="btnClear" runat="server" Text="Clear Form" CssClass="btn-custom btn-secondary" OnClick="btnClear_Click" />
-                <asp:Button ID="btnAddCeleb" runat="server" Text="Add Celebrity" CssClass="btn-custom btn-primary" OnClick="btnAddCeleb_Click" />
+                <asp:Button ID="btnClear" runat="server" Text="Clear Form" 
+                    CssClass="btn-custom btn-secondary" OnClick="btnClear_Click" />
+                <asp:Button ID="btnAddCeleb" runat="server" Text="Add Celebrity"
+                    CssClass="btn-custom btn-primary" OnClick="btnAddCeleb_Click" />
             </div>
 
-            <asp:Label ID="lblManageMessage" runat="server" Visible="false" CssClass="message-label"></asp:Label>
+
+            <asp:Label ID="lblManageMessage" runat="server" Visible="false"
+                CssClass="message-label"></asp:Label>
         </div>
 
         <div class="search-container">
-            <asp:TextBox ID="txtSearch" runat="server" CssClass="search-box" placeholder="Search celebrities..."></asp:TextBox>
-            <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn-custom btn-primary" OnClick="btnSearch_Click" />
+            <asp:TextBox ID="txtSearch" runat="server" CssClass="search-box" 
+                placeholder="Search celebrities..."></asp:TextBox>
+            <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn-custom btn-primary"
+                OnClick="btnSearch_Click" />
         </div>
 
         <div class="grid-container">
-            <asp:GridView ID="grdCelebs" runat="server" AutoGenerateColumns="False" CssClass="manage-grid"
+            <asp:GridView ID="grdCelebs" runat="server" AutoGenerateColumns="False"
+                CssClass="manage-grid"
                 DataKeyNames="CelebId"
                 OnRowEditing="grdCelebs_RowEditing"
                 OnRowCancelingEdit="grdCelebs_RowCancelingEdit"

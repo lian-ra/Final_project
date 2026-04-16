@@ -8,14 +8,17 @@ public partial class MovieDetails : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה מוודאת שהמשתמש מחובר, וטוענת את פרטי הסרט,
+    //התגובות ורשימות המשתמשים שצפו בו או הוסיפו אותו למשאלוֹת.
     protected void Page_Load(object sender, EventArgs e)
     {
                 string status = Session["status"] as string;
         if (status != "1" && status != "2")
         {
-            string script = @"alert('You must be logged in to view this page.'); setTimeout(function() {window.location = 'login.aspx';}, 10);";
+            string script = @"alert('You must be logged in to view this page.');
+                  setTimeout(function() {window.location = 'login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
-            return; // Stop further execution
+            return; 
         }
 
         if (!IsPostBack)
@@ -24,7 +27,7 @@ public partial class MovieDetails : System.Web.UI.Page
             LoadMovie();
             LoadComments();
             
-            // Load Watched By Users
+            // Load Watched By Use
             int movieId = GetCurrentMovieId();
             if (movieId > 0)
             {
@@ -61,15 +64,18 @@ public partial class MovieDetails : System.Web.UI.Page
         }
     }
 
+    //הפעולה בודקת איזה "אקשן" המשתמש ביקש לעשות- כמו הוספה או הסרה מרשימת הסרטים שראה,
+    //מבצעת את השינוי במסד הנתונים ומעבירה אותו חזרה לדף המתאים.
     private void HandleActions()
     {
         string username = GetLoggedInUsername();
         string action = Request.QueryString["action"];
         string movieIdStr = Request.QueryString["movieId"];
-        string ret = Request.QueryString["ret"];
+        string ret = Request.QueryString["ret"]; //כדי לדעת לאיזה דף להחזיר את המשתמש אחרי שהוא מבצע פעולה
         int movieId;
 
-        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(action) && int.TryParse(movieIdStr, out movieId) && movieId > 0)
+        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(action) &&
+            int.TryParse(movieIdStr, out movieId) && movieId > 0)
         {
             string redirectUrl = ret == "home" ? "Home.aspx" : "MovieDetails.aspx?movieId=" + movieId;
 
@@ -86,6 +92,8 @@ public partial class MovieDetails : System.Web.UI.Page
         }
     }
 
+    //הפעולה בודקת אם המשתמש מחובר- סטטוס 1
+    //Sessionואז שולפת ומחזירה את שם המשתמש שלו מתוך הנתונים שנשמרו ב
     private string GetLoggedInUsername()
     {
         try
@@ -111,6 +119,8 @@ public partial class MovieDetails : System.Web.UI.Page
         return null;
     }
 
+    //הפעולה בודקת אם סרט מסוים נמצא ברשימת המשאלות של המשתמש
+    //על ידי מעבר על כל הרשימה שלו והשוואת המספר מזהה
     private bool IsMovieInWishlist(int movieId)
     {
         try
@@ -136,10 +146,11 @@ public partial class MovieDetails : System.Web.UI.Page
         catch
         {
         }
-
         return false;
     }
 
+    //Backend הפעולה בודקת מול השירות
+    //האם המשתמש המחובר כבר צפה בסרט ספציפי ומחזירה אמת או שקר
     private bool IsMovieWatched(int movieId)
     {
          try
@@ -151,6 +162,7 @@ public partial class MovieDetails : System.Web.UI.Page
         catch { return false; }
     }
 
+    //הפעולה שולפת את המספר מזהה לסרט הנוכחי מתוך כתובת הדף ומחזירה אותו כמספר
     private int GetCurrentMovieId()
     {
         int movieId;
@@ -158,20 +170,21 @@ public partial class MovieDetails : System.Web.UI.Page
         {
             return 0;
         }
-
         return movieId;
     }
 
+    //HTMLהפעולה הופכת דירוג מספרי מתוך 10 לתצוגה חזותית של כוכבים ב
+    //עם חישוב של כמה כוכבים מלאים, חצויים או ריקים להציג מתוך החמישה.
     private string GenerateStarsHtml(string ratingStr)
     {
         double rating = 0;
         double.TryParse(ratingStr, out rating);
 
-        // Rating is out of 10 — map to 5 stars
+        //to 5 stars
         double stars = rating / 2.0;
         int fullStars = (int)Math.Floor(stars);
         bool halfStar = (stars - fullStars) >= 0.25 && (stars - fullStars) < 0.75;
-        // If remainder >= 0.75 round up to a full star
+        // If 0.75 it round up to a full star
         if ((stars - fullStars) >= 0.75) fullStars++;
         int emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
@@ -183,11 +196,14 @@ public partial class MovieDetails : System.Web.UI.Page
             sb.Append("<span class='star star-half'>&#9733;</span>");
         for (int i = 0; i < emptyStars; i++)
             sb.Append("<span class='star star-empty'>&#9733;</span>");
-        sb.AppendFormat("<span class='star-score'>{0}<span style='opacity:0.5;font-size:13px;'>/10</span></span>", ratingStr);
+        sb.AppendFormat("<span class='star-score'>{0}<span style='opacity:0.5;" +
+            "font-size:13px;'>/10</span></span>", ratingStr);
         sb.Append("</div>");
         return sb.ToString();
     }
 
+    //HTML הפעולה שולפת את כל פרטי הסרט מהמסד (כמו כותרת, תקציר, במאי ושחקנים), ובונה מהם מבנה של דף
+    //phDetails ומציגה אותו למשתמש בתוך הפקד
     private void LoadMovie()
     {
         int movieId;
@@ -197,7 +213,6 @@ public partial class MovieDetails : System.Web.UI.Page
             phDetails.Controls.Add(new LiteralControl("<div class='details-error'>Invalid movie.</div>"));
             return;
         }
-
         try
         {
             DataTable dt = backendService.GetMovieById(movieId);
@@ -208,11 +223,10 @@ public partial class MovieDetails : System.Web.UI.Page
                 phDetails.Controls.Add(new LiteralControl("<div class='details-error'>Movie not found.</div>"));
                 return;
             }
-
             DataRow row = dt.Rows[0];
-
             string title = row["Title"] != DBNull.Value ? row["Title"].ToString() : "Unknown";
-            string description = row["Description"] != DBNull.Value ? row["Description"].ToString() : "No description available.";
+            string description = row["Description"] != DBNull.Value ? row["Description"].ToString() :
+                "No description available.";
             string genre = row["Genre"] != DBNull.Value ? row["Genre"].ToString() : "";
             string director = row["Director"] != DBNull.Value ? row["Director"].ToString() : "";
             string actors = row["Actors"] != DBNull.Value ? row["Actors"].ToString() : "";
@@ -224,8 +238,6 @@ public partial class MovieDetails : System.Web.UI.Page
             {
                 poster = "~/" + poster;
             }
-
-            // Format actors as badges if comma-separated
             string actorsHtml = "";
             if (!string.IsNullOrWhiteSpace(actors))
             {
@@ -236,11 +248,11 @@ public partial class MovieDetails : System.Web.UI.Page
                     if (name.Length > 0)
                     {
                         string urlName = HttpUtility.UrlEncode(name);
-                        actorsHtml += "<a href='CelebDetails.aspx?name=" + urlName + "' class='actor-badge'>" + HttpUtility.HtmlEncode(name) + "</a>";
+                        actorsHtml += "<a href='CelebDetails.aspx?name=" + urlName + "' " +
+                            "class='actor-badge'>" + HttpUtility.HtmlEncode(name) + "</a>";
                     }
                 }
             }
-
             if (string.IsNullOrEmpty(actorsHtml))
             {
                 actorsHtml = HttpUtility.HtmlEncode(actors);
@@ -250,23 +262,25 @@ public partial class MovieDetails : System.Web.UI.Page
             string actionHtml;
             if (inWishlist)
             {
-                actionHtml = "<span class='actor-badge' style='background:#555;border-color:#555;color:#ddd;'>In wishlist</span>";
+                actionHtml = "<span class='actor-badge' style='background:#555;border-color:" +
+                    "#555;color:#ddd;'>In wishlist</span>";
             }
-
             else
             {
-                actionHtml = "<a href='Wishlist.aspx?action=add&movieId=" + movieId + "' class='btn-wishlist'>Add to wishlist</a>";
+                actionHtml = "<a href='Wishlist.aspx?action=add&movieId=" + 
+                    movieId + "' class='btn-wishlist'>Add to wishlist</a>";
             }
-
             bool isWatched = IsMovieWatched(movieId);
             string watchedHtml;
             if (isWatched)
             {
-                watchedHtml = "<a href='MovieDetails.aspx?action=removeFromWatched&movieId=" + movieId + "' class='btn-watched applied'>Watched</a>";
+                watchedHtml = "<a href='MovieDetails.aspx?action=removeFromWatched&movieId=" 
+                    + movieId + "' class='btn-watched applied'>Watched</a>";
             }
             else
             {
-                watchedHtml = "<a href='MovieDetails.aspx?action=addToWatched&movieId=" + movieId + "' class='btn-watched'>Mark as Watched</a>";
+                watchedHtml = "<a href='MovieDetails.aspx?action=addToWatched&movieId="
+                    + movieId + "' class='btn-watched'>Mark as Watched</a>";
             }
 
             string html = string.Format(@"<div class='details-layout'>
@@ -314,6 +328,8 @@ public partial class MovieDetails : System.Web.UI.Page
         }
     }
 
+    //HTML הפעולה מייצרת קוד
+    //שמציג 5 כוכבים עבור ביקורת, כאשר הכוכבים המלאים הם לפי הדירוג שהתקבל והשאר נשארים ריקים.
     private string GenerateReviewStarsHtml(int rating)
     {
         // Review rating is 1-5
@@ -330,6 +346,8 @@ public partial class MovieDetails : System.Web.UI.Page
         return sb.ToString();
     }
 
+    //הפעולה שולפת את כל התגובות והדירוגים שנכתבו על הסרט,
+    //הופכת אותם למבנה של רשימה מעוצבת ומציגה אותם בדף.
     private void LoadComments()
     {
         try
@@ -345,7 +363,8 @@ public partial class MovieDetails : System.Web.UI.Page
             DataTable dt = backendService.GetMovieComments(movieId);
             if (dt == null || dt.Rows.Count == 0)
             {
-                phComments.Controls.Add(new LiteralControl("<div class='comment-item'>No comments yet. Be the first to comment!</div>"));
+                phComments.Controls.Add(new LiteralControl("<div class='comment-item'>" +
+                    "No comments yet. Be the first to comment!</div>"));
                 return;
             }
 
@@ -358,12 +377,14 @@ public partial class MovieDetails : System.Web.UI.Page
                 {
                     int.TryParse(row["Rating"].ToString(), out rating);
                 }
-                string created = row["CreatedAt"] != DBNull.Value ? Convert.ToDateTime(row["CreatedAt"]).ToString("yyyy-MM-dd HH:mm") : "";
+                string created = row["CreatedAt"] != DBNull.Value ?
+                    Convert.ToDateTime(row["CreatedAt"]).ToString("yyyy-MM-dd HH:mm") : "";
 
                 string ratingStars = rating > 0 ? GenerateReviewStarsHtml(rating) : "";
 
                 string html = string.Format(
-                    "<div class='comment-item'><div class='comment-meta'><strong>{0}</strong>{1} &mdash; <span style='opacity:0.6'>{2}</span></div><div class='comment-text'>{3}</div></div>",
+                    "<div class='comment-item'><div class='comment-meta'><strong>{0}</strong>{1}" +
+                    " &mdash; <span style='opacity:0.6'>{2}</span></div><div class='comment-text'>{3}</div></div>",
                     HttpUtility.HtmlEncode(username),
                     ratingStars,
                     HttpUtility.HtmlEncode(created),
@@ -375,17 +396,20 @@ public partial class MovieDetails : System.Web.UI.Page
         }
         catch
         {
-            // Swallow comment loading errors to avoid breaking the page
         }
     }
 
+    //הפעולה בודקת אם המשתמש מחובר
+    //אם כן היא מציגה לו את הטופס להוספת תגובה, ואם לא
+    //היא מסתירה את הטופס ומציגה הודעה שצריך להתחבר כדי להגיב.
     private void SetupCommentFormVisibility()
     {
         string username = GetLoggedInUsername();
         if (string.IsNullOrEmpty(username))
         {
             pnlCommentForm.Visible = false;
-            phComments.Controls.Add(new LiteralControl("<div class='comment-item'>You must be logged in to add comments.</div>"));
+            phComments.Controls.Add(new LiteralControl("<div class='comment-item'>" +
+                "You must be logged in to add comments.</div>"));
         }
         else
         {
@@ -393,6 +417,9 @@ public partial class MovieDetails : System.Web.UI.Page
         }
     }
 
+
+    //הפעולה שומרת את התגובה והדירוג שהמשתמש הזין במסד הנתונים,
+    //ולאחר מכן מנקה את הטופס ומעדכנת את רשימת התגובות המוצגת בדף.
     protected void btnAddComment_Click(object sender, EventArgs e)
     {
         try

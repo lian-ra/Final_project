@@ -1,4 +1,5 @@
-<%@ Page Title="My Orders" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="MyOrders.aspx.cs" Inherits="MyOrders" %>
+<%@ Page Title="My Orders" Language="C#" MasterPageFile="~/Design.master"
+    AutoEventWireup="true" CodeFile="MyOrders.aspx.cs" Inherits="MyOrders" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <style type="text/css">
@@ -121,12 +122,19 @@
         <asp:Label ID="lblSuccess" runat="server" CssClass="success-msg" Visible="false"></asp:Label>
 
         <div style="display: flex; gap: 10px; margin-bottom: 25px; justify-content: center;">
-            <asp:TextBox ID="txtSearchOrders" runat="server" placeholder="Search order code, event name, or items..." style="padding: 10px; border-radius: 5px; border: 1px solid #444; background: #222; color: white; flex-grow: 1; max-width: 500px;"></asp:TextBox>
-            <asp:Button ID="btnSearchOrders" runat="server" Text="Search" style="padding: 10px 20px; border-radius: 5px; background: #ff4c3b; color: white; border: none; font-weight: bold; cursor: pointer;" OnClick="btnSearchOrders_Click" formnovalidate="formnovalidate" />
-            <asp:Button ID="btnClearSearch" runat="server" Text="Clear" style="padding: 10px 20px; border-radius: 5px; background: #555; color: white; border: none; font-weight: bold; cursor: pointer;" OnClick="btnClearSearch_Click" formnovalidate="formnovalidate" />
+            <asp:TextBox ID="txtSearchOrders" runat="server" placeholder="Search order code, 
+                event name, or items..." style="padding: 10px; border-radius: 5px; border: 1px 
+             solid #444; background: #222; color: white; flex-grow: 1; max-width: 500px;"></asp:TextBox>
+            <asp:Button ID="btnSearchOrders" runat="server" Text="Search" style="padding: 10px 20px;
+         border-radius: 5px; background: #ff4c3b; color: white; border: none; font-weight: bold; 
+         cursor: pointer;" OnClick="btnSearchOrders_Click" formnovalidate="formnovalidate" />
+            <asp:Button ID="btnClearSearch" runat="server" Text="Clear" style="padding: 10px 20px; 
+       border-radius: 5px; background: #555; color: white; border: none; font-weight: bold;
+       cursor: pointer;" OnClick="btnClearSearch_Click" formnovalidate="formnovalidate" />
         </div>
 
-        <asp:Label ID="lblEmpty" runat="server" CssClass="empty-orders" Visible="false" Text="You haven't placed any orders yet."></asp:Label>
+        <asp:Label ID="lblEmpty" runat="server" CssClass="empty-orders" Visible="false" 
+            Text="You haven't placed any orders yet."></asp:Label>
 
         <asp:Repeater ID="rptOrders" runat="server">
             <ItemTemplate>

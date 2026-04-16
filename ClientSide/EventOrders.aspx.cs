@@ -19,6 +19,8 @@ public partial class EventOrders : System.Web.UI.Page
         public string ItemsSummary { get; set; }
     }
 
+    //הפעולה בודקת אם המשתמש מחובר למערכת לפי הסטטוס
+    //שלו ושולפת את שם המשתמש 
     private string GetLoggedInUsername()
     {
         string status = Session["status"] as string;
@@ -33,6 +35,8 @@ public partial class EventOrders : System.Web.UI.Page
         return null;
     }
 
+    //הפעולה מוודאת שהמשתמש מחובר ושהוא בעל האירוע, ואם הכל תקין
+    //היא מציגה את שם האירוע וטוענת את ההזמנות שלו.
     protected void Page_Load(object sender, EventArgs e)
     {
         string username = GetLoggedInUsername();
@@ -52,7 +56,8 @@ public partial class EventOrders : System.Web.UI.Page
 
         // Verify Owner
         DataTable dtEvent = srv.GetEventById(eventId);
-        if (dtEvent == null || dtEvent.Rows.Count == 0 || !dtEvent.Rows[0]["Username"].ToString().Equals(username, StringComparison.OrdinalIgnoreCase))
+        if (dtEvent == null || dtEvent.Rows.Count == 0 || !dtEvent.Rows[0]["Username"].ToString().Equals(username, StringComparison.OrdinalIgnoreCase))// התעלמות מהבדל באותיות קטנות או גדולות
+
         {
             Response.Redirect("EventDetails.aspx?eventId=" + eventId);
             return;
@@ -65,6 +70,8 @@ public partial class EventOrders : System.Web.UI.Page
         }
     }
 
+    //הפעולה טוענת את כל ההזמנות של אירוע ספציפי, מחשבת את סך
+    //ההכנסות ומציגה את רשימת הפריטים בדף או הודעה במידה ואין הזמנות.
     private void LoadOrders(int eventId)
     {
         DataTable dtOrders = srv.GetEventOrders(eventId);
@@ -95,7 +102,7 @@ public partial class EventOrders : System.Web.UI.Page
                     }
                 }
                 
-                order.ItemsSummary = string.Join("<br/>", itemStrs);
+                order.ItemsSummary = string.Join("<br/>", itemStrs); //מאוסף מחרוזות למחרוזת אחת
                 ordersList.Add(order);
             }
         }

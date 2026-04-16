@@ -46,7 +46,6 @@
                 margin-bottom: 15px;
             }
 
-            /* Star rating display */
             .star-rating {
                 display: flex;
                 align-items: center;
@@ -211,7 +210,7 @@
                 flex-wrap: wrap;
             }
 
-            /* ---- Interactive star input (review form) ---- */
+
             .star-input-label {
                 color: rgba(255,255,255,0.7);
                 font-size: 14px;
@@ -236,14 +235,12 @@
                 line-height: 1;
             }
 
-            /* Hover: highlight hovered star and all siblings after it (row-reverse trick) */
             .star-input-group label:hover,
             .star-input-group label:hover ~ label {
                 color: #ffd700;
                 transform: scale(1.15);
             }
 
-            /* Checked: keep selected stars gold */
             .star-input-group input:checked ~ label {
                 color: #ffd700;
             }
@@ -267,7 +264,6 @@
                 transform: translateY(-1px);
             }
 
-            /* ---- Review star display (in comment cards) ---- */
             .review-stars {
                 display: inline-flex;
                 gap: 2px;
@@ -283,7 +279,7 @@
             .review-stars .rs-empty { color: #444; }
 
             .comment-actions select {
-                display: none; /* keep hidden; updated by JS */
+                display: none; 
             }
 
             .comments-message {

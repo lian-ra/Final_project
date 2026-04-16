@@ -1,4 +1,5 @@
-<%@ Page Title="Manage Event Store" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="ManageEventStore.aspx.cs" Inherits="ManageEventStore" %>
+<%@ Page Title="Manage Event Store" Language="C#" MasterPageFile="~/Design.master"
+    AutoEventWireup="true" CodeFile="ManageEventStore.aspx.cs" Inherits="ManageEventStore" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <style type="text/css">
@@ -155,30 +156,35 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="manage-wrapper">
-        <a href="EventDetails.aspx?eventId=<%= Request.QueryString["eventId"] %>" class="btn-back"><i class="fa fa-arrow-left"></i> Back to Event Details</a>
+        <a href="EventDetails.aspx?eventId=<%= Request.QueryString["eventId"] %>" 
+            class="btn-back"><i class="fa fa-arrow-left"></i> Back to Event Details</a>
         
         <div class="manage-header">
             <h1 class="manage-title">Manage Event Store</h1>
-            <div class="manage-subtitle">Select items from the global stock to sell at <asp:Label ID="lblEventName" runat="server" Font-Bold="true" ForeColor="White"></asp:Label></div>
+            <div class="manage-subtitle">Select items from the global stock to sell at <asp:Label 
+                ID="lblEventName" runat="server" Font-Bold="true" ForeColor="White"></asp:Label></div>
         </div>
 
         <div class="split-layout">
             <div class="panel-half">
                 <h3 class="panel-title">Global Stock</h3>
-                <asp:Label ID="lblGlobalEmpty" runat="server" CssClass="empty-message" Text="No more items to add." Visible="false"></asp:Label>
+                <asp:Label ID="lblGlobalEmpty" runat="server" CssClass="empty-message" 
+                    Text="No more items to add." Visible="false"></asp:Label>
                 
                 <div class="stock-list">
                     <asp:Repeater ID="rptGlobalStock" runat="server" OnItemCommand="rptGlobalStock_ItemCommand">
                         <ItemTemplate>
                             <div class="stock-item">
                                 <div class="item-info">
-                                    <img src='<%# ResolveUrl(Eval("Picture").ToString().StartsWith("~/") ? Eval("Picture").ToString() : "~/" + Eval("Picture").ToString()) %>' alt='<%# Eval("Name") %>' class="item-img" />
+                                    <img src='<%# ResolveUrl(Eval("Picture").ToString().StartsWith("~/") ? 
+                    Eval("Picture").ToString() : "~/" + Eval("Picture").ToString()) %>' alt='<%# Eval("Name") %>' class="item-img" />
                                     <div class="item-details">
                                         <h4><%# Eval("Name") %></h4>
                                         <p><%# Eval("Price") %> ILS</p>
                                     </div>
                                 </div>
-                                <asp:Button ID="btnAdd" runat="server" Text="Add to Event" CommandName="Add" CommandArgument='<%# Eval("ProductId") %>' CssClass="btn-add" />
+                                <asp:Button ID="btnAdd" runat="server" Text="Add to Event" CommandName="Add"
+                                    CommandArgument='<%# Eval("ProductId") %>' CssClass="btn-add" />
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>
@@ -187,20 +193,23 @@
 
             <div class="panel-half">
                 <h3 class="panel-title">Event Store (Items for Sale)</h3>
-                <asp:Label ID="lblEventEmpty" runat="server" CssClass="empty-message" Text="No items in your store yet. Add some from the Global Stock!" Visible="false"></asp:Label>
+                <asp:Label ID="lblEventEmpty" runat="server" CssClass="empty-message" Text="No items in your store yet. 
+                    Add some from the Global Stock!" Visible="false"></asp:Label>
 
                 <div class="stock-list">
                     <asp:Repeater ID="rptEventStock" runat="server" OnItemCommand="rptEventStock_ItemCommand">
                         <ItemTemplate>
                             <div class="stock-item">
                                 <div class="item-info">
-                                    <img src='<%# ResolveUrl(Eval("Picture").ToString().StartsWith("~/") ? Eval("Picture").ToString() : "~/" + Eval("Picture").ToString()) %>' alt='<%# Eval("Name") %>' class="item-img" />
+                                    <img src='<%# ResolveUrl(Eval("Picture").ToString().StartsWith("~/") ? Eval("Picture").
+                                      ToString() : "~/" + Eval("Picture").ToString()) %>' alt='<%# Eval("Name") %>' class="item-img" />
                                     <div class="item-details">
                                         <h4><%# Eval("Name") %></h4>
                                         <p><%# Eval("Price") %> ILS</p>
                                     </div>
                                 </div>
-                                <asp:Button ID="btnRemove" runat="server" Text="Remove" CommandName="Remove" CommandArgument='<%# Eval("ProductId") %>' CssClass="btn-remove" />
+                                <asp:Button ID="btnRemove" runat="server" Text="Remove" CommandName="Remove"
+                                    CommandArgument='<%# Eval("ProductId") %>' CssClass="btn-remove" />
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>

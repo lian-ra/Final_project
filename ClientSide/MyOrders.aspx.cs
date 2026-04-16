@@ -10,7 +10,6 @@ public partial class MyOrders : System.Web.UI.Page
 {
     localhost.Service srv = new localhost.Service();
 
-    // Helper class for data binding
     public class StoreOrder
     {
         public int OrderId { get; set; } //הקוד של ההזמנה
@@ -19,7 +18,7 @@ public partial class MyOrders : System.Web.UI.Page
         public string ItemsSummary { get; set; } //תיאור הפריטים 
     }
 
-    //הפעולה מוצאת ומחזירה את שם המשתמש המחובר מתוך זיכרון אם הוא עבר אימות  
+    //הפעולה מחלצת את שם המשתמש מתוך נתוני הזיכרון במידה והוא מחובר למערכת
     private string GetLoggedInUsername()
     {
         string status = Session["status"] as string;
@@ -35,6 +34,8 @@ public partial class MyOrders : System.Web.UI.Page
         return null;
     }
 
+    //הפעולה מוודאת שהמשתמש מחובר למערכת
+    //ולאחר מכן מציגה הודעת אישור אם בוצעה הזמנה בהצלחה וטוענת את רשימת ההזמנות של המשתמש
     protected void Page_Load(object sender, EventArgs e)
     {
         if (GetLoggedInUsername() == null) 
@@ -54,8 +55,9 @@ public partial class MyOrders : System.Web.UI.Page
         }
     }
 
-    //הפעולה
-    //מושכת את כל ההזמנות של המשתמש מהמסד והופכת כל שורה בטבלה לאובייקט מסודר ברשימה 
+    //הפעולה שולפת את כל ההזמנות של המשתמש ממסד הנתונים,
+    //והופכת אותן לרשימה מסודרת הכוללת את פרטי האירוע
+    //והמוצרים שנרכשו, ומציגה אותן בטבלה בדף
     private void LoadOrders(string searchQuery = "")
     {
         string username = GetLoggedInUsername();
@@ -80,53 +82,59 @@ public partial class MyOrders : System.Web.UI.Page
                 string movieTitle = row["MovieTitle"].ToString();
                 DateTime eventDate = Convert.ToDateTime(row["EventDate"]);
                 
-                DataTable dtItems = srv.GetOrderItems(orderId); //רשימת הפרטים שנבחרו בהזמנה ספציפית בטבלה
+                DataTable dtItems = srv.GetOrderItems(orderId); 
                 List<string> itemStrs = new List<string>(); 
                 if (dtItems != null)
                 {
                     foreach(DataRow iRow in dtItems.Rows)
                     {
-                        itemStrs.Add(iRow["Quantity"].ToString() + "x " + iRow["ProductName"].ToString());
+                        itemStrs.Add(iRow["Quantity"].ToString() + "x "
+                            + iRow["ProductName"].ToString());
                     }
                 }
                 
-                string itemsText = string.Join(", ", itemStrs); //מרשימה של מילים למחרוזת ארוכה
-                order.ItemsSummary = "<b>Event:</b> " + movieTitle + " (" + eventDate.ToShortDateString() + ") " +
+                string itemsText = string.Join(", ", itemStrs);//אוסף של מחרוזות למחרוזת אחת ארוכה
+                order.ItemsSummary = "<b>Event:</b> " + movieTitle + 
+                    " (" + eventDate.ToShortDateString() + ") " + //תאריך מסורבל לידידותי
                     "<br/> <b>Items:</b> " + itemsText;
                 
-                if (!string.IsNullOrWhiteSpace(searchQuery)) //חיפוש
+                if (!string.IsNullOrWhiteSpace(searchQuery)) 
                 {
                     bool match = orderId.ToString().Contains(searchQuery) ||
                                  movieTitle.ToLower().Contains(searchQuery) ||
                                  itemsText.ToLower().Contains(searchQuery);
-                    //עובד גם במקרה והחיפוש באותיות גדולות או באותיות קטנות
-                    if (!match) continue;
+                    if (!match) 
+                        continue; //דילוג על המוצר שלא עומד בתנאי החיפוש- סינון
                 }
                 ordersList.Add(order);
             }
         }
         
-        if (ordersList.Count == 0) //רשימת ההזמנות
+        if (ordersList.Count == 0) 
         {
             lblEmpty.Text = string.IsNullOrWhiteSpace(searchQuery)
                 ? "You haven't placed any orders yet." : "No orders found matching your search.";
             lblEmpty.Visible = true;
-            rptOrders.Visible = false; //הצגת טבלת ההזמנות
+            rptOrders.Visible = false; 
         }
         else
         {
             lblEmpty.Visible = false;
             rptOrders.DataSource = ordersList;
-            rptOrders.DataBind(); //מעבירה את הנתונים של הc# 
-                                  //אל התצוגה של הhtml 
+            rptOrders.DataBind();                            
             rptOrders.Visible = true;
         }
     }
-    protected void btnSearchOrders_Click(object sender, EventArgs e)//חיפוש
+
+    //הפעולה מפעילה את טעינת ההזמנות מחדש תוך שימוש בטקסט שהמשתמש הקליד
+    //בתיבת החיפוש, כדי להציג רק את ההזמנות המתאימות לחיפוש
+    protected void btnSearchOrders_Click(object sender, EventArgs e)
     {
         LoadOrders(txtSearchOrders.Text.Trim());
     }
-    protected void btnClearSearch_Click(object sender, EventArgs e)//מוחק
+
+    //הפעולה מרוקנת את תיבת החיפוש וטוענת מחדש את כל רשימת ההזמנות ללא סינון.
+    protected void btnClearSearch_Click(object sender, EventArgs e)
     {
         txtSearchOrders.Text = "";
         LoadOrders();

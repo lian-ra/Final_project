@@ -10,21 +10,23 @@ public partial class SearchUsers : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה בודקת האם המשתמש המחובר הוא מנהל
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["status"] == null || !Session["status"].ToString().Equals("2"))
         {
             string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'Login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
-            return;
+            return; //לדף ההתחברות
         }
 
-        if (!IsPostBack)
+        if (!IsPostBack) //אם כן מנהל
         {
             LoadAllUsers();
         }
     }
 
+    //הפעולה מבצעת חיפוש של משתמשים לפי הטקסט והסינון שהוזנו, ומציגה את התוצאות בתוך טבלה
     protected void BtnSearch_Click(object sender, EventArgs e)
     {
         string searchText = TxtSearch.Text.Trim();
@@ -49,6 +51,8 @@ public partial class SearchUsers : System.Web.UI.Page
         }
     }
 
+    //הפעולה מאפסת את שדות החיפוש והסינון, סוגרת חלונות קופצים
+    //וטוענת מחדש את רשימת כל המשתמשים כדי להחזיר את התצוגה למצבה הרגיל.
     protected void BtnReset_Click(object sender, EventArgs e)
     {
         TxtSearch.Text = "";
@@ -58,6 +62,9 @@ public partial class SearchUsers : System.Web.UI.Page
         GrdUsers.SelectedIndex = -1;
     }
 
+    //הפעולה פונה לשרת כדי לקבל את רשימת כל המשתמשים ללא סינון
+    //Grid ומחברת את הנתונים לטבלה
+    //כדי להציג אותם בדף המנהל.
     private void LoadAllUsers()
     {
         try
@@ -72,6 +79,8 @@ public partial class SearchUsers : System.Web.UI.Page
         }
     }
 
+    //הפעולה מזהה בחירה של משתמש מהטבלה, שולפת את פרטיו האישיים
+    //ממסד הנתונים וממלאת אותם בשדות הטקסט בתוך החלונית שקופצת כדי שיהיה אפשר לערוך אותם
     protected void GrdUsers_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (GrdUsers.SelectedRow != null)
@@ -90,7 +99,6 @@ public partial class SearchUsers : System.Web.UI.Page
                     TxtEmail.Text = row["email"].ToString();
                     TxtAddress.Text = row["address"].ToString();
 
-                    // Handle phone/gender column confusion logic just in case, but usually Service returns raw data
                     if (dt.Columns.Contains("phone"))
                         TxtPhone.Text = row["phone"].ToString();
                     else
@@ -98,12 +106,12 @@ public partial class SearchUsers : System.Web.UI.Page
                 }
             }
             catch { }
-
-            // Show the Modal
             pnlModal.Visible = true;
         }
     }
 
+    //הפעולה אוספת את הנתונים המעודכנים מהטפסים
+    //ושולחת אותם לעדכון במסד הנתונים
     protected void BtnUpdateUser_Click(object sender, EventArgs e)
     {
         try
@@ -111,7 +119,6 @@ public partial class SearchUsers : System.Web.UI.Page
             string username = HiddenUsername.Value;
             if (string.IsNullOrEmpty(username)) return;
 
-            // 1. Fetch current user data to preserve other fields (like password, picture)
             DataTable dt = backendService.SearchUser(username, "username");
             if (dt != null && dt.Rows.Count > 0)
             {
@@ -120,14 +127,11 @@ public partial class SearchUsers : System.Web.UI.Page
                 localhost.Users user = new localhost.Users();
                 user.UserN = username;
 
-                // Update modified fields from TextBoxes
                 user.NameF = TxtFirstName.Text.Trim();
                 user.LastN = TxtLastName.Text.Trim();
                 user.Email = TxtEmail.Text.Trim();
                 user.Fulladdres = TxtAddress.Text.Trim();
                 user.PhoneN = TxtPhone.Text.Trim();
-
-                // Preserve existing fields (Pass, Pic)
                 user.Pass = row["pass"].ToString();
 
                 if (fileUploadPic.HasFile)
@@ -151,10 +155,10 @@ public partial class SearchUsers : System.Web.UI.Page
                         user.Pic = "Profile.jpg";
                 }
 
-                // 2. Send update
+                //update
                 backendService.UpdateUser(user);
 
-                // 3. Refresh Grid and Close Modal
+                //Refresh 
                 LoadAllUsers();
                 pnlModal.Visible = false;
 
@@ -168,6 +172,7 @@ public partial class SearchUsers : System.Web.UI.Page
         }
     }
 
+    //הפעולה מוחקת את המשתמש הנבחר ממסד הנתונים
     protected void BtnDeleteUser_Click(object sender, EventArgs e)
     {
         string username = HiddenUsername.Value;
@@ -187,12 +192,16 @@ public partial class SearchUsers : System.Web.UI.Page
         }
     }
 
+    //הפעולה מסתירה את החלונית הקופצת ומבטלת את הבחירה
+    //של השורה בטבלה כדי להחזיר את ממשק המשתמש למצבו הרגיל.
     protected void BtnClose_Click(object sender, EventArgs e)
     {
         pnlModal.Visible = false;
         GrdUsers.SelectedIndex = -1;
     }
 
+    //הפעולה מקבלת הודעת שגיאה ומציגה אותה למשתמש
+    //תוך טיפול בתווים מיוחדים כדי למנוע תקלות בהרצת הקוד.
     private void ShowError(string msg)
     {
         string message = "alert('Error: " + msg.Replace("'", "\\'") + "');";
@@ -201,6 +210,7 @@ public partial class SearchUsers : System.Web.UI.Page
 
     // --- Helper Methods ---
 
+    //הפעולה מחלצת את מספר הטלפון מתוך שורת הנתונים
     protected string GetPhoneValue(object dataItem)
     {
         if (dataItem == null) return "";
@@ -216,8 +226,8 @@ public partial class SearchUsers : System.Web.UI.Page
                 if (!string.IsNullOrEmpty(val) && !IsGender(val)) return val;
             }
         }
-
-        if (row.Row.Table.Columns.Contains("gender"))
+         
+        if (row.Row.Table.Columns.Contains("gender")) //בדיקה שהמספר אינו מכיל בטעות מידע ששייך לעמודות אחרות
         {
             object objVal = row["gender"];
             if (objVal != null && objVal != DBNull.Value)
@@ -229,6 +239,7 @@ public partial class SearchUsers : System.Web.UI.Page
         return "";
     }
 
+    //הפעולה מחלצת את ערך המגדר מתוך שורת הנתונים על ידי בדיקת העמודות הרלוונטיות
     protected string GetGenderValue(object dataItem)
     {
         if (dataItem == null) return "";
@@ -257,6 +268,8 @@ public partial class SearchUsers : System.Web.UI.Page
         return "";
     }
 
+    //הפעולה סורקת רשימת עמודות אפשריות כדי למצוא תאריך לידה,
+    //מנסה להמיר את הערך שנמצא לתאריך תקין ומחזירה אותו בפורמט של חודש/יום/שנה.
     protected string GetBirthdayValue(object dataItem)
     {
         if (dataItem == null) return "";
@@ -281,12 +294,14 @@ public partial class SearchUsers : System.Web.UI.Page
         return "";
     }
 
+    //"male" או "female" הפעולה בודקת האם טקסט מסוים הוא
     private bool IsGender(string s)
     {
         s = s.ToLower();
         return s == "male" || s == "female";
     }
 
+    //הפעולה בודקת האם טקסט מסוים מייצג תאריך תקין ומחזירה אמת או שקר בהתאם.
     private bool IsDate(string s)
     {
         DateTime d;

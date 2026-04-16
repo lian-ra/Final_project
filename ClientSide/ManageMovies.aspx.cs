@@ -8,11 +8,13 @@ public partial class ManageMovies : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה מבצעת אבטחת גישה לדף מנהל.
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["status"] == null || !Session["status"].ToString().Equals("2"))
         {
-            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'login.aspx';}, 10);";
+            string script = @"alert('You are not welcome!'); 
+            setTimeout(function() {window.location = 'login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
             return;
         }
@@ -23,6 +25,7 @@ public partial class ManageMovies : System.Web.UI.Page
         }
     }
 
+    //הפעולה מבצעת הוספה של סרט חדש למערכת על ידי מנהל.
     protected void btnAddMovie_Click(object sender, EventArgs e)
     {
         try
@@ -88,17 +91,22 @@ public partial class ManageMovies : System.Web.UI.Page
         }
     }
 
+    //הפעולה מנקה את כל השדות בטופס ומסתירה את הודעת הסטטוס מהמסך.
     protected void btnClear_Click(object sender, EventArgs e)
     {
         ClearForm();
         lblManageMessage.Visible = false;
     }
 
+    //(Grid) הפעולה מפעילה את רענון רשימת הסרטים בטבלה
+    //ברגע שמישהו לוחץ על כפתור החיפוש.
     protected void btnSearch_Click(object sender, EventArgs e)
     {
         BindMoviesGrid();
     }
 
+    //הפעולה מנקה את כל תיבות הטקסט והבחירה בטופס
+    //כדי לאפשר הזנה של סרט חדש.
     private void ClearForm()
     {
         txtTitle.Text = "";
@@ -112,13 +120,18 @@ public partial class ManageMovies : System.Web.UI.Page
         txtDescription.Text = "";
     }
 
+    //הפעולה מציגה הודעת משוב למשתמש כמו "הסרט נוסף בהצלחה" או הודעת שגיאה
+    //וצובעת אותה בירוק או באדום לפי הצורך.
     private void ShowMessage(string message, bool isSuccess)
     {
         lblManageMessage.Text = message;
         lblManageMessage.Visible = true;
-        lblManageMessage.CssClass = isSuccess ? "message-label message-success" : "message-label message-error";
+        lblManageMessage.CssClass = isSuccess ?
+            "message-label message-success" : "message-label message-error";
     }
 
+    //הפעולה מושכת את כל הסרטים מהמסד לפי חיפוש או את כולם
+    //ומציגה אותם בטבלת הנתונים שעל המסך.
     private void BindMoviesGrid()
     {
         try
@@ -144,49 +157,28 @@ public partial class ManageMovies : System.Web.UI.Page
         }
     }
 
+    //הפעולה מעבירה שורה ספציפית בטבלה למצב עריכה כדי שהמנהל יוכל לעדכן את פרטי הסרט.
     protected void grdMovies_RowEditing(object sender, GridViewEditEventArgs e)
     {
         grdMovies.EditIndex = e.NewEditIndex;
         BindMoviesGrid();
     }
 
+    //הפעולה מבטלת את מצב העריכה בטבלה ומחזירה את השורה לתצוגה הרגילה שלה ללא שמירת שינויים.
     protected void grdMovies_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
         grdMovies.EditIndex = -1;
         BindMoviesGrid();
     }
 
+    //הפעולה אוספת את הפרטים החדשים שהוקלדו בשורת העריכה ושומרת את העדכונים במסד הנתונים.
     protected void grdMovies_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
         try
         {
             int movieId = (int)grdMovies.DataKeys[e.RowIndex].Value;
             GridViewRow row = grdMovies.Rows[e.RowIndex];
-
-            // Accessing cells by index since we have known columns
-            // Cell 0: ID (ReadOnly) - we can't edit it
-            // Cell 1: Title
-            // Cell 2: Year
-            // Cell 3: Genre
-            // Cell 4: Rating
-            // Cell 5: Director
-            // Cell 6: Actors
-            // Cell 7: Duration
-            // Cell 8: Actions
-
-            // Note: The index shifts based on AutoGenerateColumns=False. 
-            // In the ASPX above:
-            // 0: ID
-            // 1: Title
-            // 2: Year
-            // 3: Genre
-            // 4: Rating
-            // 5: Director
-            // 6: Actors
-            // 7: Duration
-            // 8: Actions (CommandField)
-
-            // TextBoxes are the first control in the cell during edit mode
+         
             string title = ((TextBox)row.Cells[1].Controls[0]).Text.Trim();
             string yearText = ((TextBox)row.Cells[2].Controls[0]).Text.Trim();
             string genre = ((TextBox)row.Cells[3].Controls[0]).Text.Trim();
@@ -218,8 +210,6 @@ public partial class ManageMovies : System.Web.UI.Page
             movie.Duration = duration;
             movie.Description = description;
 
-
-
             backendService.UpdateMovie(movie);
 
             grdMovies.EditIndex = -1;
@@ -232,6 +222,7 @@ public partial class ManageMovies : System.Web.UI.Page
         }
     }
 
+    //הפעולה מוחקת סרט נבחר מהמערכת ומעדכנת את הטבלה המוצגת למנהל.
     protected void grdMovies_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
         try

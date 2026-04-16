@@ -71,14 +71,13 @@
             .events-grid {
                 display: flex;
                 flex-direction: row;
-                flex-wrap: wrap;       /* חשוב מאוד! זה מה שגורם להם לרדת שורה */
+                flex-wrap: wrap;       
                 gap: 20px;
                 padding-bottom: 30px;
-                justify-content: flex-start; /* מתחיל מצד שמאל (או ימין בעברית) */
+                justify-content: flex-start; 
             }
             
             .event-card {
-                /* ...הרקע והבורדר נשארים אותו דבר... */
                 background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(50, 50, 50, 0.95) 100%);
                 border-radius: 15px;
                 overflow: hidden;
@@ -86,14 +85,11 @@
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 position: relative;
                 display: flex;
-                flex-direction: row; /* תמונה לצד טקסט */
-                
-                /* התיקון החשוב לגודל הכרטיס: */
-                width: 48%; /* שים 2 בשורה (עם רווח קטן) */
-                min-width: 450px; /* שלא יהיו קטנים מדי */
+                flex-direction: row;
+                width: 48%; 
+                min-width: 450px;
             }
 
-            /* התאמה למסכים קטנים - שירד לכרטיס אחד בשורה */
             @media (max-width: 1000px) {
                 .event-card {
                     width: 100%;
@@ -154,7 +150,6 @@
                 color: white;
                 margin-bottom: 10px;
                 min-height: 44px;
-                /* Ensure 2 lines of text */
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
@@ -246,7 +241,6 @@
                 opacity: 0.5;
             }
 
-            /* Modal Styles */
             .modal-overlay {
                 display: none;
                 position: fixed;
@@ -396,10 +390,12 @@
                 <div class="search-container">
                     <asp:TextBox ID="txtSearchLocation" runat="server" CssClass="search-box"
                         placeholder="Search by location..." />
-                    <asp:LinkButton ID="btnSearch" runat="server" CssClass="btn-search" OnClick="btnSearch_Click">
+                    <asp:LinkButton ID="btnSearch" runat="server" CssClass="btn-search"
+                        OnClick="btnSearch_Click">
                         <i class="fa fa-search"></i>
                     </asp:LinkButton>
-                    <asp:Button ID="btnCreateEvent" runat="server" Text="+ Create Event" CssClass="btn-create-event"
+                    <asp:Button ID="btnCreateEvent" runat="server" Text="+ Create Event"
+                        CssClass="btn-create-event"
                         OnClick="btnCreateEvent_Click" />
                 </div>
             </div>

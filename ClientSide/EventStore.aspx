@@ -1,4 +1,5 @@
-<%@ Page Title="Event Store" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="EventStore.aspx.cs" Inherits="EventStore" %>
+<%@ Page Title="Event Store" Language="C#" MasterPageFile="~/Design.master"
+    AutoEventWireup="true" CodeFile="EventStore.aspx.cs" Inherits="EventStore" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <style type="text/css">
@@ -210,12 +211,12 @@
             input.value = newQty;
             
             recalculateTotal();
-            return false; // prevent postback
+            return false; 
         }
+
 
         function recalculateTotal() {
             var total = 0;
-            // Iterate over all cards to sum price * qty
             var cards = document.querySelectorAll('.product-card');
             cards.forEach(function(card) {
                 var priceEl = card.querySelector('input[id$="hfPrice"]');
@@ -229,7 +230,6 @@
             document.getElementById('lblTotalAmount').innerText = total.toFixed(2) + ' ILS';
         }
 
-        // Run once on load
         window.onload = function() {
             recalculateTotal();
         }
@@ -240,7 +240,8 @@
     <div class="store-wrapper">
         <div class="store-header">
             <h1 class="store-title">Event Store</h1>
-            <div class="store-subtitle">Buy snacks and merch for <span style="color:white; font-weight:bold;"><asp:Label ID="lblEventName" runat="server"></asp:Label></span></div>
+            <div class="store-subtitle">Buy snacks and merch for <span style="color:white;
+   font-weight:bold;"><asp:Label ID="lblEventName" runat="server"></asp:Label></span></div>
         </div>
 
         <asp:Label ID="lblMessage" runat="server" CssClass="msg-box"></asp:Label>
@@ -251,7 +252,9 @@
             </HeaderTemplate>
             <ItemTemplate>
                 <div class="product-card">
-                    <img src='<%# ResolveUrl(Eval("Picture").ToString().StartsWith("~/") ? Eval("Picture").ToString() : "~/" + Eval("Picture").ToString()) %>' alt='<%# Eval("Name") %>' class="product-image" onerror="this.src='/images/default-product.png';" />
+                    <img src='<%# ResolveUrl(Eval("Picture").ToString().StartsWith("~/") ?
+              Eval("Picture").ToString() : "~/" + Eval("Picture").ToString()) %>' alt='<%# Eval("Name") %>'
+                        class="product-image" onerror="this.src='/images/default-product.png';" />
                     <div class="product-name"><%# Eval("Name") %></div>
                     <div class="product-code">Item ID: <%# Eval("ProductId") %></div>
                     <div class="product-desc"><%# Eval("Description") %></div>
@@ -265,7 +268,8 @@
                         </div>
                         <div class="qty-control">
                             <button type="button" class="qty-btn" onclick="updateQty(this, -1)">-</button>
-                            <asp:TextBox ID="txtQty" runat="server" CssClass="qty-input" Text="0" onkeyup="recalculateTotal()"></asp:TextBox>
+                            <asp:TextBox ID="txtQty" runat="server" CssClass="qty-input" Text="0" 
+                                onkeyup="recalculateTotal()"></asp:TextBox>
                             <button type="button" class="qty-btn" onclick="updateQty(this, 1)">+</button>
                         </div>
                     </div>
@@ -280,7 +284,8 @@
             <div class="total-text">
                 Total: <span id="lblTotalAmount" class="total-amount">0.00 ILS</span>
             </div>
-            <asp:Button ID="btnCheckout" runat="server" Text="Checkout & Place Order" CssClass="btn-checkout" OnClick="btnCheckout_Click" />
+            <asp:Button ID="btnCheckout" runat="server" Text="Checkout & Place Order" 
+                CssClass="btn-checkout" OnClick="btnCheckout_Click" />
         </div>
     </div>
 </asp:Content>

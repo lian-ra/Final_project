@@ -1,4 +1,5 @@
-<%@ Page Title="Update Profile" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="UpdateMyUser.aspx.cs" Inherits="UpdateMyUser" %>
+<%@ Page Title="Update Profile" Language="C#" MasterPageFile="~/Design.master"
+    AutoEventWireup="true" CodeFile="UpdateMyUser.aspx.cs" Inherits="UpdateMyUser" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -104,14 +105,18 @@
             <h1>Update Profile</h1>
 
             <div style="text-align: center; margin-bottom: 20px;">
-                <asp:Image ID="img" runat="server" CssClass="profile-img" ImageUrl="~/MyPics/Profile.jpg" />
+                <asp:Image ID="img" runat="server" CssClass="profile-img"
+                    ImageUrl="~/MyPics/Profile.jpg" />
                 <br />
-                <asp:FileUpload ID="FileUpload1" runat="server" CssClass="file-upload" />
+                <asp:FileUpload ID="FileUpload1" runat="server"
+                    CssClass="file-upload" />
             </div>
 
             <div class="form-group">
-                <asp:Label ID="Label1" runat="server" Text="Username (ReadOnly)" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" ReadOnly="true" style="background:#333; cursor:not-allowed;"></asp:TextBox>
+                <asp:Label ID="Label1" runat="server" Text="Username (ReadOnly)"
+                    CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control"
+                    ReadOnly="true" style="background:#333; cursor:not-allowed;"></asp:TextBox>
             </div>
 
             <div class="form-row">
@@ -146,7 +151,8 @@
                 </div>
             </div>
 
-            <asp:Button ID="btnUpdate" runat="server" Text="Update Profile" OnClick="btnUpdate_Click" CssClass="btn-update" />
+            <asp:Button ID="btnUpdate" runat="server" Text="Update Profile" 
+                OnClick="btnUpdate_Click" CssClass="btn-update" />
         </div>
     </div>
 </asp:Content>

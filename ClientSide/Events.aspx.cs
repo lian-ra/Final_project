@@ -7,18 +7,22 @@ public partial class Events : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה מוודאת שהמשתמש מחובר, חוסמת גישה למי שלא,
+    //ומגדירה ערכי מינימום לתאריך (מהיום והלאה) ולמחיר כדי למנוע טעויות בהזנת אירועים חדשים
     protected void Page_Load(object sender, EventArgs e)
     {
         string status = Session["status"] as string;
         if (status != "1" && status != "2")
         {
-            string script = @"alert('You must be logged in to view this page.'); setTimeout(function() {window.location = 'login.aspx';}, 10);";
+            string script = @"alert('You must be logged in to view this page.'); 
+            setTimeout(function() {window.location = 'login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
             return;
         }
 
         if (!IsPostBack)
         {
+            //HTMLהוספת הגבלות ישירות על פקדי ה
             txtEventDate.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
             txtPrice.Attributes["min"] = "0";
             LoadMoviesDropdown();
@@ -26,6 +30,8 @@ public partial class Events : System.Web.UI.Page
         }
     }
 
+    //הפעולה מחלצת את שם המשתמש המחובר מתוך הנתונים השמורים
+    //בתנאי שהמשתמש מזוהה במערכת כמשתמש רשום או כמנהל
     private string GetLoggedInUsername()
     {
         try
@@ -45,6 +51,8 @@ public partial class Events : System.Web.UI.Page
         return null;
     }
 
+    //הפעולה שולפת את רשימת כל הסרטים ממסד הנתונים וממלאת איתם תפריט בחירה
+    //כך שכל אפשרות מציגה את שם הסרט ושנת היציאה שלו
     private void LoadMoviesDropdown()
     {
         try
@@ -60,7 +68,7 @@ public partial class Events : System.Web.UI.Page
                     int movieId = Convert.ToInt32(row["MovieId"]);
                     string title = row["Title"].ToString();
                     string year = row["Year"] != DBNull.Value ? row["Year"].ToString() : "";
-                    string displayText = title + (string.IsNullOrEmpty(year) ? "" : " (" + year + ")");
+                    string displayText = title + (string.IsNullOrEmpty(year) ? "" : " (" + year + ")");//עיצוב טקסט
                     ddlMovie.Items.Add(new ListItem(displayText, movieId.ToString()));
                 }
             }
@@ -72,6 +80,8 @@ public partial class Events : System.Web.UI.Page
         }
     }
 
+    //הפעולה שולפת אירועים ממסד הנתונים לפי סינון שנבחר כמו אירועים שלי או חיפוש,
+    //בונה עבורם כרטיסי תצוגה מעוצבים עם כל הפרטים (תמונה, תאריך ומחיר), ומציגה אותם בדף.
     private void LoadEvents()
     {
         try
@@ -104,7 +114,8 @@ public partial class Events : System.Web.UI.Page
                 dt = backendService.GetAllEvents();
             }
 
-            phEvents.Controls.Clear();
+            phEvents.Controls.Clear(); //מרוקן את כל התוכן שנמצא בתוך המיקום בטבלה
+                                       //מונע כפילויות על המסך והיפטרות מפקדים קודמים
 
             if (dt == null || dt.Rows.Count == 0)
             {
@@ -139,7 +150,7 @@ public partial class Events : System.Web.UI.Page
 
                 string statusClass = "status-" + eventStatus.ToLower();
 
-                // יצירת הכרטיס בלבד
+                // יצירת הכרטיס תצוגה
                 html += string.Format(@"
                     <div class='event-card'>
                         <div style='position: relative;'>
@@ -178,7 +189,7 @@ public partial class Events : System.Web.UI.Page
                         </div>
                     </div>",
                     ResolveUrl(poster),
-                    Server.HtmlEncode(movieTitle),
+                    Server.HtmlEncode(movieTitle), 
                     statusClass,
                     Server.HtmlEncode(eventStatus),
                     Server.HtmlEncode(eventUsername),
@@ -188,33 +199,42 @@ public partial class Events : System.Web.UI.Page
                     subscriberCount,
                     price.ToString("F2"),
                     eventId,
-                    row.Table.Columns.Contains("Location") && row["Location"] != DBNull.Value ? Server.HtmlEncode(row["Location"].ToString()) : "TBD"
+                    row.Table.Columns.Contains("Location") && row["Location"] != DBNull.Value ? Server.HtmlEncode(row["Location"].ToString()) : "TBD" //יקבע בהמשך
+                                                                                      //חשש מכתובת מסוכנת- שומר על הקוד מפני פריצות
                 );
             }
 
-            // תיקון: מחקנו גם את סגירת ה-div מכאן
             phEvents.Controls.Add(new LiteralControl(html));
         }
         catch (Exception ex)
         {
             phEvents.Controls.Add(new LiteralControl("<div class='empty-state'>Error loading events: " + Server.HtmlEncode(ex.Message) + "</div>"));
+                                                                                                         
+                                                                                                           
         }
     }
 
 
-
+    //פעולה שמציגה למשתמש את הטופס למילוי פרטי האירוע
+    //על ידי הפעלת סקריפט שפותח את חלון המודל
     protected void btnCreateEvent_Click(object sender, EventArgs e)
     {
         pnlCreateModal.Visible = true;
         ClientScript.RegisterStartupScript(this.GetType(), "ShowModal", "showModal();", true);
     }
 
+    //הפעולה סוגרת את חלונית יצירת האירוע
+    //ומסתירה את הודעת העדכון שבתוכה
     protected void btnCancelModal_Click(object sender, EventArgs e)
     {
         pnlCreateModal.Visible = false;
         lblModalMessage.Visible = false;
     }
 
+
+    //הפעולה בודקת שכל פרטי האירוע (משתמש, סרט, תאריך, שעה ומחיר) תקינים ומלאים.
+    //אם הכל בסדר, היא שומרת את האירוע החדש במסד הנתונים
+    //ומעבירה את המשתמש לדף הפרטים של האירוע שנוצר
     protected void btnSubmitEvent_Click(object sender, EventArgs e)
     {
         try
@@ -241,7 +261,7 @@ public partial class Events : System.Web.UI.Page
                 lblModalMessage.Visible = true;
                 return;
             }
-            DateTime selectedEventDate;
+            DateTime selectedEventDate; //שומר תאריך ושעה
             if (DateTime.TryParse(txtEventDate.Text, out selectedEventDate))
             {
                 if (selectedEventDate.Date < DateTime.Today)
@@ -300,12 +320,16 @@ public partial class Events : System.Web.UI.Page
         }
     }
 
+    //הפעולה בודקת אם הוכנס טקסט בתיבת החיפוש. אם כן,
+    //היא מעבירה את המשתמש לדף האירועים עם מילת החיפוש- המיקום,
+    //ואם התיבה ריקה, היא פשוט מרעננת את דף האירועים ומציגה את כולם
     protected void btnSearch_Click(object sender, EventArgs e)
     {
         string location = txtSearchLocation.Text.Trim();
         if (!string.IsNullOrEmpty(location))
         {
             Response.Redirect("Events.aspx?search=" + Server.UrlEncode(location));
+                       //פקודה הממירה תווים מיוחדים ורווחים לפורמט תקין של כתובת כדי שהקישור בדפדפן לא יישבר.
         }
         else
         {

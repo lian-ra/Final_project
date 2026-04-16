@@ -16,7 +16,9 @@ public partial class AddMovie : System.Web.UI.Page
     {
         if (!Session["status"].ToString().Equals("2"))
         {
-            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'login.aspx';}, 10); // 10 = 10/1000 seconds delay";
+            string script = @"alert('You are not welcome!');
+          setTimeout(function() {window.location = 'login.aspx';}, 10); 
+           // 10 = 10/1000 seconds delay";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
         }
 
@@ -37,7 +39,7 @@ public partial class AddMovie : System.Web.UI.Page
         {
             try
             {
-                localhost.Movies newMovie = new localhost.Movies();  //אובייקט חדש
+                localhost.Movies newMovie = new localhost.Movies();  
 
                 newMovie.MovieId = 0;
 
@@ -88,7 +90,7 @@ public partial class AddMovie : System.Web.UI.Page
                         string extension = Path.GetExtension(fileName).ToLower();
                         
                  
-                        string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" }; //מערך חדש
+                        string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" }; 
                         if (!allowedExtensions.Contains(extension))
                         {
                             ShowMessage("Invalid file type. Please upload an image file (jpg, jpeg, png, gif, bmp).", false);

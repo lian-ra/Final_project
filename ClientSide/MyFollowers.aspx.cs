@@ -6,6 +6,8 @@ public partial class MyNetwork : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה מוודאת הרשאות מנהל בכניסה לדף, מפנה משתמשים לא מורשים
+    //להתחברות וטוענת את נתוני הרשת בביקור הראשון.
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["status"] == null || Session["status"].ToString() != "1")
@@ -13,20 +15,19 @@ public partial class MyNetwork : System.Web.UI.Page
             Response.Redirect("Login.aspx");
             return;
         }
-
         if (!IsPostBack)
         {
             LoadNetwork();
         }
     }
 
+    //הפעולה מזהה את המשתמש הרלוונטי (מכתובת הדף או מהזיכרון), שולפת ומציגה
+    //את רשימות הנעקבים והעוקבים שלו, ומציגה הודעה אם הרשימות ריקות
     private void LoadNetwork()
     {
         try
         {
-            string currentUser = "";
-            
-            // Check for query string username first
+            string currentUser = "";     
             string queryUser = Request.QueryString["username"];
             if (!string.IsNullOrEmpty(queryUser))
             {
@@ -34,7 +35,6 @@ public partial class MyNetwork : System.Web.UI.Page
             }
             else
             {
-                // Fallback to session user
                 DataTable dtSession = Session["data"] as DataTable;
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {

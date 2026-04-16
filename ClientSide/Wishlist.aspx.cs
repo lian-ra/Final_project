@@ -8,6 +8,8 @@ public partial class Wishlist : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה רצה כשהדף נטען לראשונה, בודקת אם
+    //בוצעו פעולות (כמו הוספה או הסרה) וטוענת את רשימת המשאלות של המשתמש.
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -17,6 +19,9 @@ public partial class Wishlist : System.Web.UI.Page
         }
     }
 
+    //הפעולה בודקת אם יש שם משתמש בכתובת הדף
+    //אם כן היא מחזירה אותו כדי להציג פרופיל של מישהו אחר,
+    //ואם לא היא מחזירה את שם המשתמש המחובר כדי להציג את הפרופיל האישי שלו.
     private string GetTargetUsername()
     {
         string queryUser = Request.QueryString["username"];
@@ -27,6 +32,8 @@ public partial class Wishlist : System.Web.UI.Page
         return GetLoggedInUsername();
     }
 
+    //Sessionהפעולה שולפת את שם המשתמש מה
+    //במידה והוא מחובר כדי שהאתר ידע מי המשתמש הפעיל כרגע.
     private string GetLoggedInUsername()
     {
         try
@@ -52,12 +59,13 @@ public partial class Wishlist : System.Web.UI.Page
         return null;
     }
 
+    //הפעולה מזהה בקשות לביצוע פעולות (כמו הוספה או הסרה של סרט מרשימת המשאלות), מעדכנת
+    //את מסד הנתונים בהתאם ומפנה את המשתמש חזרה לדף המעודכן.
     private void HandleActions()
     {
         string username = GetLoggedInUsername();
         if (string.IsNullOrEmpty(username))
         {
-            // Only redirect if trying to perform an action or viewing own wishlist without login
             if (string.IsNullOrEmpty(Request.QueryString["username"])) 
             {
                  Response.Redirect("Login.aspx");
@@ -68,13 +76,11 @@ public partial class Wishlist : System.Web.UI.Page
         string action = Request.QueryString["action"];
         string movieIdStr = Request.QueryString["movieId"];
 
-        // Prevent modifying others' wishlists
         string targetUser = GetTargetUsername();
         if (targetUser != username && !string.IsNullOrEmpty(action))
         {
              return; 
         }
-
         int movieId;
         if (!string.IsNullOrEmpty(action) && int.TryParse(movieIdStr, out movieId))
         {
@@ -99,6 +105,8 @@ public partial class Wishlist : System.Web.UI.Page
         }
     }
 
+    //הפעולה מושכת מהמסד את רשימת הסרטים שמשתמש ספציפי שמר,
+    //הופכת אותם לכרטיסיות תצוגה ומציגה אותם בדף
     private void LoadWishlist()
     {
         string username = GetTargetUsername();
@@ -122,7 +130,8 @@ public partial class Wishlist : System.Web.UI.Page
             }
             else
             {
-                string msg = (username == GetLoggedInUsername()) ? "Your wishlist is empty. Browse films and add some!" : "This user's wishlist is empty.";
+                string msg = (username == GetLoggedInUsername()) ?
+                    "Your wishlist is empty. Browse films and add some!" : "This user's wishlist is empty.";
                 phWishlist.Controls.Add(new LiteralControl("<div class='wishlist-empty'>" + msg + "</div>"));
             }
         }
@@ -131,10 +140,14 @@ public partial class Wishlist : System.Web.UI.Page
             string msg = "alert('Error loading wishlist: " + ex.Message.Replace("'", "\\'") + "');";
             ClientScript.RegisterStartupScript(this.GetType(), "WishlistLoadError", msg, true);
             phWishlist.Controls.Clear();
-            phWishlist.Controls.Add(new LiteralControl("<div class='wishlist-empty'>Error loading wishlist.</div>"));
+            phWishlist.Controls.Add(new LiteralControl("<div class='wishlist-empty'>Error" +
+                " loading wishlist.</div>"));
         }
     }
 
+    //HTML הפעולה מעצבת כרטיסייה חזותית
+    //עבור סרט ברשימת המשאלות, הכוללת את הפוסטר והפרטים שלו,
+    //ומוסיפה כפתור "הסרה" רק אם המשתמש שצופה בדף הוא בעל הרשימה.
     private string GenerateWishlistCard(DataRow row, bool isOwner)
     {
         string title = row["Title"] != DBNull.Value ? row["Title"].ToString() : "Unknown";
@@ -151,7 +164,8 @@ public partial class Wishlist : System.Web.UI.Page
         string removeBtn = "";
         if (isOwner)
         {
-            removeBtn = "<a href='Wishlist.aspx?action=remove&movieId=" + movieId + "' class='wishlist-remove'>Remove</a>";
+            removeBtn = "<a href='Wishlist.aspx?action=remove&movieId=" + movieId + 
+                "' class='wishlist-remove'>Remove</a>";
         }
 
         string html = string.Format(@"<div class='wishlist-card'>

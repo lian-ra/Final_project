@@ -1,4 +1,5 @@
-<%@ Page Title="Admin Area" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="AdminArea.aspx.cs" Inherits="AdminArea" %>
+<%@ Page Title="Admin Area" Language="C#" MasterPageFile="~/Design.master" 
+    AutoEventWireup="true" CodeFile="AdminArea.aspx.cs" Inherits="AdminArea" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -22,7 +23,6 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* Dashboard Grid Layout */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -31,7 +31,6 @@
             margin-bottom: 50px;
         }
 
-        /* Individual Action Cards */
         .dash-card {
             background: rgba(30, 30, 30, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -54,7 +53,6 @@
             background: rgba(40, 40, 40, 0.9);
         }
 
-        /* Icons inside cards */
         .dash-icon {
             font-size: 48px;
             color: #ff4c3b;
@@ -66,7 +64,6 @@
             color: #fff;
         }
 
-        /* Text inside cards */
         .dash-text {
             color: white;
             font-size: 20px;
@@ -74,7 +71,6 @@
             text-transform: uppercase;
         }
 
-        /* Logout Button Area */
         .logout-container {
             margin-top: auto;
         }
@@ -106,34 +102,40 @@
         <h1 class="admin-title">Admin Dashboard</h1>
 
         <div class="dashboard-grid">
-            <asp:HyperLink ID="lnkSearchUsers" runat="server" NavigateUrl="~/SearchUsers.aspx" CssClass="dash-card">
+            <asp:HyperLink ID="lnkSearchUsers" runat="server" NavigateUrl="~/SearchUsers.aspx"
+                CssClass="dash-card">
                 <i class="fa fa-users dash-icon"></i>
                 <span class="dash-text">Search Users</span>
             </asp:HyperLink>
 
-            <asp:HyperLink ID="lnkManageCelebs" runat="server" NavigateUrl="~/ManageCelebs.aspx" CssClass="dash-card">
+            <asp:HyperLink ID="lnkManageCelebs" runat="server" NavigateUrl="~/ManageCelebs.aspx"
+                CssClass="dash-card">
                 <i class="fa fa-star dash-icon"></i>
                 <span class="dash-text">Manage Celebs</span>
             </asp:HyperLink>
 
-            <asp:HyperLink ID="lnkManageMovies" runat="server" NavigateUrl="~/ManageMovies.aspx" CssClass="dash-card">
+            <asp:HyperLink ID="lnkManageMovies" runat="server" NavigateUrl="~/ManageMovies.aspx" 
+                CssClass="dash-card">
                 <i class="fa fa-film dash-icon"></i>
                 <span class="dash-text">Manage Movies</span>
             </asp:HyperLink>
 
-            <asp:HyperLink ID="lnkManageStock" runat="server" NavigateUrl="~/ManageStock.aspx" CssClass="dash-card">
+            <asp:HyperLink ID="lnkManageStock" runat="server" NavigateUrl="~/ManageStock.aspx" 
+                CssClass="dash-card">
                 <i class="fa fa-shopping-bag dash-icon"></i>
                 <span class="dash-text">Manage Stock</span>
             </asp:HyperLink>
 
-            <asp:HyperLink ID="lnkAdminOrders" runat="server" NavigateUrl="~/AdminOrders.aspx" CssClass="dash-card">
+            <asp:HyperLink ID="lnkAdminOrders" runat="server" NavigateUrl="~/AdminOrders.aspx" 
+                CssClass="dash-card">
                 <i class="fa fa-list-alt dash-icon"></i>
                 <span class="dash-text">All Orders</span>
             </asp:HyperLink>
         </div>
 
         <div class="logout-container">
-            <asp:HyperLink ID="lnkLogout" runat="server" NavigateUrl="~/Login.aspx" CssClass="btn-logout">
+            <asp:HyperLink ID="lnkLogout" runat="server" NavigateUrl="~/Login.aspx"
+                CssClass="btn-logout">
                 <i class="fa fa-sign-out"></i> Log Out
             </asp:HyperLink>
         </div>

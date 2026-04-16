@@ -9,7 +9,9 @@ using System.Web.UI.WebControls;
 public partial class EventStore : System.Web.UI.Page
 {
     localhost.Service srv = new localhost.Service();
-    
+
+    //הפעולה בודקת אם המשתמש מחובר ומחזירה
+    //את שם המשתמש שלו מתוך הנתונים שנשמרו בזיכרון
     private string GetLoggedInUsername()
     {
         string status = Session["status"] as string;
@@ -25,6 +27,8 @@ public partial class EventStore : System.Web.UI.Page
         return null;
     }
 
+    //הפעולה מוודאת שהמשתמש מחובר ושרשום לו מזהה אירוע תקין, בודקת
+    //שהוא רשום לאותו אירוע, ואז טוענת את פרטי האירוע והמוצרים הרלוונטיים.
     protected void Page_Load(object sender, EventArgs e)
     {
         string username = GetLoggedInUsername();
@@ -48,7 +52,6 @@ public partial class EventStore : System.Web.UI.Page
             return;
         }
 
-        // Ensure user is subscribed
         if (!srv.IsUserSubscribed(eventId, username))
         {
             Response.Redirect("EventDetails.aspx?eventId=" + eventId);
@@ -62,6 +65,8 @@ public partial class EventStore : System.Web.UI.Page
         }
     }
 
+    //הפעולה שולפת את פרטי האירוע ממסד הנתונים לפי המספר
+    //המזהה שלו ומציגה את שם האירוע בתווית שבדף
     private void LoadEventDetails(int eventId)
     {
         DataTable dt = srv.GetEventById(eventId);
@@ -71,6 +76,8 @@ public partial class EventStore : System.Web.UI.Page
         }
     }
 
+    //הפעולה שולפת את רשימת המוצרים ששייכים לאירוע ספציפי
+    //ומציגה אותם בדף, ואם אין מוצרים היא מציגה הודעה שהחנות ריקה כרגע
     private void LoadProducts()
     {
         int eventId = Convert.ToInt32(Request.QueryString["eventId"]);
@@ -84,6 +91,9 @@ public partial class EventStore : System.Web.UI.Page
         }
     }
 
+    //הפעולה אוספת את כל המוצרים שהמשתמש בחר לקנות, בודקת
+    //שהכמויות תקינות, יוצרת הזמנה חדשה במסד הנתונים ומעבירה את המשתמש
+    //לדף "ההזמנות שלי" עם אישור על הצלחת הרכישה
     protected void btnCheckout_Click(object sender, EventArgs e)
     {
         try
@@ -91,11 +101,9 @@ public partial class EventStore : System.Web.UI.Page
             string username = GetLoggedInUsername();
             if (username == null) return;
 
-            int eventId = Convert.ToInt32(Request.QueryString["eventId"]);
-            
+            int eventId = Convert.ToInt32(Request.QueryString["eventId"]);            
             List<localhost.OrderItem> cart = new List<localhost.OrderItem>();
             
-            // Loop through repeater items to build the cart
             foreach (RepeaterItem item in rptProducts.Items)
             {
                 HiddenField hfProductId = (HiddenField)item.FindControl("hfProductId");
@@ -104,31 +112,30 @@ public partial class EventStore : System.Web.UI.Page
                 
                 int qty = 0;
                 int.TryParse(txtQty.Text, out qty);
-                
-                if (qty > 0)
+
+                //הפיכת בחירה של משתמש באתר לפריט אמיתי בתוך סל הקניות
+
+                if (qty > 0) //הכמות שהמשתמש בחר
                 {
-                    decimal price = 0;
+                    decimal price = 0;                                //מאפשר לקוד לקבל את המספר בכל מיני צורות
                     decimal.TryParse(hfPrice.Value.Replace(",", "."), System.Globalization.NumberStyles.Any, 
-                        System.Globalization.CultureInfo.InvariantCulture, out price);
+                        System.Globalization.CultureInfo.InvariantCulture, out price); //המספר הסופי יישמר בתוך המשתנה שנקרא מחיר
+                        //מבטיח שהקוד שלך יעבוד אותו דבר על כל מחשב בעולם
                     cart.Add(new localhost.OrderItem
                     {
                         ProductId = Convert.ToInt32(hfProductId.Value),
                         Quantity = qty,
                         Price = price
-                    });
+                    }); //מוסיפה פריט חדש לסל הקניות
                 }
             }
-
             if (cart.Count == 0)
             {
                 lblMessage.Text = "Please select at least one item to checkout.";
                 lblMessage.ForeColor = System.Drawing.Color.Red;
                 return;
             }
-
-            // Call PlaceOrder expecting an array
-            int orderId = srv.PlaceOrder(username, eventId, cart.ToArray());
-            
+            int orderId = srv.PlaceOrder(username, eventId, cart.ToArray());       
             if (orderId > 0)
             {
                 Response.Redirect("MyOrders.aspx?success=" + orderId);

@@ -10,9 +10,12 @@ public partial class FindUsers : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה מוודאת הרשאות גישה של המשתמש בעת טעינת הדף,
+    //ומבצעת הפניה לדף ההתחברות אם צריך או טוענת את רשימת המשתמשים.
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["status"] == null || (Session["status"].ToString() != "1" && Session["status"].ToString() != "2"))
+        if (Session["status"] == null || (Session["status"].ToString() != "1" 
+            && Session["status"].ToString() != "2"))
         {
             Response.Redirect("Login.aspx");
             return;
@@ -24,11 +27,14 @@ public partial class FindUsers : System.Web.UI.Page
         }
     }
 
+    //הפעולה מפעילה את טעינת רשימת המשתמשים ומסננת אותה לפי הטקסט שהוזן בתיבת החיפוש.
     protected void btnSearch_Click(object sender, EventArgs e)
     {
         LoadUsers(txtSearch.Text.Trim());
     }
 
+    //הפעולה שולפת את רשימת המשתמשים (הכל או לפי חיפוש), מעדכנת את התצוגה
+    //בטבלה ומציגה הודעה מתאימה במידה ולא נמצאו תוצאות או שקרתה שגיאה
     private void LoadUsers(string searchTerm)
     {
         try
@@ -37,7 +43,6 @@ public partial class FindUsers : System.Web.UI.Page
 
             if (string.IsNullOrEmpty(searchTerm))
             {
-                // Load all users (using SearchUser with empty strings usually returns all)
                 dt = backendService.SearchUser("", "");
             }
             else
@@ -65,7 +70,6 @@ public partial class FindUsers : System.Web.UI.Page
         }
         catch (Exception)
         {
-            // Ideally log error
             lblNoResults.Text = "Error loading users.";
             lblNoResults.Visible = true;
         }

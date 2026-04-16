@@ -8,8 +8,6 @@
     <asp:ContentPlaceHolder id="head" runat="server">
     </asp:ContentPlaceHolder>
 
-    <!-- Basic need -->
-
 <meta charset="UTF-8">
 <meta name="description" content="">
 <meta name="keywords" content="">
@@ -85,11 +83,12 @@
                             </span>
                         </li>
                         <li id="liLogout" runat="server" visible="false" class="btn">
-                            <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" style="color: white; padding: 10px 15px; display: inline-block; text-decoration: none; cursor: pointer;">Log Out</asp:LinkButton>
+                            <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click"
+                                style="color: white; padding: 10px 15px; display: inline-block; 
+                             text-decoration: none; cursor: pointer;">Log Out</asp:LinkButton>
                         </li>
                     </ul>
 </div>
-<!-- /.navbar-collapse -->
 </nav>
 
 </div>

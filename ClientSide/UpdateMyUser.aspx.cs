@@ -9,21 +9,21 @@ using System.Web.UI.WebControls;
 public partial class UpdateMyUser : System.Web.UI.Page
 {
     private DataTable dtUser;
-    private localhost.Users user = new localhost.Users(); //אובייקט חדש
-    private localhost.Service backendService = new localhost.Service();//קריאה לפעולות הקיימות בשרת
+    private localhost.Users user = new localhost.Users(); 
+    private localhost.Service backendService = new localhost.Service();
     private string pic;
 
+    //הפעולה בודקת אם המשתמש מחובר עם הרשאות מתאימות, אם כן היא טוענת את פרטיו האישיים מהזיכרון
+    //ומציגה אותם בטפסים ובתמונת הפרופיל עם טעינת הדף.
     protected void Page_Load(object sender, EventArgs e)
     {
-        // FIX: Check if Session exists first to avoid crash
         string status = Session["status"] as string;
-
-        // FIX: Allow BOTH "1" (User) AND "2" (Admin)
         if (status != "1" && status != "2")
         {
-            string script = @"alert('You are not welcome!'); setTimeout(function() {window.location = 'Login.aspx';}, 10);";
+            string script = @"alert('You are not welcome!'); setTimeout(function() 
+                            {window.location = 'Login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
-            return; // Stop execution here
+            return; 
         }
 
         if (!Page.IsPostBack)
@@ -42,7 +42,6 @@ public partial class UpdateMyUser : System.Web.UI.Page
                 return;
             }
 
-            // Load data into fields
             txtUsername.Text = dtUser.Rows[0]["User"].ToString();
             txtPassword.Text = dtUser.Rows[0]["pass"].ToString();
             txtFirstName.Text = dtUser.Rows[0]["FName"].ToString();
@@ -51,7 +50,6 @@ public partial class UpdateMyUser : System.Web.UI.Page
             txtEmail.Text = dtUser.Rows[0]["email"].ToString();
 
             string phoneValue = dtUser.Rows[0]["phone"].ToString();
-            // Simplify phone logic
             txtPhone.Text = phoneValue;
 
             if (dtUser.Columns.Contains("pic"))
@@ -68,13 +66,13 @@ public partial class UpdateMyUser : System.Web.UI.Page
         }
     }
 
+    //הפעולה מעדכנת את פרטי המשתמש במסד הנתונים
     protected void btnUpdate_Click(object sender, EventArgs e)
     {
         if (Session["data"] != null)
         {
             dtUser = (DataTable)Session["data"];
         }
-
         user.UserN = txtUsername.Text;
         user.Pass = txtPassword.Text;
         user.Fulladdres = txtAddress.Text;
@@ -82,31 +80,26 @@ public partial class UpdateMyUser : System.Web.UI.Page
         user.PhoneN = txtPhone.Text;
         user.NameF = txtFirstName.Text;
         user.LastN = txtLastName.Text;
-
-        // Retrieve existing pic if not changing
         if (dtUser != null && dtUser.Rows.Count > 0)
         {
             if (dtUser.Columns.Contains("pic")) pic = dtUser.Rows[0]["pic"].ToString();
             else if (dtUser.Rows[0].ItemArray.Length > 9) pic = dtUser.Rows[0][9].ToString();
         }
+        if (string.IsNullOrEmpty(pic))
+            pic = "Profile.jpg";
 
-        if (string.IsNullOrEmpty(pic)) pic = "Profile.jpg";
-
-        // Check if new file uploaded
         if (FileUpload1.HasFile)
         {
             pic = FileUpload1.FileName;
             FileUpload1.SaveAs(Server.MapPath("~/MyPics/") + pic);
         }
-
         user.Pic = pic;
 
-        // Perform Update
         dtUser = backendService.UpdateUser(user);
         Session["data"] = dtUser;
 
-        // Show success and redirect
-        string script = @"alert('Profile Updated Successfully!'); setTimeout(function() { window.location = 'ClientArea.aspx'; }, 100);";
+        string script = @"alert('Profile Updated Successfully!'); 
+                    setTimeout(function() { window.location = 'ClientArea.aspx'; }, 100);";
         ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
     }
 }

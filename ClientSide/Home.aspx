@@ -140,7 +140,6 @@
                 border-color: #ff6b6b;
             }
 
-            /* Card action buttons row */
             .card-actions {
                 display: flex;
                 flex-wrap: wrap;
@@ -162,7 +161,6 @@
                 white-space: nowrap;
             }
 
-            /* Wishlist - not yet added */
             .card-btn-wishlist {
                 background: rgba(255, 107, 107, 0.15);
                 color: #ff6b6b;
@@ -175,7 +173,6 @@
                 transform: translateY(-1px);
             }
 
-            /* Wishlist - already added */
             .card-btn-wishlisted {
                 background: #555;
                 color: #bbb;
@@ -183,7 +180,6 @@
                 cursor: default;
             }
 
-            /* Watched - not yet watched */
             .card-btn-watch {
                 background: rgba(78, 205, 196, 0.15);
                 color: #4ecdc4;
@@ -196,7 +192,6 @@
                 transform: translateY(-1px);
             }
 
-            /* Watched - already watched (click to undo) */
             .card-btn-watched-done {
                 background: rgba(78, 205, 196, 0.3);
                 color: #4ecdc4;
@@ -209,7 +204,6 @@
                 text-decoration: none;
             }
 
-            /* View Details arrow button */
             .card-btn-details {
                 background: rgba(51, 51, 153, 0.3);
                 color: #aaaaff;
@@ -225,16 +219,18 @@
     </asp:Content>
 
     <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-
+        
         <div class="films-container">
             <div class="films-header">
                 <h1>Films</h1>
                 <p>Discover and explore movies</p>
             </div>
 
+
             <div class="search-section">
                 <div
-                    style="display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                    style="display: flex; gap: 15px; justify-content: center;
+                   align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                     <asp:Panel ID="pnlSearch" runat="server" DefaultButton="btnSearchFilms"
                         style="display: flex; gap: 10px; align-items: center;">
                         <asp:TextBox ID="txtSearchFilms" runat="server" CssClass="search-box"

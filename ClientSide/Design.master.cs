@@ -8,6 +8,8 @@ using System.Data;
 
 public partial class Design : System.Web.UI.MasterPage
 {
+    //הפעולה שקובעת אם האתר יגיד לך שלום ואז השם שלך
+    //ויתן לך גישה לפרטים האישיים שלך, או יתייחס אלייך כאל אורח אנונימי.
     protected void Page_Load(object sender, EventArgs e)
     {
         try
@@ -49,11 +51,12 @@ public partial class Design : System.Web.UI.MasterPage
         }
         catch
         {
-            // In case of any unexpected issue with Session/DataTable, default to logged-out UI
             SetUserLoggedOut();
         }
     }
 
+    //הפעולה מעדכנת את סרגל הניווט באתר כך שיציג אפשרויות למשתמש מחובר
+    //כמו התנתקות ושם המשתמש ויסתיר כפתורי הרשמה והתחברות.
     public void SetUserLoggedIn(string username, string status)
     {
         try
@@ -68,6 +71,8 @@ public partial class Design : System.Web.UI.MasterPage
         catch { }
     }
 
+    //הפעולה מעדכנת את סרגל הניווט באתר כך שיציג
+    //כפתורי התחברות והרשמה ויסתיר אזורים אישיים או כפתור התנתקות.
     public void SetUserLoggedOut()
     {
         try
@@ -81,6 +86,7 @@ public partial class Design : System.Web.UI.MasterPage
         catch { }
     }
 
+    //הפעולה מאפסת את נתוני המשתמש מהזיכרון של הדפדפן ומחזירה אותו לדף ההתחברות.
     protected void btnLogout_Click(object sender, EventArgs e)
     {
         Session["status"] = "-1";

@@ -1,4 +1,5 @@
-﻿<%@ Page Title="Find Users" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="FindUsers.aspx.cs" Inherits="FindUsers" %>
+﻿<%@ Page Title="Find Users" Language="C#" MasterPageFile="~/Design.master"
+    AutoEventWireup="true" CodeFile="FindUsers.aspx.cs" Inherits="FindUsers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <style type="text/css">
@@ -27,7 +28,6 @@
             font-size: 16px;
         }
 
-        /* --- Search Bar --- */
         .search-container {
             display: flex;
             justify-content: center;
@@ -67,7 +67,6 @@
             background: #e04332;
         }
 
-        /* --- User Cards Grid --- */
         .profiles-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -151,17 +150,21 @@
         </div>
 
         <div class="search-container">
-            <asp:TextBox ID="txtSearch" runat="server" CssClass="search-input" placeholder="Search by name or username..."></asp:TextBox>
-            <asp:Button ID="btnSearch" runat="server" Text="Find" OnClick="btnSearch_Click" CssClass="btn-search" />
+            <asp:TextBox ID="txtSearch" runat="server" CssClass="search-input" 
+                placeholder="Search by name or username..."></asp:TextBox>
+            <asp:Button ID="btnSearch" runat="server" Text="Find" OnClick="btnSearch_Click"
+                CssClass="btn-search" />
         </div>
 
         <div class="profiles-grid">
             <asp:Repeater ID="rptUsers" runat="server">
                 <ItemTemplate>
 
-                    <a class="profile-card" href='UserProfile.aspx?username=<%# Eval("User") %>' class="profile-card" style="width: 100%; text-decoration:none;">
+                    <a class="profile-card" href='UserProfile.aspx?username=<%# Eval("User") %>'
+                        class="profile-card" style="width: 100%; text-decoration:none;">
                         <div class="profile-img-container">
-                            <img src='<%# ResolveUrl("~/MyPics/" + (string.IsNullOrEmpty(Eval("pic").ToString()) ? "Profile.jpg" : Eval("pic"))) %>' class="profile-img" alt="User Pic" />
+                            <img src='<%# ResolveUrl("~/MyPics/" + (string.IsNullOrEmpty(Eval("pic").ToString()) ?
+                            "Profile.jpg" : Eval("pic"))) %>' class="profile-img" alt="User Pic" />
                         </div>
                         
                         <div class="profile-name">
@@ -171,7 +174,8 @@
                         <span class="profile-username">@<%# Eval("User") %></span>
                         
                         <div class="profile-detail">
-                            <i class="fa fa-map-marker"></i> <%# string.IsNullOrEmpty(Eval("address").ToString()) ? "Unknown" : Eval("address") %>
+                            <i class="fa fa-map-marker"></i> <%# string.IsNullOrEmpty(Eval("address").ToString()) ? 
+                                                                     "Unknown" : Eval("address") %>
                         </div>
                         
                         <div class="profile-detail">
@@ -181,7 +185,8 @@
                 </ItemTemplate>
             </asp:Repeater>
             
-            <asp:Label ID="lblNoResults" runat="server" CssClass="no-results" Text="No users found." Visible="false"></asp:Label>
+            <asp:Label ID="lblNoResults" runat="server" CssClass="no-results" 
+                Text="No users found." Visible="false"></asp:Label>
         </div>
     </div>
    

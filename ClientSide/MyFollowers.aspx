@@ -1,4 +1,5 @@
-﻿<%@ Page Title="My Followers" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="MyFollowers.aspx.cs" Inherits="MyNetwork" %>
+﻿<%@ Page Title="My Followers" Language="C#" MasterPageFile="~/Design.master" 
+    AutoEventWireup="true" CodeFile="MyFollowers.aspx.cs" Inherits="MyNetwork" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -102,7 +103,8 @@
                 <div class="column-title">Following</div>
                 <asp:Repeater ID="rptFollowing" runat="server">
                     <ItemTemplate>
-                        <a href='UserProfile.aspx?username=<%# Eval("FollowingUser") %>' class="user-list-item">
+                        <a href='UserProfile.aspx?username=<%# Eval("FollowingUser") %>'
+                            class="user-list-item">
                             <img src="MyPics/Profile.jpg" class="user-pic" />
                             <div class="user-info">
                                 <span class="username">@<%# Eval("FollowingUser") %></span>
@@ -110,14 +112,16 @@
                         </a>
                     </ItemTemplate>
                 </asp:Repeater>
-                <asp:Label ID="lblNoFollowing" runat="server" CssClass="empty-msg" Text="You are not following anyone." Visible="false"></asp:Label>
+                <asp:Label ID="lblNoFollowing" runat="server" CssClass="empty-msg"
+                    Text="You are not following anyone." Visible="false"></asp:Label>
             </div>
 
             <div class="network-column">
                 <div class="column-title">Followers</div>
                 <asp:Repeater ID="rptFollowers" runat="server">
                     <ItemTemplate>
-                        <a href='UserProfile.aspx?username=<%# Eval("FollowerUser") %>' class="user-list-item">
+                        <a href='UserProfile.aspx?username=<%# Eval("FollowerUser") %>'
+                            class="user-list-item">
                             <img src="MyPics/Profile.jpg" class="user-pic" />
                             <div class="user-info">
                                 <span class="username">@<%# Eval("FollowerUser") %></span>
@@ -125,7 +129,8 @@
                         </a>
                     </ItemTemplate>
                 </asp:Repeater>
-                <asp:Label ID="lblNoFollowers" runat="server" CssClass="empty-msg" Text="You have no followers yet." Visible="false"></asp:Label>
+                <asp:Label ID="lblNoFollowers" runat="server" CssClass="empty-msg" 
+                    Text="You have no followers yet." Visible="false"></asp:Label>
             </div>
         </div>
     </div>

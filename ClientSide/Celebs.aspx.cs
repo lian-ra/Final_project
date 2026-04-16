@@ -10,20 +10,23 @@ public partial class Celebs : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה טוענת את רשימת הסלבים בטעינה הראשונה של הדף.
     protected void Page_Load(object sender, EventArgs e)
     {
-
         if (!IsPostBack)
         {
             LoadCelebs();
         }
     }
 
+    //הפעולה מפעילה את טעינת רשימת הסלבים מחדש בעת לחיצה על כפתור החיפוש
     protected void btnSearchCelebs_Click(object sender, EventArgs e)
     {
         LoadCelebs();
     }
 
+    //הפעולה מחפשת סלבים לפי טקסט ותפקיד, יוצרת עבור כל אחד "כרטיס" תצוגה
+    //ומציגה אותו בטבלה, או מציגה הודעת שגיאה/חוסר תוצאות.
     private void LoadCelebs()
     {
         try
@@ -45,7 +48,8 @@ public partial class Celebs : System.Web.UI.Page
             }
             else
             {
-                LiteralControl noResults = new LiteralControl("<div style='text-align: center; color: white; padding: 40px; grid-column: 1 / -1;'>No celebrities found.</div>");
+                LiteralControl noResults = new LiteralControl("<div style='text-align: center; color: white;" +
+                    " padding: 40px; grid-column: 1 / -1;'>No celebrities found.</div>");
                 celebsGrid.Controls.Add(noResults);
             }
         }
@@ -53,12 +57,15 @@ public partial class Celebs : System.Web.UI.Page
         {
             string message = "alert('Error loading celebs: " + ex.Message.Replace("'", "\\'") + "');";
             ClientScript.RegisterStartupScript(this.GetType(), "Error", message, true);
-            LiteralControl errorMsg = new LiteralControl("<div style='text-align: center; color: white; padding: 40px; grid-column: 1 / -1;'>Error loading celebrities. Please try again.</div>");
+            LiteralControl errorMsg = new LiteralControl("<div style='text-align: center; color: white; " +
+                "padding: 40px; grid-column: 1 / -1;'>Error loading celebrities. Please try again.</div>");
             celebsGrid.Controls.Clear();
             celebsGrid.Controls.Add(errorMsg);
         }
     }
 
+    //HTML הפעולה מעצבת כרטיס תצוגה
+    //עבור סלב, הכולל את תמונתו, שמו, תפקידו ותיאורו, ויוצרת קישור לדף הפרטים האישיים שלו.
     private string GenerateCelebCard(DataRow row)
     {
         string name = row["Name"] != DBNull.Value ? row["Name"].ToString() : "Unknown";
@@ -72,7 +79,6 @@ public partial class Celebs : System.Web.UI.Page
         }
 
         string urlName = HttpUtility.UrlEncode(name);
-
         string cardHtml = string.Format(@"
             <div class='celeb-card'>
                 <a href='CelebDetails.aspx?name={4}' style='text-decoration:none; color:inherit;'>

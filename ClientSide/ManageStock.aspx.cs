@@ -7,21 +7,26 @@ public partial class ManageStock : System.Web.UI.Page
 {
     localhost.Service srv = new localhost.Service();
 
+    //הפעולה בודקת אם המשתמש המחובר הוא מנהל, ואם כן
+    //היא מחזירה את שם המשתמש שלו מתוך הנתונים שנשמרו בזיכרון המערכת
     private string GetLoggedInUsername()
     {
         string status = Session["status"] as string;
-        if (status != "2") return null; // Admin only
+        if (status != "2") return null; 
 
         DataTable dt = Session["data"] as DataTable;
         if (dt != null && dt.Rows.Count > 0)
         {
             if (dt.Columns.Contains("User"))
                 return dt.Rows[0]["User"].ToString();
-            return dt.Rows[0][0].ToString(); //למניעת קריסה
+            return dt.Rows[0][0].ToString(); 
         }
         return null;
     }
 
+    //הפעולה בודקת אם המשתמש המחובר הוא מנהל: אם לא היא
+    //מעבירה אותו לדף ההתחברות ואם כן היא טוענת עבורו
+    //את רשימת מלאי המוצרים כשהדף עולה לראשונה
     protected void Page_Load(object sender, EventArgs e)
     {
         if (GetLoggedInUsername() == null)
@@ -29,13 +34,14 @@ public partial class ManageStock : System.Web.UI.Page
             Response.Redirect("Login.aspx");
             return;
         }
-
         if (!IsPostBack)
         {
             LoadStock();
         }
     }
 
+    //הפעולה טוענת את רשימת כל המוצרים מהמלאי ומציגה אותם בדף, תוך
+    //אפשרות לסינון התוצאות לפי שם המוצר או הקוד שלו במידה והוזן טקסט בחיפוש
     private void LoadStock(string searchQuery = "")
     {
         DataTable dt = srv.GetProducts(); 
@@ -44,36 +50,42 @@ public partial class ManageStock : System.Web.UI.Page
         {
             DataTable filteredDt = dt.Clone(); //טבלה ריקה משוכפלת
             string escaped = searchQuery.Replace("'", "''"); 
-            DataRow [] results = dt.Select("Name LIKE '%" + escaped + "%' OR Convert(ProductId, 'System.String') LIKE '%" + escaped + "%'"); //סינון
+            DataRow [] results = dt.Select("Name LIKE '%" + escaped +
+                "%' OR Convert(ProductId, 'System.String') LIKE '%" + escaped + "%'"); //סינון
             foreach (DataRow row in results)
             {
                 filteredDt.ImportRow(row);
             }
-            dt = filteredDt;
+            dt = filteredDt; //כדי להציג רק את התוצאות שנמצאו בחיפוש
         }
 
         rptStock.DataSource = dt;
         rptStock.DataBind();
     }
 
+    //הפעולה מפעילה את טעינת המלאי מחדש, תוך סינון
+    //המוצרים לפי הטקסט שהמנהל הקליד בתיבת החיפוש
     protected void btnSearchStock_Click(object sender, EventArgs e)
     {
         LoadStock(txtSearchStock.Text.Trim());
     }
 
+    //הפעולה מנקה את טקסט החיפוש ומציגה מחדש
+    //את רשימת המלאי המלאה ללא סינון
     protected void btnClearSearch_Click(object sender, EventArgs e)
     {
         txtSearchStock.Text = "";
         LoadStock();
     }
 
+    //הפעולה מוסיפה מוצר חדש למערכת עם הפרטים
+    //שהוזנו (שם, תיאור ומחיר) ומעדכנת את תצוגת המלאי
     protected void btnAddProduct_Click(object sender, EventArgs e)
     {
         string name = txtName.Text.Trim();
         string desc = txtDescription.Text.Trim();
         decimal price = 0;
         decimal.TryParse(txtPrice.Text, out price);
-
         string picturePath = "images/default-product.png";
         
         if (fuPicture.HasFile)
@@ -107,6 +119,8 @@ public partial class ManageStock : System.Web.UI.Page
         }
     }
 
+    //הפעולה מנהלת את הכפתורים ברשימת המוצרים: מחיקה(בתנאי שהמוצר לא הוזמן בעבר) או
+    //פתיחת טופס עריכה עם פרטי המוצר הקיים.
     protected void rptStock_ItemCommand(object source, System.Web.UI.WebControls.RepeaterCommandEventArgs e)
                                                          //מכיל את כל הנתונים על הכפתור שנלחץ בתוך הרשימה
     {
@@ -142,7 +156,7 @@ public partial class ManageStock : System.Web.UI.Page
                     txtEditPrice.Text = args[2];
                     
                     pnlAdd.Visible = false;
-                    pnlEdit.Visible = true;
+                    pnlEdit.Visible = true; //מצב עריכה
                     lblSuccess.Visible = false;
                     lblError.Visible = false;
                 }
@@ -151,14 +165,19 @@ public partial class ManageStock : System.Web.UI.Page
         }
     }
 
+    //הפעולה מעדכנת את המחיר והתמונה של מוצר קיים במסד הנתונים, שומרת
+    //את התמונה החדשה בשרת (אם הועלתה) ומרעננת את תצוגת המלאי.
     protected void btnSaveEdit_Click(object sender, EventArgs e)
     {
         try
         {
             int productId = Convert.ToInt32(hfEditProductId.Value);
             decimal price = 0;
-            decimal.TryParse(txtEditPrice.Text.Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out price);
-            
+            decimal.TryParse(txtEditPrice.Text.Replace(",", "."), 
+         System.Globalization.NumberStyles.Any, //מקבל גם אם הוסיף בטעות רווחים
+         System.Globalization.CultureInfo.InvariantCulture, out price);//כדי למנוע קריסה
+                                                             //של האתר בשל הבדלי פורמטים ומחירים בין מדינות
+
             string picture = "";
             if (fuEditPicture.HasFile)
             {
@@ -187,6 +206,8 @@ public partial class ManageStock : System.Web.UI.Page
         }
     }
 
+    //הפעולה מבטלת את מצב העריכה על ידי הסתרת טופס
+    //העריכה והודעות המערכת, והחזרת טופס הוספת המוצר לתצוגה
     protected void btnCancelEdit_Click(object sender, EventArgs e)
     {
         pnlAdd.Visible = true;

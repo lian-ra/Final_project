@@ -281,7 +281,6 @@
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             }
 
-            /* Modal Styles */
             .modal-overlay {
                 position: fixed;
                 top: 0;
@@ -354,7 +353,6 @@
                 color: white;
                 font-size: 16px;
                 box-sizing: border-box;
-                /* Important for padding */
             }
 
             .form-control:focus {
@@ -387,8 +385,15 @@
                     <asp:Button ID="btnUpdateEvent" runat="server" Text="Update Details"
                         CssClass="btn-status btn-status-open" style="background: #e67e22;"
                         OnClick="btnUpdateEvent_Click" />
-                    <a href='ManageEventStore.aspx?eventId=<%= Request.QueryString["eventId"] %>' class="btn-status" style="background: #9b59b6; color: white; text-decoration: none; display: inline-flex; align-items: center;"><i class="fa fa-shopping-basket" style="margin-right:5px;"></i>Manage Store</a>
-                    <a href='EventOrders.aspx?eventId=<%= Request.QueryString["eventId"] %>' class="btn-status" style="background: #34495e; color: white; text-decoration: none; display: inline-flex; align-items: center;"><i class="fa fa-list-alt" style="margin-right:5px;"></i>View Orders</a>
+
+                    <a href='ManageEventStore.aspx?eventId=<%= Request.QueryString["eventId"] %>'
+                        class="btn-status" style="background: #9b59b6; color: white; text-decoration: none; 
+                        display: inline-flex; align-items: center;"><i class="fa fa-shopping-basket"
+                            style="margin-right:5px;"></i>Manage Store</a>
+                    <a href='EventOrders.aspx?eventId=<%= Request.QueryString["eventId"] %>' 
+                        class="btn-status" style="background: #34495e; color: white; 
+                           text-decoration: none; display: inline-flex; align-items: center;"><i
+                               class="fa fa-list-alt" style="margin-right:5px;"></i>View Orders</a>
                 </div>
             </asp:Panel>
 

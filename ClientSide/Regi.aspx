@@ -13,13 +13,13 @@
 
         /* The main card container */
         .register-card {
-            background: rgba(20, 20, 20, 0.85); /* Dark semi-transparent background */
+            background: rgba(20, 20, 20, 0.85); 
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Soft shadow */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
             border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 500px; /* Slightly wider than login for more fields */
+            max-width: 500px; 
             text-align: center;
         }
 
@@ -139,15 +139,18 @@
             <h1>Register</h1>
 
             <div style="text-align: center;">
-                <asp:Image ID="img" runat="server" CssClass="profile-img-preview" Height="100px" ImageUrl="~/MyPics/Profile.jpg" Width="100px" />
+                <asp:Image ID="img" runat="server" CssClass="profile-img-preview" Height="100px" 
+                    ImageUrl="~/MyPics/Profile.jpg" Width="100px" />
             </div>
 
             <div class="form-group">
                 <asp:Label ID="label1" runat="server" Text="Username" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtUName" runat="server" CssClass="form-control-custom" placeholder="Choose a username"></asp:TextBox>
+                <asp:TextBox ID="txtUName" runat="server" CssClass="form-control-custom"
+                    placeholder="Choose a username"></asp:TextBox>
                 
                         
-    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage=" Username required" ControlToValidate="txtUName"></asp:RequiredFieldValidator>
+    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage=" Username required"
+        ControlToValidate="txtUName"></asp:RequiredFieldValidator>
 
 
             </div>
@@ -155,38 +158,48 @@
 
             <div class="form-group">
                 <asp:Label ID="label2" runat="server" Text="Password" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtPass" runat="server" CssClass="form-control-custom" TextMode="Password" placeholder="Create a password"></asp:TextBox>
+                <asp:TextBox ID="txtPass" runat="server" CssClass="form-control-custom" TextMode="Password"
+                    placeholder="Create a password"></asp:TextBox>
             </div>
 
             <div class="form-group">
                 <asp:Label ID="label3" runat="server" Text="First Name" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtFirstNameName" runat="server" CssClass="form-control-custom" placeholder="Enter first name"></asp:TextBox>
+                <asp:TextBox ID="txtFirstNameName" runat="server" CssClass="form-control-custom"
+                    placeholder="Enter first name"></asp:TextBox>
             </div>
 
             <div class="form-group">
                 <asp:Label ID="label4" runat="server" Text="Last Name" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtLastNameName" runat="server" CssClass="form-control-custom" placeholder="Enter last name"></asp:TextBox>
+                <asp:TextBox ID="txtLastNameName" runat="server" CssClass="form-control-custom" 
+                    placeholder="Enter last name"></asp:TextBox>
             </div>
 
             <div class="form-group">
                 <asp:Label ID="label5" runat="server" Text="Address" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtAddress" runat="server" CssClass="form-control-custom" placeholder="Enter address"></asp:TextBox>
+                <asp:TextBox ID="txtAddress" runat="server" CssClass="form-control-custom"
+                    placeholder="Enter address"></asp:TextBox>
             </div>
 
             <div class="form-group">
                 <asp:Label ID="label6" runat="server" Text="Email" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtEmailail" runat="server" CssClass="form-control-custom" TextMode="Email" placeholder="Enter email address"></asp:TextBox>
+                <asp:TextBox ID="txtEmailail" runat="server" CssClass="form-control-custom"
+                    TextMode="Email" placeholder="Enter email address"></asp:TextBox>
                 
-                    <asp:RegularExpressionValidator ID="re_Email" runat="server" ErrorMessage="RegularExpressionValidator" ControlToValidate="txtEmailail" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"></asp:RegularExpressionValidator>
+                    <asp:RegularExpressionValidator ID="re_Email" runat="server" ErrorMessage="RegularExpressionValidator"
+                        ControlToValidate="txtEmailail" 
+                        ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"></asp:RegularExpressionValidator>
             </div>
             
                                       
 
             <div class="form-group">
                 <asp:Label ID="label7" runat="server" Text="Phone" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtPhoneone" runat="server" CssClass="form-control-custom" placeholder="Enter phone number" EnableTheming="False" ></asp:TextBox>
-                <asp:RequiredFieldValidator ID="rfvPhone" runat="server" ErrorMessage="Phone number is required." ControlToValidate="txtPhoneone" ForeColor="#ff4c3b" Display="Dynamic"></asp:RequiredFieldValidator>
-                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="Must be exactly 10 digits." ControlToValidate="txtPhoneone" ValidationExpression="^\d{10}$" ForeColor="#ff4c3b" Display="Dynamic"></asp:RegularExpressionValidator>
+                <asp:TextBox ID="txtPhoneone" runat="server" CssClass="form-control-custom" 
+                    placeholder="Enter phone number" EnableTheming="False" ></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvPhone" runat="server" ErrorMessage="Phone number is required."
+                    ControlToValidate="txtPhoneone" ForeColor="#ff4c3b" Display="Dynamic"></asp:RequiredFieldValidator>
+                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server"
+                    ErrorMessage="Must be exactly 10 digits." ControlToValidate="txtPhoneone" ValidationExpression="^\d{10}$" ForeColor="#ff4c3b" Display="Dynamic"></asp:RegularExpressionValidator>
             </div>
          
        
@@ -205,9 +218,14 @@
                     <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
                             <div style="margin-bottom: 10px; display: flex; justify-content: space-between;">
-                                <asp:DropDownList ID="ddlMonth" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DateDropdown_SelectedIndexChanged" CssClass="dropdown-custom" style="width: 48%;"></asp:DropDownList>
-                                <asp:DropDownList ID="ddlYear" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DateDropdown_SelectedIndexChanged" CssClass="dropdown-custom" style="width: 48%;"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlMonth" runat="server" AutoPostBack="true"
+                                    OnSelectedIndexChanged="DateDropdown_SelectedIndexChanged" 
+                                    CssClass="dropdown-custom" style="width: 48%;"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlYear" runat="server" AutoPostBack="true"
+                                    OnSelectedIndexChanged="DateDropdown_SelectedIndexChanged" 
+                                    CssClass="dropdown-custom" style="width: 48%;"></asp:DropDownList>
                             </div>
+
                             <asp:Calendar ID="Calendar1" runat="server" 
                                 OnDayRender="Calendar1_DayRender"
                                 OnSelectionChanged="Calendar1_SelectionChanged"
@@ -240,7 +258,8 @@
                 <asp:FileUpload ID="FileUpload1" runat="server" CssClass="file-upload-custom" />
             </div>
 
-            <asp:Button runat="server" ID="btnsave" Text="Sign Up" OnClick="RegisterNewUser" CssClass="btn-custom btn-signup" />
+            <asp:Button runat="server" ID="btnsave" Text="Sign Up" OnClick="RegisterNewUser"
+                CssClass="btn-custom btn-signup" />
         </div>
     </div>
 

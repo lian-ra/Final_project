@@ -1351,14 +1351,16 @@ public class Service : System.Web.Services.WebService
     [WebMethod]
     public void CreateEventProductsTable()
     {
-        CreateStoreTables();
+        CreateStoreTables();   
         string checkSql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EventProducts'";
+        //בודקת אם טבלת הקישור בין מוצרים לאירועים קיימת, כדי למנוע יצירה כפולה.
         SqlCommand cmd = new SqlCommand(checkSql);
         DataTable dt = DbActions.SearchWithParameters(cmd, GetPath());
         int exists = (dt != null && dt.Rows.Count > 0) ? Convert.ToInt32(dt.Rows[0][0]) : 0;
 
         if (exists == 0)
         {
+            //יצירת טבלה חדשה
             string createSql = @"CREATE TABLE [EventProducts] (
                 [Id] INT IDENTITY(1,1) PRIMARY KEY,
                 [EventId] INT NOT NULL,

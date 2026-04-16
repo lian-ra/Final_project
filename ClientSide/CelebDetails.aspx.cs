@@ -8,41 +8,45 @@ public partial class CelebDetails : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
 
+    //הפעולה בודקת אם המשתמש מחובר למערכת
+    //ואם לא היא מקפיצה הודעה ומעבירה אותו לדף ההתחברות
+    //אם הוא מחובר, היא טוענת את נתוני הסלב בטעינה הראשונה של הדף
     protected void Page_Load(object sender, EventArgs e)
     {
         string status = Session["status"] as string;
         if (status != "1" && status != "2")
         {
-            string script = @"alert('You must be logged in to view this page.'); setTimeout(function() {window.location = 'login.aspx';}, 10);";
+            string script = @"alert('You must be logged in to view this page.');
+            setTimeout(function() {window.location = 'login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
-            return; // Stop further execution
+            return; 
         }
-
         if (!IsPostBack)
         {
             LoadCeleb();
         }
     }
 
+    //הפעולה שולפת את שם הסלב מהכתובת מבקשת מהשירות את הנתונים שלו, ומציגה אותם בדף
     private void LoadCeleb()
     {
         string name = Request.QueryString["name"];
         if (string.IsNullOrWhiteSpace(name))
         {
             phCeleb.Controls.Clear();
-            phCeleb.Controls.Add(new LiteralControl("<div class='celeb-details-error'>No celebrity specified.</div>"));
+            phCeleb.Controls.Add(new LiteralControl("<div class='celeb-details-error'>" +
+                "No celebrity specified.</div>"));
             return;
         }
-
         try
         {
-            // We can reuse SearchCelebs by name
             DataTable dt = backendService.SearchCelebs(name, "all");
             phCeleb.Controls.Clear();
 
             if (dt == null || dt.Rows.Count == 0)
             {
-                phCeleb.Controls.Add(new LiteralControl("<div class='celeb-details-error'>Celebrity not found.</div>"));
+                phCeleb.Controls.Add(new LiteralControl("<div class='celeb-details-error'>" +
+                    "Celebrity not found.</div>"));
                 return;
             }
 
@@ -58,12 +62,12 @@ public partial class CelebDetails : System.Web.UI.Page
                 photo = "~/" + photo;
             }
 
-            // Find movies where this celeb appears in the Actors column
             DataTable moviesDt = backendService.SearchMovies(celebName, "");
             string moviesHtml = "";
             if (moviesDt != null && moviesDt.Rows.Count > 0)
             {
-                moviesHtml += "<div class='celeb-details-movies-title'>Movies</div><div class='celeb-details-movies-list'><ul>";
+                moviesHtml += "<div class='celeb-details-movies-title'>Movies</div><div" +
+                    " class='celeb-details-movies-list'><ul>";
                 foreach (DataRow m in moviesDt.Rows)
                 {
                     int movieId = m["MovieId"] != DBNull.Value ? Convert.ToInt32(m["MovieId"]) : 0;
@@ -71,7 +75,8 @@ public partial class CelebDetails : System.Web.UI.Page
                     string year = m["Year"] != DBNull.Value ? m["Year"].ToString() : "";
                     string rating = m["Rating"] != DBNull.Value ? m["Rating"].ToString() : "";
 
-                    moviesHtml += "<li><a href='MovieDetails.aspx?movieId=" + movieId + "'>" + HttpUtility.HtmlEncode(title) + "</a>";
+                    moviesHtml += "<li><a href='MovieDetails.aspx?movieId=" + movieId + "'>" + 
+                        HttpUtility.HtmlEncode(title) + "</a>";
                     if (!string.IsNullOrEmpty(year) || !string.IsNullOrEmpty(rating))
                     {
                         moviesHtml += " (";
@@ -113,7 +118,8 @@ public partial class CelebDetails : System.Web.UI.Page
             string msg = "alert('Error loading celebrity: " + ex.Message.Replace("'", "\\'") + "');";
             ClientScript.RegisterStartupScript(this.GetType(), "CelebDetailsError", msg, true);
             phCeleb.Controls.Clear();
-            phCeleb.Controls.Add(new LiteralControl("<div class='celeb-details-error'>Error loading celebrity details.</div>"));
+            phCeleb.Controls.Add(new LiteralControl("<div class='celeb-details-error'>" +
+                "Error loading celebrity details.</div>"));
         }
     }
 }

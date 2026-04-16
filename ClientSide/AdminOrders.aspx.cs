@@ -22,10 +22,12 @@ public partial class AdminOrders : System.Web.UI.Page
         public string ItemsSummary { get; set; }
     }
 
+    //הפעולה בודקת אם המשתמש המחובר הוא מנהל ואם כן היא מחזירה את שם המשתמש
+    //שלו מתוך הנתונים שנשמרו במערכת. אם הוא לא מנהל, היא לא מחזירה כלום
     private string GetLoggedInUsername()
     {
         string status = Session["status"] as string;
-        if (status != "2") return null; // Admin only
+        if (status != "2") return null; 
 
         DataTable dt = Session["data"] as DataTable;
         if (dt != null && dt.Rows.Count > 0)
@@ -36,10 +38,12 @@ public partial class AdminOrders : System.Web.UI.Page
         return null;
     }
 
+    //הפעולה בודקת אם המשתמש מחובר (מנהל): אם לא, היא מעבירה אותו
+    //לדף ההתחברות. אם כן, היא טוענת עבורו את רשימת כל ההזמנות הקיימות במערכת.
     protected void Page_Load(object sender, EventArgs e)
     {
         string username = GetLoggedInUsername();
-        if (username == null) // Not Admin
+        if (username == null) 
         {
             Response.Redirect("Login.aspx");
             return;
@@ -51,17 +55,21 @@ public partial class AdminOrders : System.Web.UI.Page
         }
     }
 
+    //הפעולה מפעילה את טעינת כל ההזמנות מחדש, תוך סינון התוצאות לפי הטקסט שהמנהל הקליד בתיבת החיפוש
     protected void btnSearchOrders_Click(object sender, EventArgs e)
     {
         LoadAllOrders(txtSearch.Text.Trim());
     }
 
+    //הפעולה מנקה את מה שכתוב בתיבת החיפוש ומציגה מחדש את רשימת כל ההזמנות ללא סינון.
     protected void btnClear_Click(object sender, EventArgs e)
     {
         txtSearch.Text = "";
         LoadAllOrders("");
     }
 
+    //הפעולה מציגה למנהל את כל ההזמנות באתר, כולל סינון לפי חיפוש,
+    //פירוט מוצרים לכל הזמנה וחישוב סך כל הרווחים וההזמנות שבוצעו
     private void LoadAllOrders(string searchTerm = "")
     {
         DataTable dtOrders = srv.GetAllOrders();
@@ -85,7 +93,7 @@ public partial class AdminOrders : System.Web.UI.Page
                         !eventOwner.ToLower().Contains(s) && 
                         !movieTitle.ToLower().Contains(s))
                     {
-                        continue;
+                        continue; //בודק אם מה שהמשתמש חיפש לא נמצא באף אחד מהשדות- הוא פשוט מדלג על השורה הזו.
                     }
                 }
                 
@@ -99,7 +107,6 @@ public partial class AdminOrders : System.Web.UI.Page
                 order.Total = Convert.ToDecimal(row["Total"]);
                 totalRev += order.Total;
                 
-                // Get Items
                 DataTable dtItems = srv.GetOrderItems(orderId);
                 List<string> itemStrs = new List<string>();
                 if (dtItems != null)
@@ -108,9 +115,8 @@ public partial class AdminOrders : System.Web.UI.Page
                     {
                         itemStrs.Add(iRow["Quantity"].ToString() + "x " + iRow["ProductName"].ToString());
                     }
-                }
-                
-                order.ItemsSummary = string.Join("<br/>", itemStrs);
+                }   
+                order.ItemsSummary = string.Join("<br/>", itemStrs); //מאוסף מחרוזות למחרוזת אחת
                 ordersList.Add(order);
             }
         }

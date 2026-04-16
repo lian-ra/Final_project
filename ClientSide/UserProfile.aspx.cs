@@ -10,7 +10,6 @@ public partial class UserProfile : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        // 1. Get Logged In User
         if (Session["status"] == null || (Session["status"].ToString() != "1" && Session["status"].ToString() != "2"))
         {
             Response.Redirect("Login.aspx");
@@ -26,7 +25,6 @@ public partial class UserProfile : System.Web.UI.Page
                 currentUser = dtSession.Rows[0][0].ToString();
         }
 
-        // 2. Determine Profile User
         profileUser = Request.QueryString["username"];
         if (string.IsNullOrEmpty(profileUser))
         {
@@ -124,9 +122,7 @@ public partial class UserProfile : System.Web.UI.Page
     {
         try
         {
-            // Get current user info to preserve what hasn't changed if needed
-            // But we will overwrite everything with what's in textboxes
-            
+          
             // Handle Pic
             string picName = "Profile.jpg"; // default
             DataTable dt = backendService.SearchUser(currentUser, "username");

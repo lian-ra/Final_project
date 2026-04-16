@@ -9,9 +9,10 @@ using System.Data;
 public partial class Home : System.Web.UI.Page
 {
     private localhost.Service backendService = new localhost.Service();
-    private HashSet<int> wishlistMovieIds = new HashSet<int>();
-    private HashSet<int> watchedMovieIds = new HashSet<int>();
+    private HashSet<int> wishlistMovieIds = new HashSet<int>(); //Watchlist הסרטים שב
+    private HashSet<int> watchedMovieIds = new HashSet<int>(); //Watched הסרטים שב
 
+    //הפעולה מבצעת טעינת נתונים אישיים של המשתמש בעת פתיחת הדף.
     protected void Page_Load(object sender, EventArgs e)
     {
         LoadWishlistForCurrentUser();
@@ -22,6 +23,7 @@ public partial class Home : System.Web.UI.Page
         }
     }
 
+    //הפעולה מבצעת טעינה של רשימת המשאלות עבור המשתמש המחובר
     private void LoadWishlistForCurrentUser()
     {
         try
@@ -52,9 +54,10 @@ public partial class Home : System.Web.UI.Page
                 }
             }
         }
-        catch { /* ignore errors */ }
+        catch {}
     }
 
+    //הפעולה מבצעת טעינה של רשימת הסרטים שהמשתמש כבר ראה.
     private void LoadWatchedForCurrentUser()
     {
         try
@@ -87,20 +90,21 @@ public partial class Home : System.Web.UI.Page
                 }
             }
         }
-        catch { /* ignore errors */ }
+        catch {}
     }
 
+    //הפעולה מראה למשתמש את תוצאות הסרטים שהוא חיפש בחיפוש
     protected void btnSearchFilms_Click(object sender, EventArgs e)
     {
         LoadFilms();
     }
 
+    //הפעולה מבצעת סינון של סרטים לפי ז'אנר.
     protected void btnFilter_Click(object sender, EventArgs e)
     {
         LinkButton btn = sender as LinkButton;
         string genre = btn.CommandArgument;
 
-        // Reset button styles
         btnAll.CssClass = "genre-btn";
         btnAction.CssClass = "genre-btn";
         btnComedy.CssClass = "genre-btn";
@@ -114,6 +118,7 @@ public partial class Home : System.Web.UI.Page
         LoadFilms();
     }
 
+    //הפעולה מבצעת שינוי של סדר הצגת הסרטים- מיון.
     protected void ddlSort_SelectedIndexChanged(object sender, EventArgs e)
     {
         DropDownList ddl = sender as DropDownList;
@@ -121,12 +126,14 @@ public partial class Home : System.Web.UI.Page
         LoadFilms();
     }
 
+    //הפעולה מבצעת את הצגת הסרטים על המסך לפי כל הסינונים והמיונים שהמשתמש בחר.
     private void LoadFilms()
     {
         try
         {
             string searchTerm = txtSearchFilms.Text.Trim();
-            string genre = ViewState["SelectedGenre"] != null ? ViewState["SelectedGenre"].ToString() : "all";
+            string genre = ViewState["SelectedGenre"] != null ?
+                ViewState["SelectedGenre"].ToString() : "all";
 
             if (genre == "all") genre = "";
             else if (genre == "scifi") genre = "Sci-Fi";
@@ -151,10 +158,7 @@ public partial class Home : System.Web.UI.Page
                 }
                 dt = dv.ToTable();
             }
-
-            // This line requires the div id="filmsGrid" in the ASPX file
             filmsGrid.Controls.Clear();
-
             if (dt != null && dt.Rows.Count > 0)
             {
                 foreach (DataRow row in dt.Rows)
@@ -173,6 +177,10 @@ public partial class Home : System.Web.UI.Page
         }
     }
 
+
+    //הפעולה מבצעת את הבנייה הוויזואלית של כרטיס הסרט
+    //HTML היא הופכת את הנתונים מהטבלה לקוד
+    //שמוצג למשתמש
     private string GenerateMovieCard(DataRow row)
     {
         string title = row["Title"] != DBNull.Value ? row["Title"].ToString() : "Unknown";
@@ -194,7 +202,8 @@ public partial class Home : System.Web.UI.Page
         }
         else
         {
-            wishlistHtml = string.Format("<a href='Wishlist.aspx?action=add&movieId={0}' class='card-btn card-btn-wishlist'>&#9825; Wishlist</a>", movieId);
+            wishlistHtml = string.Format("<a href='Wishlist.aspx?action=add&movieId={0}' " +
+                "class='card-btn card-btn-wishlist'>&#9825; Wishlist</a>", movieId);
         }
 
         // Watched button
@@ -209,7 +218,8 @@ public partial class Home : System.Web.UI.Page
         }
 
         // View details button
-        string detailsHtml = string.Format("<a href='MovieDetails.aspx?movieId={0}' class='card-btn card-btn-details'>View Details &#8594;</a>", movieId);
+        string detailsHtml = string.Format("<a href='MovieDetails.aspx?movieId={0}'" +
+            " class='card-btn card-btn-details'>View Details &#8594;</a>", movieId);
 
         return string.Format(@"
             <div class='film-card'>

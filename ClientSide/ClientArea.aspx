@@ -23,7 +23,6 @@
                 text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             }
 
-            /* Card Layout */
             .dashboard-grid {
                 display: flex;
                 justify-content: center;
@@ -56,7 +55,6 @@
                 background: rgba(40, 40, 40, 0.9);
             }
 
-            /* Image handling inside the card */
             .card-image-container {
                 width: 100px;
                 height: 100px;
@@ -97,7 +95,6 @@
                 text-transform: uppercase;
             }
 
-            /* Bottom Buttons */
             .actions-container {
                 display: flex;
                 flex-direction: column;
@@ -155,7 +152,8 @@
             <div class="dashboard-grid">
                 <a href="UpdateMyUser.aspx" class="dash-card">
                     <div class="card-image-container">
-                        <asp:Image ID="imgUpdateUser" runat="server" ImageUrl="~/MyPics/update_user.jpg" />
+                        <asp:Image ID="imgUpdateUser" runat="server" 
+                            ImageUrl="~/MyPics/update_user.jpg" />
                     </div>
                     <span class="dash-text">Update Profile</span>
                 </a>
@@ -190,8 +188,10 @@
             </div>
 
             <div class="actions-container">
-                <asp:Button ID="btnResetWishlist" runat="server" Text="Reset Wishlist" OnClick="btnResetWishlist_Click"
-                    OnClientClick="return confirm('Are you sure you want to delete the Wishlist table? This cannot be undone.');"
+                <asp:Button ID="btnResetWishlist" runat="server" Text="Reset Wishlist"
+                    OnClick="btnResetWishlist_Click"
+                    OnClientClick="return confirm('Are you sure you want to delete 
+                    the Wishlist table? This cannot be undone.');"
                     CssClass="btn-custom btn-danger" />
 
                 <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Login.aspx"

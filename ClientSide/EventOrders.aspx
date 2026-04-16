@@ -1,4 +1,5 @@
-<%@ Page Title="Event Orders" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="EventOrders.aspx.cs" Inherits="EventOrders" %>
+<%@ Page Title="Event Orders" Language="C#" MasterPageFile="~/Design.master"
+    AutoEventWireup="true" CodeFile="EventOrders.aspx.cs" Inherits="EventOrders" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <style type="text/css">
@@ -145,38 +146,46 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="orders-wrapper">
-        <a href="EventDetails.aspx?eventId=<%= Request.QueryString["eventId"] %>" class="btn-back"><i class="fa fa-arrow-left"></i> Back to Event Details</a>
+        <a href="EventDetails.aspx?eventId=<%= Request.QueryString["eventId"] %>"
+            class="btn-back"><i
+            class="fa fa-arrow-left"></i> Back to Event Details</a>
         
         <h1 class="orders-title">Event Orders</h1>
         <div class="orders-subtitle"><asp:Label ID="lblEventName" runat="server"></asp:Label></div>
         
         <asp:Panel ID="pnlStats" runat="server" CssClass="stats-bar" Visible="false">
             <div class="stat-item">
-                <div class="stat-value"><asp:Label ID="lblTotalOrders" runat="server" Text="0"></asp:Label></div>
+                <div class="stat-value"><asp:Label ID="lblTotalOrders" runat="server"
+                    Text="0"></asp:Label></div>
                 <div class="stat-label">Total Orders</div>
             </div>
             <div class="stat-item">
-                <div class="stat-value"><asp:Label ID="lblTotalRevenue" runat="server" Text="0.00 ILS"></asp:Label></div>
+                <div class="stat-value"><asp:Label ID="lblTotalRevenue"
+                    runat="server" Text="0.00 ILS"></asp:Label></div>
                 <div class="stat-label">Revenue</div>
             </div>
         </asp:Panel>
 
-        <asp:Label ID="lblEmpty" runat="server" CssClass="empty-orders" Visible="false" Text="No orders have been placed yet for this event."></asp:Label>
+        <asp:Label ID="lblEmpty" runat="server" CssClass="empty-orders"
+            Visible="false" Text="No orders have been placed yet for this event."></asp:Label>
 
         <asp:Repeater ID="rptOrders" runat="server">
             <ItemTemplate>
                 <div class="order-card">
                     <div class="order-header">
                         <div class="order-code">ORDER #<%# Eval("OrderId") %></div>
-                        <div class="order-buyer">Buyer: @<a href="UserProfile.aspx?username=<%# Eval("Buyer") %>" style="color:inherit;"><%# Eval("Buyer") %></a></div>
-                        <div class="order-date"><%# Convert.ToDateTime(Eval("DatePurchased")).ToString("MMMM dd, yyyy HH:mm") %></div>
+                        <div class="order-buyer">Buyer: @<a href="UserProfile.aspx?username=<%#
+                             Eval("Buyer") %>" style="color:inherit;"><%# Eval("Buyer") %></a></div>
+                        <div class="order-date"><%# Convert.ToDateTime(Eval("DatePurchased"))
+                                                        .ToString("MMMM dd, yyyy HH:mm") %></div>
                     </div>
                     <div class="order-body">
                         <b>Items Ordered:</b><br />
                         <%# Eval("ItemsSummary") %>
                     </div>
                     <div class="order-footer">
-                        <div class="order-total">Total: <span><%# Convert.ToDecimal(Eval("Total")).ToString("0.00") %> ILS</span></div>
+                        <div class="order-total">Total: <span><%# Convert.ToDecimal(Eval("Total"))
+                                                                      .ToString("0.00") %> ILS</span></div>
                     </div>
                 </div>
             </ItemTemplate>

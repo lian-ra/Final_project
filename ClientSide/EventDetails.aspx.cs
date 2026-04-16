@@ -9,12 +9,15 @@ public partial class EventDetails : System.Web.UI.Page
     private localhost.Service backendService = new localhost.Service();
     private int currentEventId = 0;
 
+    //הפעולה בודקת שהמשתמש מחובר למערכת
+    //אם הוא מחובר היא טוענת את פרטי האירוע ואת רשימת הנרשמים אליו.
     protected void Page_Load(object sender, EventArgs e)
     {
         string status = Session["status"] as string;
         if (status != "1" && status != "2")
         {
-            string script = @"alert('You must be logged in to view this page.'); setTimeout(function() {window.location = 'login.aspx';}, 10);";
+            string script = @"alert('You must be logged in to view this page.');
+             setTimeout(function() {window.location = 'login.aspx';}, 10);";
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
             return;
         }
@@ -26,6 +29,8 @@ public partial class EventDetails : System.Web.UI.Page
         }
     }
 
+    //הפעולה מחלצת את שם המשתמש המחובר מתוך הנתונים השמורים
+    //בתנאי שהמשתמש מזוהה במערכת כמשתמש רשום או כמנהל
     private string GetLoggedInUsername()
     {
         try
@@ -45,6 +50,8 @@ public partial class EventDetails : System.Web.UI.Page
         return null;
     }
 
+    //הפעולה טוענת את כל פרטי האירוע והסרט ממסד הנתונים ומציגה אותם בדף בתוך
+    //כרטיס מעוצב הכולל אפשרויות הרשמה למשתמשים או כלי ניהול ליוצר האירוע.
     private void LoadEventDetails()
     {
         if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0)
@@ -66,51 +73,62 @@ public partial class EventDetails : System.Web.UI.Page
             string username = GetLoggedInUsername();
             string eventOwner = row["Username"].ToString();
             string movieTitle = row["Title"].ToString();
-            string poster = row["Poster"] != DBNull.Value ? row["Poster"].ToString() : "images/uploads/slider1.jpg";
+            string poster = row["Poster"] != DBNull.Value ?
+                row["Poster"].ToString() : "images/uploads/slider1.jpg";
             string eventDate = Convert.ToDateTime(row["EventDate"]).ToString("MMMM dd, yyyy");
-            string startTime = row["StartTime"] != DBNull.Value ? Convert.ToDateTime(row["StartTime"].ToString()).ToString("HH:mm") : "";
+            string startTime = row["StartTime"] != DBNull.Value ? 
+                Convert.ToDateTime(row["StartTime"].ToString()).ToString("HH:mm") : "";
             decimal price = row["Price"] != DBNull.Value ? Convert.ToDecimal(row["Price"]) : 0;
             string eventStatus = row["Status"].ToString();
-            string genre = row["Genre"] != DBNull.Value ? row["Genre"].ToString() : "";
+            string genre = row["Genre"] != DBNull.Value ? 
+                row["Genre"].ToString() : "";
             string director = row["Director"] != DBNull.Value ? row["Director"].ToString() : "";
-            string actors = row["Actors"] != DBNull.Value ? row["Actors"].ToString() : "";
+            string actors = row["Actors"] != DBNull.Value ? 
+                row["Actors"].ToString() : "";
             int movieId = Convert.ToInt32(row["MovieId"]);
-            string location = row.Table.Columns.Contains("Location") && row["Location"] != DBNull.Value ? row["Location"].ToString() : "TBD";
+            string location = row.Table.Columns.Contains("Location") && 
+                row["Location"] != DBNull.Value ? row["Location"].ToString() : "TBD";
 
             if (!poster.StartsWith("http") && !poster.StartsWith("/") && !poster.StartsWith("~/"))
             {
                 poster = "~/" + poster;
             }
 
+
             string statusClass = "status-" + eventStatus.ToLower();
 
-            // Check if user is subscribed
-            bool isSubscribed = !string.IsNullOrEmpty(username) && backendService.IsUserSubscribed(currentEventId, username);
-            bool isOwner = !string.IsNullOrEmpty(username) && username.Equals(eventOwner, StringComparison.OrdinalIgnoreCase);
+            bool isSubscribed = !string.IsNullOrEmpty(username) &&
+                backendService.IsUserSubscribed(currentEventId, username);
+            bool isOwner = !string.IsNullOrEmpty(username) && 
+                username.Equals(eventOwner, StringComparison.OrdinalIgnoreCase);//מתעלם מאותיות גדולות/קטנות
 
-            // Show owner controls if user is the event owner
             if (isOwner)
             {
-                pnlOwnerControls.Visible = true;
+                pnlOwnerControls.Visible = true;//הצגת אפשרויות ניהול
             }
 
-            // Build subscription button
             string subscriptionButton = "";
             if (!string.IsNullOrEmpty(username) && !isOwner)
             {
                 if (isSubscribed)
                 {
-                    subscriptionButton = string.Format("<a href='EventDetails.aspx?eventId={0}&action=unsubscribe' class='btn-action btn-unsubscribe'>Unsubscribe</a>", currentEventId);
-                    subscriptionButton += string.Format(" <a href='EventStore.aspx?eventId={0}' class='btn-action btn-subscribe' " +
-                        "style='background: linear-gradient(135deg, #ff4c3b 0%, #d82b1f 100%); margin-left:10px;'><i class='fa fa-shopping-cart'></i> Event Store</a>"
+                    subscriptionButton = string.Format("<a href='EventDetails.aspx?eventId={0}&action=unsubscribe" +
+                        "' class='btn-action btn-unsubscribe'>Unsubscribe</a>", currentEventId);
+                    subscriptionButton += string.Format(" <a href='EventStore.aspx?eventId={0}' class='btn-action " +
+                        "btn-subscribe' " +
+                        "style='background: linear-gradient(135deg, #ff4c3b 0%, #d82b1f 100%); margin-left:10px;'><i " +
+                        "class='fa fa-shopping-cart'></i> Event Store</a>"
                         , currentEventId);
                 }
                 else if (eventStatus.Equals("Open", StringComparison.OrdinalIgnoreCase))
                 {
-                    subscriptionButton = string.Format("<a href='EventDetails.aspx?eventId={0}&action=subscribe' class='btn-action btn-subscribe'>Subscribe to Event</a>", currentEventId);
+                                         //מבטיח שהכפתורים יובילו בדיוק לאירוע הנכון שהמשתמש נמצא בו כרגע. 
+                    subscriptionButton = string.Format("<a href='EventDetails.aspx?eventId={0}&action=subscribe'" +
+                        " class='btn-action btn-subscribe'>Subscribe to Event</a>", currentEventId);
                 }
             }
 
+              // יצירת הכרטיס תצוגה
             string html = string.Format(@"
                 <div class='event-header'>
                     <div class='event-layout'>
@@ -171,10 +189,10 @@ public partial class EventDetails : System.Web.UI.Page
                 subscriptionButton,
                 Server.HtmlEncode(location)
             );
+            //חשש מכתובת מסוכנת- שומר על הקוד מפני פריצות HtmlEncode
 
-            phEventDetails.Controls.Add(new LiteralControl(html));
+            phEventDetails.Controls.Add(new LiteralControl(html)); //היא לוקחת את כל ה הטמל שנבנה קודם ומציגה אותו בפועל למשתמש.
 
-            // Handle subscription actions
             string action = Request.QueryString["action"];
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(action))
             {
@@ -192,10 +210,13 @@ public partial class EventDetails : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            phEventDetails.Controls.Add(new LiteralControl("<div class='empty-subscribers'>Error loading event: " + Server.HtmlEncode(ex.Message) + "</div>"));
+            phEventDetails.Controls.Add(new LiteralControl("<div class='empty-subscribers'>Error loading event: " +
+                "" + Server.HtmlEncode(ex.Message) + "</div>"));
         }
     }
 
+    //הפעולה שולפת את רשימת המשתמשים שנרשמו לאירוע ומציגה אותם בתוך גריד
+    //של כרטיסים מעוצבים הכוללים את תמונת הפרופיל ושמם המלא עם קישור לדף הפרופיל האישי שלהם.
     private void LoadSubscribers()
     {
         if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0)
@@ -212,7 +233,8 @@ public partial class EventDetails : System.Web.UI.Page
 
             if (dt == null || dt.Rows.Count == 0)
             {
-                phSubscribers.Controls.Add(new LiteralControl("<div class='empty-subscribers'>No subscribers yet. Be the first to join!</div>"));
+                phSubscribers.Controls.Add(new LiteralControl("<div class='empty-subscribers'>No " +
+                    "subscribers yet. Be the first to join!</div>"));
                 return;
             }
 
@@ -252,32 +274,37 @@ public partial class EventDetails : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            phSubscribers.Controls.Add(new LiteralControl("<div class='empty-subscribers'>Error loading subscribers: " + Server.HtmlEncode(ex.Message) + "</div>"));
+            phSubscribers.Controls.Add(new LiteralControl("<div class='empty-subscribers'>Error loading subscribers: " +
+                "" + Server.HtmlEncode(ex.Message) + "</div>"));
         }
     }
 
+    //open הפעולה מעדכנת את סטטוס האירוע למצב
     protected void btnSetOpen_Click(object sender, EventArgs e)
     {
         UpdateEventStatus("Open");
     }
 
+    //Closed הפעולה משנה את סטטוס האירוע למצב
     protected void btnSetClosed_Click(object sender, EventArgs e)
     {
         UpdateEventStatus("Closed");
     }
 
+    //Canceled הפעולה משנה את סטטוס האירוע למצב 
     protected void btnSetCanceled_Click(object sender, EventArgs e)
     {
         UpdateEventStatus("Canceled");
     }
 
+    //הפעולה מקבלת סטטוס חדש כטקסט, מעדכנת אותו במסד הנתונים עבור האירוע הנוכחי,
+    //ולאחר מכן מרעננת את הדף כדי להציג את השינוי
     private void UpdateEventStatus(string status)
     {
         if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0)
         {
             return;
         }
-
         try
         {
             backendService.UpdateEventStatus(currentEventId, status);
@@ -285,33 +312,44 @@ public partial class EventDetails : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            // Handle error
-            ClientScript.RegisterStartupScript(this.GetType(), "Error", "alert('Error updating status: " + ex.Message.Replace("'", "\\'") + "');", true);
+            ClientScript.RegisterStartupScript(this.GetType(), "Error", 
+                "alert('Error updating status: " + ex.Message.Replace("'", "\\'") + "');", true);
         }
     }
 
+    //הפעולה שולפת את פרטי האירוע הנוכחי ממסד הנתונים וממלאת אותם אוטומטית בתוך שדות
+    //(Date, Time, Price, Location) הטקסט של חלונית העריכה
+    //כדי שהמשתמש יוכל לעדכן אותם
     protected void btnUpdateEvent_Click(object sender, EventArgs e)
     {
-        if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0) return;
+        if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0)
+            return;
 
         DataTable dt = backendService.GetEventById(currentEventId);
         if (dt != null && dt.Rows.Count > 0)
         {
             DataRow row = dt.Rows[0];
             txtUpdateDate.Text = Convert.ToDateTime(row["EventDate"]).ToString("yyyy-MM-dd");
-            txtUpdateTime.Text = row["StartTime"] != DBNull.Value ? Convert.ToDateTime(row["StartTime"].ToString()).ToString("HH:mm") : "";
-            txtUpdatePrice.Text = row["Price"] != DBNull.Value ? row["Price"].ToString() : "0";
-            txtUpdateLocation.Text = row.Table.Columns.Contains("Location") && row["Location"] != DBNull.Value ? row["Location"].ToString() : "";
+            txtUpdateTime.Text = row["StartTime"] != DBNull.Value ? 
+                Convert.ToDateTime(row["StartTime"].ToString()).ToString("HH:mm") : "";
+            txtUpdatePrice.Text = row["Price"] != DBNull.Value ? 
+                row["Price"].ToString() : "0";
+            txtUpdateLocation.Text = row.Table.Columns.Contains("Location") &&
+                row["Location"] != DBNull.Value ? row["Location"].ToString() : "";
             
             pnlUpdateModal.Visible = true;
         }
     }
 
+    //הפעולה מסתירה את חלונית העדכון וסוגרת אותה מהתצוגה של המשתמש
     protected void btnCloseModal_Click(object sender, EventArgs e)
     {
         pnlUpdateModal.Visible = false;
     }
 
+    //הפעולה אוספת את הנתונים החדשים שהמשתמש הזין- תאריך, שעה, מיקום ומחיר,
+    //שולחת אותם לעדכון במסד הנתונים עבור האירוע הספציפי,
+    //ומעבירה את המשתמש חזרה לדף פרטי האירוע המעודכן
     protected void btnSaveUpdate_Click(object sender, EventArgs e)
     {
         if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0) return;
@@ -329,7 +367,8 @@ public partial class EventDetails : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            ClientScript.RegisterStartupScript(this.GetType(), "Error", "alert('Error updating event: " + ex.Message.Replace("'", "\\'") + "');", true);
+            ClientScript.RegisterStartupScript(this.GetType(), "Error",
+                "alert('Error updating event: " + ex.Message.Replace("'", "\\'") + "');", true);
         }
     }
 }

@@ -1,4 +1,5 @@
-<%@ Page Title="Wishlist" Language="C#" MasterPageFile="~/Design.master" AutoEventWireup="true" CodeFile="Wishlist.aspx.cs" Inherits="Wishlist" %>
+<%@ Page Title="Wishlist" Language="C#" MasterPageFile="~/Design.master"
+    AutoEventWireup="true" CodeFile="Wishlist.aspx.cs" Inherits="Wishlist" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style type="text/css">

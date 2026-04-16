@@ -119,13 +119,19 @@
         <h1 class="orders-title">All System Orders</h1>
         <div class="orders-subtitle">Platform-wide events store revenue tracking</div>
         
-        <asp:Panel ID="pnlSearch" runat="server" DefaultButton="btnSearchOrders" style="display: flex; gap: 10px; justify-content: center; align-items: center; margin-bottom: 30px; flex-wrap: wrap;">
-            <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by Order Code, Buyer, or Movie..." 
-                style="padding: 12px 20px; font-size: 16px; width: 350px; border-radius: 25px; border: 1px solid #ff4c3b; background: rgba(0,0,0,0.5); color: white;" />
+        <asp:Panel ID="pnlSearch" runat="server" DefaultButton="btnSearchOrders" 
+            style="display: flex; gap: 10px; justify-content: center; align-items: center;
+            margin-bottom: 30px; flex-wrap: wrap;">
+            <asp:TextBox ID="txtSearch" runat="server" 
+                placeholder="Search by Order Code, Buyer, or Movie..." 
+                style="padding: 12px 20px; font-size: 16px; width: 350px; 
+             border-radius: 25px; border: 1px solid #ff4c3b; background: rgba(0,0,0,0.5); color: white;" />
             <asp:Button ID="btnSearchOrders" runat="server" Text="Search" OnClick="btnSearchOrders_Click" 
-                style="padding: 12px 30px; background: #ff4c3b; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold;" />
+                style="padding: 12px 30px; background: #ff4c3b; color: white; 
+            border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold;" />
             <asp:Button ID="btnClear" runat="server" Text="Clear" OnClick="btnClear_Click" 
-                style="padding: 12px 20px; background: transparent; color: #aaa; border: 1px solid #aaa; border-radius: 25px; cursor: pointer; font-size: 16px;" />
+                style="padding: 12px 20px; background: transparent; color: #aaa;
+              border: 1px solid #aaa; border-radius: 25px; cursor: pointer; font-size: 16px;" />
         </asp:Panel>
         
         <asp:Panel ID="pnlStats" runat="server" CssClass="stats-bar" Visible="false">
@@ -159,9 +165,12 @@
                 <ItemTemplate>
                             <tr>
                                 <td class="order-code"><%# Eval("OrderId") %></td>
-                                <td>@<a href="UserProfile.aspx?username=<%# Eval("Buyer") %>" style="color:white;"><%# Eval("Buyer") %></a></td>
-                                <td>@<a href="UserProfile.aspx?username=<%# Eval("EventOwner") %>" style="color:white;"><%# Eval("EventOwner") %></a></td>
-                                <td><b><%# Eval("MovieTitle") %></b><br /><small><%# Convert.ToDateTime(Eval("EventDate")).ToShortDateString() %></small></td>
+                                <td>@<a href="UserProfile.aspx?username=<%# Eval("Buyer") %>"
+                                    style="color:white;"><%# Eval("Buyer") %></a></td>
+                                <td>@<a href="UserProfile.aspx?username=<%# Eval("EventOwner") %>" 
+                                    style="color:white;"><%# Eval("EventOwner") %></a></td>
+                                <td><b><%# Eval("MovieTitle") %></b><br /><small><%# Convert.ToDateTime(Eval("EventDate"))
+                                                                                         .ToShortDateString() %></small></td>
                                 <td><%# Convert.ToDateTime(Eval("DatePurchased")).ToString("MM/dd/yyyy HH:mm") %></td>
                                 <td style="font-size:13px; color:#ccc;"><%# Eval("ItemsSummary") %></td>
                                 <td class="order-total"><%# Convert.ToDecimal(Eval("Total")).ToString("0.00") %> ILS</td>
@@ -173,7 +182,9 @@
                 </FooterTemplate>
             </asp:Repeater>
             
-            <asp:Label ID="lblEmpty" runat="server" Text="No orders found." Visible="false" style="color:#aaa; font-style:italic; display:block; text-align:center; padding:20px;"></asp:Label>
+            <asp:Label ID="lblEmpty" runat="server" Text="No orders found." 
+                Visible="false" style="color:#aaa; font-style:italic; display:block; 
+             text-align:center; padding:20px;"></asp:Label>
         </div>
     </div>
 </asp:Content>

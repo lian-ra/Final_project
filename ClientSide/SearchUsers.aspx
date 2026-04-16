@@ -20,7 +20,6 @@
                 letter-spacing: 1px;
             }
 
-            /* Search Card Styling */
             .search-card {
                 background: rgba(30, 30, 30, 0.9);
                 border-radius: 12px;
@@ -69,7 +68,6 @@
                 height: 42px;
             }
 
-            /* Buttons */
             .btn-custom {
                 padding: 10px 25px;
                 border-radius: 25px;
@@ -99,7 +97,6 @@
                 background-color: #555;
             }
 
-            /* Grid Styling */
             .grid-container {
                 overflow-x: auto;
                 border-radius: 8px;
@@ -150,7 +147,6 @@
                 border: 2px solid #555;
             }
 
-            /* --- MODAL STYLES --- */
             .modal-overlay {
                 position: fixed;
                 top: 0;
