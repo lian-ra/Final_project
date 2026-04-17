@@ -16,8 +16,10 @@ public partial class UserProfile : System.Web.UI.Page
             return;
         }
 
-        DataTable dtSession = Session["data"] as DataTable;
-        if (dtSession != null && dtSession.Rows.Count > 0)
+        DataTable dtSession = Session["data"] as DataTable; //ניגשת לטבלה שנשמרה ב-סיזיון-נתונים בזמן הלוגין.
+                                                            //הטבלה הזו מכילה את כל הפרטים של המשתמש מהדאטה-בייס
+        if (dtSession != null && dtSession.Rows.Count > 0)//מוודאת שהטבלה קיימת ושיש
+                                                          //בה לפחות שורה אחת של נתונים
         {
             if (dtSession.Columns.Contains("User"))
                 currentUser = dtSession.Rows[0]["User"].ToString();
@@ -31,7 +33,11 @@ public partial class UserProfile : System.Web.UI.Page
             profileUser = currentUser; // Viewing own profile
         }
 
-        if (!IsPostBack)
+        if (!IsPostBack)//כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+                        //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                        //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
         {
             LoadUserProfile(profileUser);
             LoadUserWishlist(profileUser);

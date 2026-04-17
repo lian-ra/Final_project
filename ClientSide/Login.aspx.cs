@@ -13,7 +13,12 @@ public partial class Login : System.Web.UI.Page
     //הפעולה מבצעת ניתוק משתמש ברגע שהדף נטען לראשונה
     protected void Page_Load(object sender, EventArgs e)
     {      
-        if (!IsPostBack)
+        if (!IsPostBack)//כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+                        //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                        //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
         {
             string message = "alert('You are Loged out');"; 
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", message, true); 

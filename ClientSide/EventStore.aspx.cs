@@ -17,8 +17,9 @@ public partial class EventStore : System.Web.UI.Page
         string status = Session["status"] as string;
         if (status != "1" && status != "2") return null;
 
-        DataTable dt = Session["data"] as DataTable;
-        if (dt != null && dt.Rows.Count > 0)
+        DataTable dt = Session["data"] as DataTable; //ניגשת לטבלה שנשמרה ב-סיזיון-נתונים בזמן הלוגין.
+                                                     //הטבלה הזו מכילה את כל הפרטים של המשתמש מהדאטה-בייס
+        if (dt != null && dt.Rows.Count > 0)//מוודאת שהטבלה קיימת ושיש בה לפחות שורה אחת של נתונים
         {
             if (dt.Columns.Contains("User"))
                 return dt.Rows[0]["User"].ToString();
@@ -58,7 +59,12 @@ public partial class EventStore : System.Web.UI.Page
             return;
         }
 
-        if (!IsPostBack)
+        if (!IsPostBack)//כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+                        //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                        //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
         {
             LoadEventDetails(eventId);
             LoadProducts();

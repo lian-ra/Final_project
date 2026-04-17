@@ -13,7 +13,12 @@ public partial class Celebs : System.Web.UI.Page
     //הפעולה טוענת את רשימת הסלבים בטעינה הראשונה של הדף.
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        if (!IsPostBack)//כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+                        //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                        //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
         {
             LoadCelebs();
         }
@@ -38,7 +43,7 @@ public partial class Celebs : System.Web.UI.Page
 
             celebsGrid.Controls.Clear();
 
-            if (dt != null && dt.Rows.Count > 0)
+            if (dt != null && dt.Rows.Count > 0)//מוודאת שהטבלה קיימת ושיש בה לפחות שורה אחת של נתונים
             {
                 foreach (DataRow row in dt.Rows)
                 {

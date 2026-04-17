@@ -17,7 +17,12 @@ public partial class Home : System.Web.UI.Page
     {
         LoadWishlistForCurrentUser();
         LoadWatchedForCurrentUser();
-        if (!IsPostBack)
+        if (!IsPostBack)//כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+                        //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                        //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
         {
             LoadFilms();
         }

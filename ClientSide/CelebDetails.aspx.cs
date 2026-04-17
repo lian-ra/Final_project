@@ -13,7 +13,8 @@ public partial class CelebDetails : System.Web.UI.Page
     //אם הוא מחובר, היא טוענת את נתוני הסלב בטעינה הראשונה של הדף
     protected void Page_Load(object sender, EventArgs e)
     {
-        string status = Session["status"] as string;
+        string status = Session["status"] as string; 
+                                                   
         if (status != "1" && status != "2")
         {
             string script = @"alert('You must be logged in to view this page.');
@@ -21,8 +22,12 @@ public partial class CelebDetails : System.Web.UI.Page
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
             return; 
         }
-        if (!IsPostBack)
-        {
+        if (!IsPostBack)//כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+        {               //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                        //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
             LoadCeleb();
         }
     }

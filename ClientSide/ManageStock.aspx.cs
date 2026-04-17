@@ -14,12 +14,18 @@ public partial class ManageStock : System.Web.UI.Page
         string status = Session["status"] as string;
         if (status != "2") return null; 
 
-        DataTable dt = Session["data"] as DataTable;
-        if (dt != null && dt.Rows.Count > 0)
+        DataTable dt = Session["data"] as DataTable; //ניגשת לטבלה שנשמרה ב-סיזיון-נתונים בזמן הלוגין.
+                                                     //הטבלה הזו מכילה את כל הפרטים של המשתמש מהדאטה-בייס
+        if (dt != null && dt.Rows.Count > 0)//מוודאת שהטבלה קיימת ושיש בה לפחות שורה אחת של נתונים
         {
             if (dt.Columns.Contains("User"))
                 return dt.Rows[0]["User"].ToString();
-            return dt.Rows[0][0].ToString(); 
+            return dt.Rows[0][0].ToString();
+            //user אם יש בעמודות של הטבלה עמודה שקוראים לה
+            //אם כן, אני שולפת את מה שכתוב
+            //בשורה הראשונה בעמודה הזו ומחזירה את זה אחרת 
+            ////לוקחת את הערך שנמצא בתא הראשון בטבלה (שורה 0, עמודה 0), כי
+            // בדרך כלל שם נמצא שם המשתמש או המזהה
         }
         return null;
     }
@@ -34,7 +40,12 @@ public partial class ManageStock : System.Web.UI.Page
             Response.Redirect("Login.aspx");
             return;
         }
-        if (!IsPostBack)
+        if (!IsPostBack)//כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+                        //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                        //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
         {
             LoadStock();
         }
@@ -49,19 +60,27 @@ public partial class ManageStock : System.Web.UI.Page
         if (!string.IsNullOrWhiteSpace(searchQuery)) 
         {
             DataTable filteredDt = dt.Clone(); //טבלה ריקה משוכפלת
-            string escaped = searchQuery.Replace("'", "''"); 
+            string escaped = searchQuery.Replace("'", "''"); //השורה הזו מבצעת 'ניקוי' לטקסט שהמשתמש הקליד. אני מחליפה כל
+                                                //גרש בודד בשני גרשיים כדי למנוע שגיאות בשאילתת ה-אסקיואל ולהגן על האתר
+
             DataRow [] results = dt.Select("Name LIKE '%" + escaped +
                 "%' OR Convert(ProductId, 'System.String') LIKE '%" + escaped + "%'"); //סינון
+            //השורה הזו מבצעת סינון על הטבלה. היא מחפשת את המחרוזת שהמשתמש
+            //הקליד גם בעמודת השם וגם בעמודת קוד המוצר (אחרי המרה לטקסט), ומחזירה
+            //את כל השורות שמתאימות לחיפוש
+
             foreach (DataRow row in results)
             {
                 filteredDt.ImportRow(row);
+                //השורה הזו מעתיקה את השורה שנמצאה בסינון אל תוך הטבלה החדשה, כך
+                //שהיא תשמור על המבנה המקורי של הנתונים ותהיה מוכנה לתצוגה
             }
             dt = filteredDt; //כדי להציג רק את התוצאות שנמצאו בחיפוש
         }
 
-        rptStock.DataSource = dt;
-        rptStock.DataBind();
-    }
+        rptStock.DataSource = dt; //מחברת את המידע (הטבלה) לרכיב התצוגה באתר.
+        rptStock.DataBind(); //נותנת פקודה למחשב להציג את המידע בפועל על המסך.
+    } 
 
     //הפעולה מפעילה את טעינת המלאי מחדש, תוך סינון
     //המוצרים לפי הטקסט שהמנהל הקליד בתיבת החיפוש
@@ -74,9 +93,12 @@ public partial class ManageStock : System.Web.UI.Page
     //את רשימת המלאי המלאה ללא סינון
     protected void btnClearSearch_Click(object sender, EventArgs e)
     {
-        txtSearchStock.Text = "";
-        LoadStock();
-    }
+        txtSearchStock.Text = "";//מרוקנת את תיבת הטקסט של החיפוש. אני שמה
+                                 //שם מחרוזת ריקה כדי שהמשתמש יראה שהטקסט שהוא כתב נמחק.
+
+        LoadStock();//אני קוראת שוב לפעולה שטוענת את ההזמנות, אבל
+    }               //הפעם אני שולחת לה גרשיים ריקים. זה גורם לה להבין שאין יותר
+                    //סינון, והיא פשוט מציגה מחדש את כל ההזמנות של המשתמש
 
     //הפעולה מוסיפה מוצר חדש למערכת עם הפרטים
     //שהוזנו (שם, תיאור ומחיר) ומעדכנת את תצוגת המלאי
@@ -124,9 +146,9 @@ public partial class ManageStock : System.Web.UI.Page
     protected void rptStock_ItemCommand(object source, System.Web.UI.WebControls.RepeaterCommandEventArgs e)
                                                          //מכיל את כל הנתונים על הכפתור שנלחץ בתוך הרשימה
     {
-        if (e.CommandName == "Delete")
+        if (e.CommandName == "Delete")//משתנה ששומר את שם הפעולה שהגדרנו לכפתור
         {
-            int productId = Convert.ToInt32(e.CommandArgument); //המידע שמגיע מהמזהה של המוצר
+            int productId = Convert.ToInt32(e.CommandArgument); //תעודת זהות של המוצר הספציפי שלחצו עליו.
             try
             {
                 srv.DeleteProduct(productId);
@@ -134,6 +156,7 @@ public partial class ManageStock : System.Web.UI.Page
                 lblSuccess.Visible = true;
                 lblError.Visible = false;
                 LoadStock(txtSearchStock.Text.Trim());
+                //היא מפעילה את הפעולה שטוענת את רשימת המלאי, ומתחשבת במה שהמשתמש כתב בתיבת החיפוש.
             }
             catch (Exception)
             {
@@ -143,10 +166,12 @@ public partial class ManageStock : System.Web.UI.Page
                 lblSuccess.Visible = false;
             }
         }
-        else if (e.CommandName == "EditProd")
+        else if (e.CommandName == "EditProd")//משתנה ששומר את שם הפעולה שהגדרנו לכפתור
         {
             try 
             {
+                //השורה הזו לוקחת את המידע שנשלח מהכפתור ומפרקת אותו
+                //למערך של מחרוזות לפי התו המפריד '|', כדי שאוכל להשתמש בכל נתון בנפרד.
                 string[] args = e.CommandArgument.ToString().Split('|');
                                //פירוק מחרוזת לרשימה של נתונים נפרדים
                 if (args.Length >= 3)
@@ -183,10 +208,16 @@ public partial class ManageStock : System.Web.UI.Page
             {
                 string filename = Path.GetFileName(fuEditPicture.FileName);
                 string newName = Guid.NewGuid().ToString("N").Substring(0, 8) + "_" + filename;
+                //השורה הזו מייצרת שם ייחודי לקובץ על ידי יצירת קוד אקראי וחיבורו
+                //לשם המקורי. זה מבטיח שלא יהיו כפילויות בשמות הקבצים בשרת
+
                 string serverPath = Server.MapPath("~/MyPics/") + newName; //כדי לדעת איפה נמצא הקובץ- תיקייה
                 fuEditPicture.SaveAs(serverPath); //שמירה בתיקייה
                 picture = "~/MyPics/" + newName; //שמירה בכתובת של קובץ
             }
+            //.Substring(0, 8): אומר למחשב: "אל תקח את כל הקוד הארוך, קח רק את 8 התווים הראשונים".
+            //Guid.NewGuid(): פקודה שמייצרת קוד ייחודי וארוך של אותיות ומספרים
+            //(כדי שאף פעם לא יהיו שני קבצים עם אותו שם).
 
             srv.UpdateProduct(productId, price, picture);
 

@@ -8,16 +8,27 @@ using System.Data.OleDb;
 using System.Data.SqlClient;
 namespace MDb.App_Code
 {
+    //ו מחלקה שמרכזת את כל 'העבודה השחורה' מול בסיס הנתונים. במקום
+    //לכתוב את הקוד של פתיחת החיבור, הרצת הפקודה וסגירת החיבור בכל דף באתר מחדש,
+    //בניתי מחלקה אחת עם פעולות מוכנות שאני רק צריכה לקרוא להן
     public class DbActions
     {
 
         // הפעולה מחזירה ויוצרת אובייקט התחברות שהוא ה"מפתח" המאפשר לקוד
         //לגשת למסד הנתונים
-        private static SqlConnection GetConnection(string path)
-        {
+        private static SqlConnection GetConnection(string path)//פעולה פנימית שמחזירה אובייקט מסוג "חיבור
+        {//הפעולה מקבלת את הנתיב (המיקום) שבו נמצא הקובץ של בסיס הנתונים במחשב.
+
             string connectionString = "Data Source=(LocalDB)\\" +
                 "MSSQLLocalDB;AttachDbFilename=" + path + "; Integrated Security=True";
-            return new SqlConnection(connectionString);
+
+            //Data Source- אומר למחשב באיזו "תוכנת שרת" להשתמש
+            //AttachDbFilename- אומר למחשב "זה הקובץ הספציפי שאני רוצה לפתוח"
+            // Integrated Security=True" -אומר למחשב "אל תבקש ממני שם משתמש וסיסמה, תשתמש באבטחה של ווינדוס
+
+            return new SqlConnection(connectionString);//השורה הזו יוצרת את ההאובייקט ומחזירה אותו
+                                                       //כדי שנוכל להשתמש בו להרצת פקודות.
+
         }
 
 
@@ -25,42 +36,67 @@ namespace MDb.App_Code
         //מלאה במידע שנשלף ממסד הנתונים לפי השאילתה ששלחנו
         public static DataTable Search(string sql, string path)
         {
-            using (SqlConnection connect = GetConnection(path))
+            //ה-using נועד לניהול משאבים תקין. הוא
+            //מבטיח שהאובייקט שיצרנו (כמו החיבור למסד הנתונים) ייסגר וישתחרר
+            //מהזיכרון ברגע שסיימנו להשתמש בו, גם אם קרתה שגיאה באמצע הקוד.
+
+            using (SqlConnection connect = GetConnection(path)) //כאן אני יוצרת את אובייקט החיבור (הצינור) למסד הנתונים
+                                                                //Using- מבטיח שהחיבור ייסגר אוטומטית בסוף כדי לחסוך זיכרון.
+
             {
-                DataSet ds = new DataSet();
-                using (SqlCommand cmmd = new SqlCommand(sql, connect))
-                {
-                    using (SqlDataAdapter da = new SqlDataAdapter(cmmd))
+                DataSet ds = new DataSet(); //מייצרת אובייקט מסוג דטהסט שהוא כמו
+                                            //מחסן ריק בזיכרון של המחשב שיכול להכיל טבלאות
+
+                using (SqlCommand cmmd = new SqlCommand(sql, connect)) //יוצרת אובייקט פקודה (השליח), שבו אני שמה את שאילתת
+                {                                                       //האסקיואל שרציתי להריץ ואת החיבור שיצרתי
+                
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmmd))//הוא המתווך ששואב את הנתונים
+                                                                        //מהאסקיואל ומעביר אותם לקוד שלי.
                     {
-                        da.Fill(ds, "MyTable");
+                        da.Fill(ds, "MyTable"); //זו פקודת הביצוע. המתאם 'ממלא- פיל את
+                                        // המחסן דטהסט בנתונים שחזרו מהאסקיואל ונותן לטבלה את השם מייטאבל
                     }
                 }
 
-                if (ds.Tables.Count == 0 || ds.Tables["MyTable"] == null)
-                    return new DataTable();
+                if (ds.Tables.Count == 0 || ds.Tables["MyTable"] == null) //אם המחסן נשאר ריק
+                                                                          //או שהטבלה לא נוצרה מסיבה כלשהי
+                    return new DataTable();//.אז אני מחזירה טבלה ריקה, כדי שהאתר
+                                           //לא יקרוס וידע שאין נתונים להציג
 
-                return ds.Tables[0];
+                return ds.Tables[0]; //אם הכל בסדר, אני שולפת את הטבלה
+                                     //הראשונה מהמחסן ומחזירה אותה למי שקרא לפעולה
             }
+
+            //הפעולה פותחת חיבור, שואבת נתונים לתוך
+            //מחסן זמני בעזרת מתאם, ומחזירה את הטבלה מוכנה לשימוש באתר.
         }
 
         //הפעולה מחזירה טבלת נתונים- DataTable
         //מלאה במידע שנשלף ממסד הנתונים לפי השאילתה ששלחנו
         //השימוש בפרמטרים הופך את החיפוש להרבה יותר מאובטח נגד פריצות
-        public static DataTable SearchWithParameters(SqlCommand cmmd, string path)
+        public static DataTable SearchWithParameters(SqlCommand cmmd, string path) //הפעולה מקבלת אובייקט פקודה
+                                                            //מוכן מראש (עם פרמטרים) ונתיב, ומחזירה טבלת נתונים
         {
-            using (SqlConnection connect = GetConnection(path))
+            using (SqlConnection connect = GetConnection(path)) //יוצרת את אובייקט החיבור (הצינור) למסד
+                                                  //הנתונים ודואגת שהוא ייסגר אוטומטית בסוף בעזרת יוזינג
             {
-                DataSet ds = new DataSet();
-                cmmd.Connection = connect;
-                using (SqlDataAdapter da = new SqlDataAdapter(cmmd))
+                DataSet ds = new DataSet(); //אני מכינה מחסן ריק בזיכרון- דטהסט כדי לאחסן בו את הנתונים שיחזרו מהחיפוש
+                cmmd.Connection = connect; //אן אני 'מחברת' לפקודה שקיבלתי את הצינור
+                                           //שיצרתי, כדי שהיא תדע דרך איפה לעבור לבסיס הנתונים
+
+                using (SqlDataAdapter da = new SqlDataAdapter(cmmd)) //אני יוצרת את המתאם (המשאבה.
+                                               //הוא לוקח את הפקודה המוכנה ושואב בעזרתה את המידע."
                 {
-                    da.Fill(ds, "MyTable");
+                    da.Fill(ds, "MyTable"); //המתאם שואב את הנתונים וממלא את המחסן שלנו בטבלה שקראנו לה מייטאבל
                 }
 
-                if (ds.Tables.Count == 0 || ds.Tables["MyTable"] == null)
-                    return new DataTable();
+                if (ds.Tables.Count == 0 || ds.Tables["MyTable"] == null) //בדיקת בטיחות לוודא שהמחסן
+                                                                          //לא ריק ושום דבר לא השתבש בדרך.
+                    return new DataTable(); //אם אין נתונים, אני מחזירה טבלה ריקה כדי
+                                            //שהאתר ימשיך לעבוד כרגיל ולא יקרוס.
 
-                return ds.Tables[0];
+                return ds.Tables[0]; //אם הכל עבד, אני שולפת את הטבלה עם כל
+                                     //התוצאות ומחזירה אותה להצגה באתר
             }
         }
 
@@ -69,12 +105,22 @@ namespace MDb.App_Code
         //ללא החזרת טבלה, וסוגרת את הקישור בסיום
         public static void MyAction(SqlCommand cmmd, string path)
         {
-            using (SqlConnection connect = GetConnection(path))
+            using (SqlConnection connect = GetConnection(path)) //יוצרת את אובייקט החיבור (הצינור) לפי
+                                          //הנתיב של הקובץ, ומשתמשת ב-יוזינג כדי לוודא שהוא ייסגר בסוף
             {
-                cmmd.Connection = connect;
-                connect.Open();
-                cmmd.ExecuteNonQuery();
-                connect.Close();
+                cmmd.Connection = connect; //ני משייכת לפקודה (השליח) שקיבלתי
+                                           //את החיבור הספציפי שיצרתי, כדי שהיא תדע לאן ללכת.
+
+                connect.Open();//כאן אני ממש פותחת את הצינור פיזית. בפעולות של עדכון או
+                               //מחיקה, אנחנו חייבים לפתוח את החיבור בצורה מפורשת לפני הביצוע.
+
+                cmmd.ExecuteNonQuery(); //אומרת למחשב: 'תריץ את הפקודה, אבל
+                                        //אל תצפה לקבל בחזרה טבלה של נתונים'.
+                                        //זה מתאים להוספה מחיקה או עדכון
+
+                connect.Close(); //כאן אני סוגרת את החיבור באופן ידני
+                                 //(למרות שה-יוזינג היה עושה את זה בכל מקרה),
+                                 //כדי להיות בטוחה שהכל נקי ומסודר
             }
         }
     }

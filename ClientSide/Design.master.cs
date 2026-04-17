@@ -16,9 +16,11 @@ public partial class Design : System.Web.UI.MasterPage
         {
             string status = Session["status"] as string;
 
-            DataTable dt = Session["data"] as DataTable;
+            DataTable dt = Session["data"] as DataTable; //ניגשת לטבלה שנשמרה ב-סיזיון-נתונים בזמן הלוגין.
+                                                         //הטבלה הזו מכילה את כל הפרטים של המשתמש מהדאטה-בייס
 
-            if ((status == "1" || status == "2") && dt != null && dt.Rows.Count > 0)
+            if ((status == "1" || status == "2") && dt != null && dt.Rows.Count > 0)//מוודאת שהטבלה קיימת ושיש
+                                                                                    //בה לפחות שורה אחת של נתונים
             {
                 string username = null;
 

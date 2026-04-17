@@ -14,11 +14,17 @@ public partial class ManageEventStore : System.Web.UI.Page
         string status = Session["status"] as string;
         if (status != "1" && status != "2") return null;
 
-        DataTable dt = Session["data"] as DataTable;
-        if (dt != null && dt.Rows.Count > 0)
+        DataTable dt = Session["data"] as DataTable; //ניגשת לטבלה שנשמרה ב-סיזיון-נתונים בזמן הלוגין.
+                                                     //הטבלה הזו מכילה את כל הפרטים של המשתמש מהדאטה-בייס
+        if (dt != null && dt.Rows.Count > 0)//מוודאת שהטבלה קיימת ושיש בה לפחות שורה אחת של נתונים
         {
             if (dt.Columns.Contains("User")) return dt.Rows[0]["User"].ToString();
             return dt.Rows[0][0].ToString();
+            //user אם יש בעמודות של הטבלה עמודה שקוראים לה
+            //אם כן, אני שולפת את מה שכתוב
+            //בשורה הראשונה בעמודה הזו ומחזירה את זה אחרת 
+            ////לוקחת את הערך שנמצא בתא הראשון בטבלה (שורה 0, עמודה 0), כי
+            // בדרך כלל שם נמצא שם המשתמש או המזהה
         }
         return null;
     }
@@ -49,8 +55,12 @@ public partial class ManageEventStore : System.Web.UI.Page
             Response.Redirect("EventDetails.aspx?eventId=" + eventId);
             return;
         }
-        if (!IsPostBack)
-        {
+        if (!IsPostBack)//כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+                        //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+        {               //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
             lblEventName.Text = dtEvent.Rows[0]["Title"].ToString();
             LoadStoreData(eventId);
         }
@@ -61,9 +71,15 @@ public partial class ManageEventStore : System.Web.UI.Page
     private void LoadStoreData(int eventId)
     {
         DataTable dtNotInEvent = srv.GetProductsNotInEvent(eventId);
-        rptGlobalStock.DataSource = dtNotInEvent; //כל המוצרים הכללית הקיימת 
+        rptGlobalStock.DataSource = dtNotInEvent; //בשורה הזו אני מגדירה לרכיב התצוגה את המקור
+           //שממנו הוא שואב את הנתונים – במקרה הזה, הטבלה שמכילה את המוצרים שאינם משויכים לאירוע
+
         rptGlobalStock.DataBind();
-        lblGlobalEmpty.Visible = (dtNotInEvent == null || dtNotInEvent.Rows.Count == 0); //שדה טקסט-  רק כשאין מוצרים ברשימה
+        //זו הפקודה שמבצעת את הקישור הסופי. היא גורמת לרכיב התצוגה
+        //להתעדכן ולהציג את כל המוצרים מהטבלה ישירות בדף האינטרנט
+
+        lblGlobalEmpty.Visible = (dtNotInEvent == null || dtNotInEvent.Rows.Count == 0);
+        //שדה טקסט () שמופיע רק כשאין מוצרים ברשימה, כדי להודיע למשתמש שהרשימה ריקה.
 
         DataTable dtInEvent = srv.GetEventProducts(eventId);
         rptEventStock.DataSource = dtInEvent; // המוצרים ששויכו לאירוע הספציפי שבו אנחנו נמצאים
@@ -75,9 +91,9 @@ public partial class ManageEventStore : System.Web.UI.Page
     //הכללית, מוסיפה את המוצר הנבחר לאירוע הנוכחי ומעדכנת את תצוגת הרשימות בדף
     protected void rptGlobalStock_ItemCommand(object source, RepeaterCommandEventArgs e)
     {
-        if (e.CommandName == "Add")
+        if (e.CommandName == "Add")//משתנה ששומר את שם הפעולה שהגדרנו לכפתור
         {
-            int productId = Convert.ToInt32(e.CommandArgument);
+            int productId = Convert.ToInt32(e.CommandArgument);//תעודת זהות של המוצר הספציפי שלחצו עליו.
             int eventId = Convert.ToInt32(Request.QueryString["eventId"]);
             srv.AddProductToEvent(eventId, productId);
             LoadStoreData(eventId);
@@ -88,9 +104,9 @@ public partial class ManageEventStore : System.Web.UI.Page
     //המוצר הנבחר מהאירוע הנוכחי ומעדכנת את תצוגת הרשימות בדף
     protected void rptEventStock_ItemCommand(object source, RepeaterCommandEventArgs e)
     {
-        if (e.CommandName == "Remove")
+        if (e.CommandName == "Remove")//משתנה ששומר את שם הפעולה שהגדרנו לכפתור
         {
-            int productId = Convert.ToInt32(e.CommandArgument);
+            int productId = Convert.ToInt32(e.CommandArgument);//תעודת זהות של המוצר הספציפי שלחצו עליו.
             int eventId = Convert.ToInt32(Request.QueryString["eventId"]);
             srv.RemoveProductFromEvent(eventId, productId);
             LoadStoreData(eventId);

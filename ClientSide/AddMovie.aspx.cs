@@ -22,7 +22,13 @@ public partial class AddMovie : System.Web.UI.Page
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
         }
 
-        if (!IsPostBack)
+                         //כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+        if (!IsPostBack) //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                         //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                         //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                         //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
+
         {
             string status = Session["status"] as string; 
             if (status != "2")

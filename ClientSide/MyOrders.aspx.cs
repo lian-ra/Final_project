@@ -25,11 +25,16 @@ public partial class MyOrders : System.Web.UI.Page
         if (status != "1" && status != "2") return null;
 
         DataTable dt = Session["data"] as DataTable;
-        if (dt != null && dt.Rows.Count > 0)
+        if (dt != null && dt.Rows.Count > 0)//מוודאת שהטבלה קיימת ושיש בה לפחות שורה אחת של נתונים
         {
             if (dt.Columns.Contains("User"))
                 return dt.Rows[0]["User"].ToString();
             return dt.Rows[0][0].ToString();
+            //user אם יש בעמודות של הטבלה עמודה שקוראים לה
+            //אם כן, אני שולפת את מה שכתוב
+            //בשורה הראשונה בעמודה הזו ומחזירה את זה אחרת 
+            ////לוקחת את הערך שנמצא בתא הראשון בטבלה (שורה 0, עמודה 0), כי
+            // בדרך כלל שם נמצא שם המשתמש או המזהה
         }
         return null;
     }
@@ -44,8 +49,15 @@ public partial class MyOrders : System.Web.UI.Page
             return;
         }
 
-        if (!IsPostBack)
+        if (!IsPostBack)//כדי להגיד למחשב:תטען את הנתונים מהדאטה-בייס רק כשהדף נפתח בפעם הראשונה
+                        //  אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                        //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
         {
+            //קוד הזה בודק אם הגיע פרמטר הצלחה מהכתובת. אם כן, הוא מעדכן
+            //את תוכן הודעת האישור עם מספר ההזמנה הרלוונטי ומציג אותה למשתמש.
             if (Request.QueryString["success"] != null)
             {
                 lblSuccess.Text = "Order " + Request.QueryString["success"] + " placed successfully!";
@@ -120,8 +132,12 @@ public partial class MyOrders : System.Web.UI.Page
         else
         {
             lblEmpty.Visible = false;
+
+            //בשורה הראשונה אני מגדירה את מקור הנתונים של הרכיב, ובשורה השנייה
+            //אני מבצעת את הקישור הסופי כדי שההזמנות יוצגו בדף
             rptOrders.DataSource = ordersList;
-            rptOrders.DataBind();                            
+            rptOrders.DataBind();             
+            
             rptOrders.Visible = true;
         }
     }

@@ -16,16 +16,34 @@ public partial class EventDetails : System.Web.UI.Page
         string status = Session["status"] as string;
         if (status != "1" && status != "2")
         {
-            string script = @"alert('You must be logged in to view this page.');
+            string script = @"alert('You must be logged in to view this page.'); 
              setTimeout(function() {window.location = 'login.aspx';}, 10);";
+            //אם המשתמש לא מחובר, אני מכינה קוד קטן בשפת גאווהסקריפט. הקוד הזה מקפיץ
+            //הודעה (אלרט) שאומרת שחובה להתחבר, ואז מעביר אותו אוטומטית לדף ההתחברות
+
+            //זו שגורמת להודעת ההתראה לקפוץ למשתמש על המסך מיד כשהדף נטען
             ClientScript.RegisterStartupScript(this.GetType(), "MessageBox", script, true);
+            //this.GetType(): אומר למחשב באיזה דף אנחנו נמצאים כרגע.
+            //"MessageBox": זה בסך הכל שם (מזהה) שנתנו לקוד הקטן הזה, כדי שהמחשב לא יריץ אותו פעמיים בטעות.
+            //script: זה המשתנה שבו שמרנו מקודם את פקודת ההודעה שרצינו להקפיץ.
+            //true: אומר למחשב להוסיף באופן אוטומטי את התגיות של הסקריפט, כדי שלא נצטרך לכתוב אותן בעצמנו.
+
             return;
         }
 
-        if (!IsPostBack)
+        if (!IsPostBack)//  //אם המשתמש לוחץ על כפתור והדף מתרענן, אני
+                        //לא רוצה שהמחשב יטען את הכל מחדש, כי זה ימחוק
+                        //את מה שהמשתמש כתב או שינה בתיבות הטקסט.
+                        //כאן המשתמש רק עכשיו נכנס לדף, הכל נקי וחדש
+
+
         {
-            LoadEventDetails();
-            LoadSubscribers();
+            LoadEventDetails();//פעולה ששולפת מהדאטה-בייס את כל הפרטים של האירוע
+                               //כמו שם הסרט, תאריך ושעה ומציגה אותם בתוך תיבות הטקסט בדף.
+
+            LoadSubscribers();//מפעילה פעולה שטוענת את רשימת האנשים
+                              //שנרשמו לאירוע ומציגה אותם בתוך הטבלה, כדי שהמשתמש
+                              //יוכל לראות מי כבר הזמין כרטיס.
         }
     }
 
@@ -38,13 +56,16 @@ public partial class EventDetails : System.Web.UI.Page
             string status = Session["status"] as string;
             if (status != "1" && status != "2") return null;
 
-            DataTable dt = Session["data"] as DataTable;
-            if (dt != null && dt.Rows.Count > 0)
+            DataTable dt = Session["data"] as DataTable; //ניגשת לטבלה שנשמרה ב-סיזיון-נתונים בזמן הלוגין.
+                                                         //הטבלה הזו מכילה את כל הפרטים של המשתמש מהדאטה-בייס
+            if (dt != null && dt.Rows.Count > 0)//מוודאת שהטבלה קיימת ושיש בה לפחות שורה אחת של נתונים
             {
-                if (dt.Columns.Contains("User"))
-                    return dt.Rows[0]["User"].ToString();
-                return dt.Rows[0][0].ToString();
-            }
+                if (dt.Columns.Contains("User"))//user אם יש בעמודות של הטבלה עמודה שקוראים לה
+                    return dt.Rows[0]["User"].ToString();//אם כן, אני שולפת את מה שכתוב
+                                                         //בשורה הראשונה בעמודה הזו ומחזירה את זה
+
+                return dt.Rows[0][0].ToString(); //לוקחת את הערך שנמצא בתא הראשון בטבלה (שורה 0, עמודה 0), כי
+            }                                    // בדרך כלל שם נמצא שם המשתמש או המזהה
         }
         catch { }
         return null;
@@ -54,18 +75,55 @@ public partial class EventDetails : System.Web.UI.Page
     //כרטיס מעוצב הכולל אפשרויות הרשמה למשתמשים או כלי ניהול ליוצר האירוע.
     private void LoadEventDetails()
     {
+        //בודקת את הכתובת של הדף (יואראל) כדי לראות איזה מספר אירוע המשתמש ביקש לראות. אם המספר
+        //לא תקין או חסר, אני מציגה הודעת שגיאה ועוצרת.
         if (!int.TryParse(Request.QueryString["eventId"], out currentEventId) || currentEventId <= 0)
         {
-            phEventDetails.Controls.Add(new LiteralControl("<div class='empty-subscribers'>Invalid event.</div>"));
+            phEventDetails.Controls.Add(new LiteralControl
+                ("<div class='empty-subscribers'>Invalid event.</div>")); //במידה והבדיקה נכשלה, אני
+                                                                          //מוסיפה הודעת שגיאה מעוצבת ישירות למקום המיועד
+                                                                          //בדף, שאומרת למשתמש: "האירוע אינו תקין".
+             //phEventDetails- פקד מסוג פלייס אורדר שהגדרת בדף ה-אספק. הוא
+             //משמש כ"מקום שמור" או מכולה ריקה
+             //בדף, שתוכלי להכניס לתוכה תוכן דינמי דרך הקוד.
+
+            //.Controls.Add()-ו פקודה שאומרת למחשב: "קח את מה שאני נותנת לך עכשיו, ותוסיף
+            //אותו לרשימת הרכיבים שנמצאים בתוך המקום השמור
+
+            //new LiteralControl(...)- את יוצרת רכיב חדש מסוג "פקד טקסט חופשי". בניגוד
+            //לכפתור או תיבת טקסט רגילה, הפקד הזה פשוט לוקח את מה
+            //שתכתבי בתוכו ומתייחס אליו כאל קוד אייץ טי אמ אל
+
+            //"<div class='empty-subscribers'>Invalid event.</div>" -
+            //זהו תוכן ה-אייץ טי אמ אל שיוצג למשתמש. את משתמשת בתגית דיב עם מחלקה (קלאס) של
+            //עיצוב שכבר כתבת ב-סי אס אס, כדי שהודעת השגיאה תיראה יפה ולא סתם טקסט פשוט.
+
             return;
         }
 
         try
         {
-            DataTable dt = backendService.GetEventById(currentEventId);
+            DataTable dt = backendService.GetEventById(currentEventId); //תביא לי מהשירות את
+                                                                        //כל המידע על האירוע הזה ושמור אותו בטבלה dt
             if (dt == null || dt.Rows.Count == 0)
             {
                 phEventDetails.Controls.Add(new LiteralControl("<div class='empty-subscribers'>Event not found.</div>"));
+
+                //phEventDetails- פקד מסוג פלייס אורדר שהגדרת בדף ה-אספק. הוא
+                //משמש כ"מקום שמור" או מכולה ריקה
+                //בדף, שתוכלי להכניס לתוכה תוכן דינמי דרך הקוד.
+
+                //.Controls.Add()-ו פקודה שאומרת למחשב: "קח את מה שאני נותנת לך עכשיו, ותוסיף
+                //אותו לרשימת הרכיבים שנמצאים בתוך המקום השמור
+
+                //new LiteralControl(...)- את יוצרת רכיב חדש מסוג "פקד טקסט חופשי". בניגוד
+                //לכפתור או תיבת טקסט רגילה, הפקד הזה פשוט לוקח את מה
+                //שתכתבי בתוכו ומתייחס אליו כאל קוד אייץ טי אמ אל
+
+                //"<div class='empty-subscribers'>Invalid event.</div>" -
+                //זהו תוכן ה-אייץ טי אמ אל שיוצג למשתמש. את משתמשת בתגית דיב עם מחלקה (קלאס) של
+                //עיצוב שכבר כתבת ב-סי אס אס, כדי שהודעת השגיאה תיראה יפה ולא סתם טקסט פשוט.
+
                 return;
             }
 
@@ -87,24 +145,37 @@ public partial class EventDetails : System.Web.UI.Page
                 row["Actors"].ToString() : "";
             int movieId = Convert.ToInt32(row["MovieId"]);
             string location = row.Table.Columns.Contains("Location") && 
-                row["Location"] != DBNull.Value ? row["Location"].ToString() : "TBD";
+                row["Location"] != DBNull.Value ? row["Location"].ToString() : "TBD"; //קיצור של ייקבע בהמשך
+
+            // DBNull.Value זהו אובייקט שמייצג ערך חסר ואנחנו בודקים אותו כדי לוודא שלא ננסה להשתמש בנתון שלא קיים.
 
             if (!poster.StartsWith("http") && !poster.StartsWith("/") && !poster.StartsWith("~/"))
             {
                 poster = "~/" + poster;
             }
 
-
+            //השורה הזו מחברת בין הנתונים מהדאטה-בייס לבין העיצוב - סי אס אס.
+            //אני יוצרת שם של מחלקה באופן דינמי לפי
+            //מצב האירוע, וככה האתר יודע לצבוע את הסטטוס בצבע הנכון באופן אוטומטי.
             string statusClass = "status-" + eventStatus.ToLower();
 
+            //השורה הזו בודקת סטטוס הרשמה בצורה בטוחה. קודם
+            //כל היא מוודאת שיש בכלל משתמש מחובר, ורק אז היא פונה לדאטה-בייס כדי
+            //לבדוק אם הוא רשום לאירוע הספציפי הזה. התוצאה נשמרת
+            //במשתנה בוליאני שמשמש אותי להצגת הכפתורים הנכונים.
             bool isSubscribed = !string.IsNullOrEmpty(username) &&
                 backendService.IsUserSubscribed(currentEventId, username);
+
+            //השורה הזו בודקת אם המשתמש המחובר הוא יוצר האירוע.
+            //אני משתמשת בהשוואה שמתעלמת מאותיות גדולות וקטנות כדי למנוע
+            //טעויות זיהוי, וזה עוזר לי להחליט אם להציג למשתמש את אפשרויות הניהול של האירוע
             bool isOwner = !string.IsNullOrEmpty(username) && 
                 username.Equals(eventOwner, StringComparison.OrdinalIgnoreCase);//מתעלם מאותיות גדולות/קטנות
 
             if (isOwner)
             {
                 pnlOwnerControls.Visible = true;//הצגת אפשרויות ניהול
+                //מכיל אפשרויות שרק המארח אמור לראות, כמו "עריכת אירוע" או "מחיקת אירוע".
             }
 
             string subscriptionButton = "";
@@ -112,6 +183,9 @@ public partial class EventDetails : System.Web.UI.Page
             {
                 if (isSubscribed)
                 {
+                    //החלק הזה בונה את ממשק המשתמש הדינמי. הקוד מחליט בזמן אמת איזה כפתור
+                    //להציג לגולש לפי המצב שלו: האם הוא כבר רשום, האם הוא המארח,
+                    //והאם האירוע עדיין פתוח להרשמה. השתמשתי בסטרינג.פורמט כדי לוודא שכל כפתור יוביל בדיוק לאירוע הנכון
                     subscriptionButton = string.Format("<a href='EventDetails.aspx?eventId={0}&action=unsubscribe" +
                         "' class='btn-action btn-unsubscribe'>Unsubscribe</a>", currentEventId);
                     subscriptionButton += string.Format(" <a href='EventStore.aspx?eventId={0}' class='btn-action " +
@@ -119,16 +193,30 @@ public partial class EventDetails : System.Web.UI.Page
                         "style='background: linear-gradient(135deg, #ff4c3b 0%, #d82b1f 100%); margin-left:10px;'><i " +
                         "class='fa fa-shopping-cart'></i> Event Store</a>"
                         , currentEventId);
+
+                    //string.Format(...)- זו פקודה שעוזרת לי לבנות את הקישור בצורה חכמה. במקום
+                    //שבו כתוב {0}, המחשב שותל באופן אוטומטי את ה-מספר מזהה
+                    //של האירוע הנוכחי, כדי שהכפתור ידע בדיוק לאיזה אירוע להירשם.
                 }
-                else if (eventStatus.Equals("Open", StringComparison.OrdinalIgnoreCase))
+                else if (eventStatus.Equals("Open", StringComparison.OrdinalIgnoreCase)) //תשווה את המילים, אבל
+                                                                                         //תתעלם מההבדל בין אותיות גדולות לקטנות
                 {
                                          //מבטיח שהכפתורים יובילו בדיוק לאירוע הנכון שהמשתמש נמצא בו כרגע. 
                     subscriptionButton = string.Format("<a href='EventDetails.aspx?eventId={0}&action=subscribe'" +
                         " class='btn-action btn-subscribe'>Subscribe to Event</a>", currentEventId);
+                    //השתמשתי בבדיקת תנאי כדי לוודא שאירוע מאפשר הרשמה רק אם הסטטוס שלו הוא פתוח.
+                    //השתמשתי ב-איגנור קייס כדי להבטיח שהשוואת הטקסט תהיה גמישה ותמנע תקלות
+                    //במקרה של הבדלים באותיות גדולות או קטנות שנשלחות ממסד הנתונים."
                 }
             }
 
-              // יצירת הכרטיס תצוגה
+            // יצירת הכרטיס תצוגה
+
+            //הקוד הזה בונה את "תעודת הזהות" של האירוע שהמשתמש רואה על המסך.
+
+            //יוצרת משתנה טקסט ארוך שמכיל את כל מבנה ה-אייץ טי אמ אל של הדף. סימן ה-@ מאפשר
+            //לי לכתוב את הקוד על פני כמה שורות כדי שיהיה סדר .
+
             string html = string.Format(@"
                 <div class='event-header'>
                     <div class='event-layout'>
@@ -190,6 +278,15 @@ public partial class EventDetails : System.Web.UI.Page
                 Server.HtmlEncode(location)
             );
             //חשש מכתובת מסוכנת- שומר על הקוד מפני פריצות HtmlEncode
+
+            //יצירת הכרטיס תצוגה פה ולא באספק:
+            //אנחנו לא יודעים כמה אירועים יהיו
+            //שינוי הנתונים בזמן אמת
+            //סדר
+
+            //בחרתי לבנות את ה-אייץ טי אמ אל ב-קוד ביאיינד כדי לשמור על תצוגה דינמית. מכיוון
+            //שהדף משתנה משמעותית בהתאם לסוג המשתמש (מארח או אורח) ובהתאם לנתוני האירוע,
+            //הרבה יותר נוח ובטוח לנהל את מבנה הדף בתוך ה-סי שארפ מאשר להעמיס על ה-אספק פקדים מוסתרים."
 
             phEventDetails.Controls.Add(new LiteralControl(html)); //היא לוקחת את כל ה הטמל שנבנה קודם ומציגה אותו בפועל למשתמש.
 
