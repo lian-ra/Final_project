@@ -72,12 +72,12 @@ public partial class Regi : System.Web.UI.Page
     {
         try
         {
-            if (Calendar1.SelectedDate == DateTime.MinValue)
+            if (Calendar1.SelectedDate == DateTime.MinValue) //לאם המשתמש בחר תאריך שבערך המינימלי בלוח שנה 
                 throw new Exception("Please explicitly select your birthdate on the calendar.");
             if (Calendar1.SelectedDate > DateTime.Today)
                 throw new Exception("Your birthdate cannot be a future date.");
 
-            Users newUser = new Users();//אובייקט חדש       
+            Users newUser = new Users(); //אובייקט חדש של יוזר       
 
             newUser.UserN = txtUName.Text;
             newUser.Pass = txtPass.Text;

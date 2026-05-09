@@ -174,7 +174,7 @@ public partial class Wishlist : System.Web.UI.Page
                 <div class='wishlist-meta'>Year: {2} | Rating: {3}</div>
                 {5}
             </div>",
-            ResolveUrl(poster),
+            ResolveUrl(poster),//המרת נתיב לנתיב שהדפדפן יכול להבין ולהציג כראוי.
             HttpUtility.HtmlEncode(title),
             HttpUtility.HtmlEncode(year),
             HttpUtility.HtmlEncode(rating),

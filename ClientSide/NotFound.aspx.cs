@@ -13,7 +13,10 @@ public partial class NotFound : System.Web.UI.Page
         Response.StatusCode = 404;
         Response.StatusDescription = "Not Found";
         
-        string requestedUrl = Request.RawUrl;
+        string requestedUrl = Request.RawUrl;//שולף ושומר בזיכרון במשתנה כתובת
+                                             //ה-יואראל המלאה והמקורית שהמשתמש ניסה לגשת אליה.
+
+        //בודקת מאיזה עמוד הגיע המשתמש
         string referrer = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "Direct";
     }
 }

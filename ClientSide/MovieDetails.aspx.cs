@@ -55,11 +55,10 @@ public partial class MovieDetails : System.Web.UI.Page
                }
             }
             
-            SetupCommentFormVisibility();
+            SetupCommentFormVisibility();//בהתאם לסטטוס של המשתמש
         }
         else
         {
-            // Also handle actions on postback if needed, or primarily GET actions
              HandleActions();
         }
     }
@@ -87,8 +86,9 @@ public partial class MovieDetails : System.Web.UI.Page
              else if (action == "removeFromWatched")
              {
                  backendService.RemoveFromWatched(username, movieId);
-                 Response.Redirect(redirectUrl);
-             }
+                 Response.Redirect(redirectUrl); // מעבירה (מפנה) את
+                               //הדפדפן של המשתמש לכתובת ה-יואראל שמוגדרת במשתנה
+            }
         }
     }
 
@@ -182,14 +182,16 @@ public partial class MovieDetails : System.Web.UI.Page
 
         //to 5 stars
         double stars = rating / 2.0;
-        int fullStars = (int)Math.Floor(stars);
+        int fullStars = (int)Math.Floor(stars);//מעגלת כלפי מטה
         bool halfStar = (stars - fullStars) >= 0.25 && (stars - fullStars) < 0.75;
         // If 0.75 it round up to a full star
         if ((stars - fullStars) >= 0.75) fullStars++;
         int emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
+        // יוצרת אובייקט חדש מסוג `סטרינגבילדר` המיועד לעריכת מחרוזות בזיכרון בצורה יעילה.
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        sb.Append("<div class='star-rating'>");
+
+        sb.Append("<div class='star-rating'>");// מוסיפה לסוף האובייקט הקיים בזיכרון 
         for (int i = 0; i < fullStars; i++)
             sb.Append("<span class='star star-full'>&#9733;</span>");
         if (halfStar)
@@ -304,7 +306,7 @@ public partial class MovieDetails : System.Web.UI.Page
                         </div>
                     </div>
                 </div>",
-                ResolveUrl(poster),
+                ResolveUrl(poster),//ממירה נתיב לנתיב הנכון
                 HttpUtility.HtmlEncode(title),
                 HttpUtility.HtmlEncode(year),
                 string.IsNullOrEmpty(genre) ? "" : " | Genre: " + HttpUtility.HtmlEncode(genre),
@@ -333,6 +335,8 @@ public partial class MovieDetails : System.Web.UI.Page
     private string GenerateReviewStarsHtml(int rating)
     {
         // Review rating is 1-5
+
+       // יוצרת אובייקט חדש מסוג `סטרינגבילדר` המיועד לעריכת מחרוזות בזיכרון בצורה יעילה.
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
         sb.Append("<span class='review-stars'>");
         for (int i = 1; i <= 5; i++)
@@ -342,7 +346,7 @@ public partial class MovieDetails : System.Web.UI.Page
             else
                 sb.Append("<span class='rs rs-empty'>&#9733;</span>");
         }
-        sb.Append("</span>");
+        sb.Append("</span>");//מוסיפה לסוף האובייקט הקיים בזיכרון
         return sb.ToString();
     }
 

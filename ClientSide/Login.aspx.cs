@@ -29,7 +29,7 @@ public partial class Login : System.Web.UI.Page
     {
         string user = txtUsername.Text;
         string pass = txtPassword.Text;
-        bool choice = true;
+        bool choice = true; // האם המשתמש רגיל
 
         if (drpChoice.Text.Equals("admin")) 
             choice = false;

@@ -104,7 +104,7 @@ public partial class CelebDetails : System.Web.UI.Page
                         </div>
                     </div>
                 </div>",
-                ResolveUrl(photo),
+                ResolveUrl(photo),//ממירה נתיב לנתיב הנכון
                 HttpUtility.HtmlEncode(celebName),
                 HttpUtility.HtmlEncode(role),
                 HttpUtility.HtmlEncode(bio),

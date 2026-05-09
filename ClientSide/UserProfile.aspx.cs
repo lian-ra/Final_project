@@ -8,6 +8,7 @@ public partial class UserProfile : System.Web.UI.Page
     private string currentUser; // The person logged in
     private string profileUser; // The person being viewed
 
+    //הקוד מאמת את חיבור המשתמש ומפנה אותו לדף ההתחברות במידה ואינו מורשה.
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["status"] == null || (Session["status"].ToString() != "1" && Session["status"].ToString() != "2"))
@@ -40,11 +41,15 @@ public partial class UserProfile : System.Web.UI.Page
         }
     }
 
+    //הפעולה מחזירה את שם המשתמש הנוכחי שנשמר בזיכרון.
     public string GetLoggedInUsername()
     {
          return currentUser;
     }
 
+    //הפעולה טוענת את מספר העוקבים והנעקבים
+    //ומציגה את כפתור העריכה עבור הפרופיל
+    //שלך או את כפתור המעקב  עבור פרופילים של משתמשים אחרים
     private void LoadFollowData()
     {
         try
@@ -80,6 +85,7 @@ public partial class UserProfile : System.Web.UI.Page
         catch { }
     }
 
+    //הפעולה מעדכנת את סטטוס המעקב של המשתמש
     protected void btnFollow_Click(object sender, EventArgs e)
     {
         try
@@ -97,9 +103,10 @@ public partial class UserProfile : System.Web.UI.Page
         catch { }
     }
 
+    //הפעולה שולפת את פרטי המשתמש מהמסד,
+    //ממלאת את תיבות הטקסט בנתונים אלו, ומציגה את חלון העריכה
     protected void btnEditProfile_Click(object sender, EventArgs e)
     {
-        // Populate fields
         DataTable dt = backendService.SearchUser(currentUser, "username");
         if (dt != null && dt.Rows.Count > 0)
         {
@@ -113,16 +120,17 @@ public partial class UserProfile : System.Web.UI.Page
         }
     }
 
+    //הפעולה סוגרת (מסתירה) את חלון העריכה.
     protected void btnCancelEdit_Click(object sender, EventArgs e)
     {
         pnlEditModal.Visible = false;
     }
 
+    //הפעולה שומרת את פרטי הפרופיל המעודכנים ומעדכנת את הנתונים במסד הנתונים
     protected void btnSaveProfile_Click(object sender, EventArgs e)
     {
         try
-        {
-          
+        {      
             // Handle Pic
             string picName = "Profile.jpg"; // default
             DataTable dt = backendService.SearchUser(currentUser, "username");
@@ -148,8 +156,7 @@ public partial class UserProfile : System.Web.UI.Page
             user.Pass = txtEditPass.Text;
             user.Pic = picName;
             
-            // These might be required by Service but not in form
-            // Retrieve existing for address/phone
+        
             user.Fulladdres = ""; 
             user.PhoneN = "";
             
@@ -175,6 +182,7 @@ public partial class UserProfile : System.Web.UI.Page
         }
     }
 
+    //הפעולה שולפת את פרטי המשתמש ממסד הנתונים ומציגה אותם ברכיבי העמוד
     private void LoadUserProfile(string username)
     {
         DataTable dt = backendService.SearchUser(username, "username");
@@ -196,6 +204,8 @@ public partial class UserProfile : System.Web.UI.Page
         }
     }
 
+    //הפעולה שולפת את רשימת המשאלות של המשתמש,
+    //מגבילה את התצוגה לעד 5 הסרטים הראשונים (במידה ויש יותר), ומציגה אותם בעמוד.
     private void LoadUserWishlist(string username)
     {
         try
@@ -204,13 +214,12 @@ public partial class UserProfile : System.Web.UI.Page
 
             if (dtWishlist != null && dtWishlist.Rows.Count > 0)
             {
-                // Limit to 5 movies in the user profile
                 if (dtWishlist.Rows.Count > 5)
                 {
-                    DataTable dtTop5 = dtWishlist.Clone();
+                    DataTable dtTop5 = dtWishlist.Clone();//מעתיקה את המבנה של הטבלה לטבלה חדשה ריקה?
                     for (int i = 0; i < 5; i++)
                     {
-                        dtTop5.ImportRow(dtWishlist.Rows[i]);
+                        dtTop5.ImportRow(dtWishlist.Rows[i]);//העתקת שורה בודדת מטבלה אחת לטבלה אחרת.
                     }
                     rptWishlist.DataSource = dtTop5;
                 }
@@ -233,6 +242,7 @@ public partial class UserProfile : System.Web.UI.Page
         }
     }
 
+    //הפעולה שולפת את רשימת הסרטים הנצפים של המשתמש, קושרת את הנתונים לרכיב התצוגה ומציגה אותם.
     private void LoadUserWatched(string username)
     {
         try
@@ -257,6 +267,8 @@ public partial class UserProfile : System.Web.UI.Page
         }
     }
 
+    //HTML הפעולה ממירה את הדירוג מסולם של 10 לסולם של 5, ומייצרת קוד
+    //המכיל כוכבים מלאים, חצי כוכבים וכוכבים ריקים לייצוג חזותי של הציון.
     public string GetStarRatingHtml(object ratingObj)
     {
         double rating = 0;

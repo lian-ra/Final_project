@@ -82,16 +82,18 @@ public partial class UpdateMyUser : System.Web.UI.Page
         user.LastN = txtLastName.Text;
         if (dtUser != null && dtUser.Rows.Count > 0)
         {
-            if (dtUser.Columns.Contains("pic")) pic = dtUser.Rows[0]["pic"].ToString();
-            else if (dtUser.Rows[0].ItemArray.Length > 9) pic = dtUser.Rows[0][9].ToString();
+            if (dtUser.Columns.Contains("pic")) 
+                pic = dtUser.Rows[0]["pic"].ToString();
+            else if (dtUser.Rows[0].ItemArray.Length > 9) 
+                pic = dtUser.Rows[0][9].ToString();
         }
         if (string.IsNullOrEmpty(pic))
             pic = "Profile.jpg";
 
         if (FileUpload1.HasFile)
         {
-            pic = FileUpload1.FileName;
-            FileUpload1.SaveAs(Server.MapPath("~/MyPics/") + pic);
+            pic = FileUpload1.FileName;//השם של הקובץ שהמשתמש בחר להעלות
+            FileUpload1.SaveAs(Server.MapPath("~/MyPics/") + pic);//השמירה של הקובץ אל תוך השרת.
         }
         user.Pic = pic;
 

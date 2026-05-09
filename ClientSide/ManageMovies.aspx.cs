@@ -178,7 +178,8 @@ public partial class ManageMovies : System.Web.UI.Page
         {
             int movieId = (int)grdMovies.DataKeys[e.RowIndex].Value;
             GridViewRow row = grdMovies.Rows[e.RowIndex];
-         
+
+            //הפעולה שולפת את הטקסט מתוך תיבת טקסט הנמצאת בתא הכתוב
             string title = ((TextBox)row.Cells[1].Controls[0]).Text.Trim();
             string yearText = ((TextBox)row.Cells[2].Controls[0]).Text.Trim();
             string genre = ((TextBox)row.Cells[3].Controls[0]).Text.Trim();

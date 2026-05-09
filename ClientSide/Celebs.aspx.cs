@@ -43,7 +43,7 @@ public partial class Celebs : System.Web.UI.Page
                 foreach (DataRow row in dt.Rows)
                 {
                     LiteralControl celebCard = new LiteralControl(GenerateCelebCard(row));
-                    celebsGrid.Controls.Add(celebCard);
+                    celebsGrid.Controls.Add(celebCard);//מוסיפה את הפקד לאוסף הפקדים של גריד
                 }
             }
             else
@@ -90,7 +90,7 @@ public partial class Celebs : System.Web.UI.Page
                     </div>
                 </a>
             </div>",
-            ResolveUrl(photo),
+            ResolveUrl(photo),//ממירה נתיב לנתיב נכון
             HttpUtility.HtmlEncode(name),
             HttpUtility.HtmlEncode(role),
             HttpUtility.HtmlEncode(bio),
